@@ -25,7 +25,7 @@ class _LoginContentState extends State<LoginContent>
   List<Widget>? loginContent;
   List<Widget>? createAccountContent;
 
-  Widget inputField(String hint, IconData iconData) {
+  Widget inputField(String hint, IconData iconData, bool isObscure) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 8),
       child: SizedBox(
@@ -36,6 +36,7 @@ class _LoginContentState extends State<LoginContent>
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(30),
           child: TextField(
+            obscureText: isObscure,
             textAlignVertical: TextAlignVertical.bottom,
             decoration: InputDecoration(
               border: OutlineInputBorder(
@@ -109,15 +110,18 @@ class _LoginContentState extends State<LoginContent>
     );
   }
 
-  Widget logos() {
+  Widget otherLoginOptions() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset('assets/images/facebook.png'),
+          GestureDetector(
+              onTap: () => {},
+              child: Image.asset('assets/images/facebook.png')),
           const SizedBox(width: 24),
-          Image.asset('assets/images/google.png'),
+          GestureDetector(
+              onTap: () => {}, child: Image.asset('assets/images/google.png')),
         ],
       ),
     );
@@ -144,20 +148,22 @@ class _LoginContentState extends State<LoginContent>
 
   Future<String> initialization() async {
     createAccountContent = [
-      inputField(AppLocalizations.of(context)!.username, Icons.person_outline),
-      inputField(AppLocalizations.of(context)!.email, Icons.mail_outline),
       inputField(
-          AppLocalizations.of(context)!.password, Icons.lock_clock_outlined),
+          AppLocalizations.of(context)!.username, Icons.person_outline, false),
+      inputField(
+          AppLocalizations.of(context)!.email, Icons.mail_outline, false),
+      inputField(AppLocalizations.of(context)!.password,
+          Icons.lock_clock_outlined, true),
       loginButton(AppLocalizations.of(context)!.signUp),
       orDivider(),
-      logos(),
+      otherLoginOptions(),
     ];
 
     loginContent = [
-      inputField(
-          AppLocalizations.of(context)!.emailOrUsername, Icons.mail_outline),
-      inputField(
-          AppLocalizations.of(context)!.password, Icons.lock_clock_outlined),
+      inputField(AppLocalizations.of(context)!.emailOrUsername,
+          Icons.mail_outline, false),
+      inputField(AppLocalizations.of(context)!.password,
+          Icons.lock_clock_outlined, true),
       loginButton(AppLocalizations.of(context)!.logIn),
       forgotPassword(),
     ];
@@ -225,9 +231,12 @@ class _LoginContentState extends State<LoginContent>
                 ),
                 const Align(
                   alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 50),
-                    child: BottomText(),
+                  child: SizedBox(
+                    height: 100,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 50),
+                      child: BottomText(),
+                    ),
                   ),
                 ),
               ],

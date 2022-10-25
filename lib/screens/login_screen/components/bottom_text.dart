@@ -3,7 +3,6 @@ import 'package:untitled/screens/login_screen/animations/change_screen_animation
 import 'package:untitled/utils/helper_functions.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../utils/constants.dart';
 import 'login_content.dart';
 
 class BottomText extends StatefulWidget {
@@ -43,24 +42,27 @@ class _BottomTextState extends State<BottomText> {
         behavior: HitTestBehavior.opaque,
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: RichText(
-            text: TextSpan(
-              style: const TextStyle(
-                fontSize: 16,
-                fontFamily: 'Montserrat',
-              ),
-              children: [
-                TextSpan(
-                  text: ChangeScreenAnimation.currentScreen ==
-                          Screens.createAccount
-                      ? AppLocalizations.of(context)!.alreadyHaveAnAccount
-                      : AppLocalizations.of(context)!.doNotHaveAnAccount,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: RichText(
+              text: TextSpan(
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontFamily: 'Montserrat',
                 ),
-              ],
+                children: [
+                  TextSpan(
+                    text: ChangeScreenAnimation.currentScreen ==
+                            Screens.createAccount
+                        ? AppLocalizations.of(context)!.alreadyHaveAnAccount
+                        : AppLocalizations.of(context)!.doNotHaveAnAccount,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
