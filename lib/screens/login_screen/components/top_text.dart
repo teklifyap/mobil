@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../utils/helper_functions.dart';
-import '../animations/change_screen_animation.dart';
+import 'package:untitled/screens/login_screen/animations/change_screen_animation.dart';
+import 'package:untitled/utils/helper_functions.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'login_content.dart';
 
 class TopText extends StatefulWidget {
@@ -28,8 +30,8 @@ class _TopTextState extends State<TopText> {
       animation: ChangeScreenAnimation.topTextAnimation,
       child: Text(
         ChangeScreenAnimation.currentScreen == Screens.createAccount
-            ? 'Create\nAccount'
-            : 'Welcome\nBack',
+            ? AppLocalizations.of(context)!.createAccount
+            : AppLocalizations.of(context)!.welcomeBack,
         style: const TextStyle(
           color: Colors.white,
           fontSize: 40,

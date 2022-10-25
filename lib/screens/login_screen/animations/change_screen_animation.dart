@@ -17,6 +17,7 @@ class ChangeScreenAnimation {
 
   static var isPlaying = false;
   static var currentScreen = Screens.createAccount;
+  static bool hasBeenInitialized = false;
 
   static Animation<Offset> _createAnimation({
     required Offset begin,
@@ -73,6 +74,8 @@ class ChangeScreenAnimation {
           parent: createAccountControllers[i],
         ),
       );
+
+      hasBeenInitialized = true;
     }
 
     for (var i = 0; i < loginItems; i++) {
@@ -94,7 +97,7 @@ class ChangeScreenAnimation {
   }
 
   static void dispose() {
-    for (final controller in [
+    for (var controller in [
       topTextController,
       bottomTextController,
       ...createAccountControllers,

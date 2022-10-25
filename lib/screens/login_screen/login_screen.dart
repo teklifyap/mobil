@@ -2,7 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../utils/constants.dart';
+import 'package:untitled/utils/constants.dart';
+
 import 'components/center_widget/center_widget.dart';
 import 'components/login_content.dart';
 

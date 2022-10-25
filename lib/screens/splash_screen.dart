@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
-import '../app_data.dart';
-import '../utils/constants.dart';
-import 'login_screen/login_screen.dart';
+import 'package:untitled/app_data.dart';
+import 'package:untitled/screens/login_screen/login_screen.dart';
+import 'package:untitled/utils/constants.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen(
@@ -35,7 +34,9 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> initialize(BuildContext context) async {
-    AppData.primaryTitle = widget.primaryTitle!;
+    if (widget.primaryTitle != null) {
+      AppData.primaryTitle = widget.primaryTitle!;
+    }
   }
 
   @override
@@ -60,34 +61,13 @@ class _SplashScreenState extends State<SplashScreen>
             if (snap.connectionState == ConnectionState.done) {
               _navigateToLoginPage();
             }
-            return Stack(
-              fit: StackFit.expand,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 100.0),
-                      child: Text(
-                        AppData.primaryTitle,
-                        style: const TextStyle(
-                            color: kSecondaryColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w900),
-                      ),
-                    )
-                  ],
-                ),
-                Center(
-                  child: Image.asset(
-                    "assets/images/${AppData.mainLogoFileName}",
-                    height: animation.value * 250,
-                    width: animation.value * 250,
-                    color: kSecondaryColor,
-                  ),
-                ),
-              ],
+            return Center(
+              child: Text(
+                AppData.primaryTitle,
+                style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontSize: animation.value * 72),
+              ),
             );
           }),
     );

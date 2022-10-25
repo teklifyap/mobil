@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/screens/login_screen/animations/change_screen_animation.dart';
+import 'package:untitled/utils/helper_functions.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../utils/constants.dart';
-import '../../../utils/helper_functions.dart';
-import '../animations/change_screen_animation.dart';
 import 'login_content.dart';
 
 class BottomText extends StatefulWidget {
@@ -52,8 +53,8 @@ class _BottomTextState extends State<BottomText> {
                 TextSpan(
                   text: ChangeScreenAnimation.currentScreen ==
                           Screens.createAccount
-                      ? 'Already have an account? '
-                      : 'Don\'t have an account? ',
+                      ? AppLocalizations.of(context)!.alreadyHaveAnAccount
+                      : AppLocalizations.of(context)!.doNotHaveAnAccount,
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,

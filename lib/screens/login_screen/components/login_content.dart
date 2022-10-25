@@ -5,6 +5,8 @@ import '../../../utils/helper_functions.dart';
 import '../animations/change_screen_animation.dart';
 import 'bottom_text.dart';
 import 'top_text.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:untitled/screens/language_picker/language_picker_widget.dart';
 
 enum Screens {
   createAccount,
@@ -20,8 +22,8 @@ class LoginContent extends StatefulWidget {
 
 class _LoginContentState extends State<LoginContent>
     with TickerProviderStateMixin {
-  late final List<Widget> createAccountContent;
-  late final List<Widget> loginContent;
+  List<Widget>? loginContent;
+  List<Widget>? createAccountContent;
 
   Widget inputField(String hint, IconData iconData) {
     return Padding(
@@ -85,11 +87,11 @@ class _LoginContentState extends State<LoginContent>
               color: Colors.white,
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              'or',
-              style: TextStyle(
+              AppLocalizations.of(context)!.or.toLowerCase(),
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -123,14 +125,14 @@ class _LoginContentState extends State<LoginContent>
 
   Widget forgotPassword() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 110),
+      padding: const EdgeInsets.symmetric(horizontal: 50),
       child: TextButton(
         style: ButtonStyle(
             overlayColor: MaterialStateProperty.all(Colors.transparent)),
         onPressed: () {},
-        child: const Text(
-          'Forgot Password?',
-          style: TextStyle(
+        child: Text(
+          AppLocalizations.of(context)!.forgotPassword,
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
             color: Colors.white,
@@ -140,88 +142,99 @@ class _LoginContentState extends State<LoginContent>
     );
   }
 
-  @override
-  void initState() {
+  Future<String> initialization() async {
     createAccountContent = [
-      inputField('Username', Icons.person_outline),
-      inputField('Email', Icons.mail_outline),
-      inputField('Password', Icons.lock_clock_outlined),
-      loginButton('Sign Up'),
+      inputField(AppLocalizations.of(context)!.username, Icons.person_outline),
+      inputField(AppLocalizations.of(context)!.email, Icons.mail_outline),
+      inputField(
+          AppLocalizations.of(context)!.password, Icons.lock_clock_outlined),
+      loginButton(AppLocalizations.of(context)!.signUp),
       orDivider(),
       logos(),
     ];
 
     loginContent = [
-      inputField('Email / Username', Icons.mail_outline),
-      inputField('Password', Icons.lock_clock_outlined),
-      loginButton('Log In'),
+      inputField(
+          AppLocalizations.of(context)!.emailOrUsername, Icons.mail_outline),
+      inputField(
+          AppLocalizations.of(context)!.password, Icons.lock_clock_outlined),
+      loginButton(AppLocalizations.of(context)!.logIn),
       forgotPassword(),
     ];
 
-    ChangeScreenAnimation.initialize(
-      vsync: this,
-      createAccountItems: createAccountContent.length,
-      loginItems: loginContent.length,
-    );
+    if (ChangeScreenAnimation.hasBeenInitialized == false) {
+      ChangeScreenAnimation.initialize(
+        vsync: this,
+        createAccountItems: createAccountContent!.length,
+        loginItems: loginContent!.length,
+      );
+    }
 
-    for (var i = 0; i < createAccountContent.length; i++) {
-      createAccountContent[i] = HelperFunctions.wrapWithAnimatedBuilder(
+    for (var i = 0; i < createAccountContent!.length; i++) {
+      createAccountContent![i] = HelperFunctions.wrapWithAnimatedBuilder(
         animation: ChangeScreenAnimation.createAccountAnimations[i],
-        child: createAccountContent[i],
+        child: createAccountContent![i],
       );
     }
 
-    for (var i = 0; i < loginContent.length; i++) {
-      loginContent[i] = HelperFunctions.wrapWithAnimatedBuilder(
+    for (var i = 0; i < loginContent!.length; i++) {
+      loginContent![i] = HelperFunctions.wrapWithAnimatedBuilder(
         animation: ChangeScreenAnimation.loginAnimations[i],
-        child: loginContent[i],
+        child: loginContent![i],
       );
     }
 
-    super.initState();
+    return "Widgets created";
   }
 
   @override
   void dispose() {
     ChangeScreenAnimation.dispose();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        const Positioned(
-          top: 136,
-          left: 24,
-          child: TopText(),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 100),
-          child: Stack(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: createAccountContent,
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: loginContent,
-              ),
-            ],
-          ),
-        ),
-        const Align(
-          alignment: Alignment.bottomCenter,
-          child: Padding(
-            padding: EdgeInsets.only(bottom: 50),
-            child: BottomText(),
-          ),
-        ),
-      ],
-    );
+    return FutureBuilder<String>(
+        future: initialization(),
+        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+          if (snapshot.hasData) {
+            return Stack(
+              children: [
+                const Positioned(
+                    top: 50, right: 5, child: LanguagePickerWidget()),
+                const Positioned(
+                  top: 136,
+                  left: 24,
+                  child: TopText(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 100),
+                  child: Stack(
+                    children: [
+                      Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: createAccountContent!),
+                      Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: loginContent!),
+                    ],
+                  ),
+                ),
+                const Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 50),
+                    child: BottomText(),
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return Container();
+          }
+        });
   }
 }
