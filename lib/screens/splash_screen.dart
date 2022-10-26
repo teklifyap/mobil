@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/app_data.dart';
-import 'package:untitled/screens/login_screen/login_screen.dart';
-import 'package:untitled/utils/constants.dart';
+import 'package:teklifyap/app_data.dart';
+import 'package:teklifyap/screens/login_screen/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen(

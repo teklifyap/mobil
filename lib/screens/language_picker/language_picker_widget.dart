@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:teklifyap/l10n/l10n.dart';
+import 'package:teklifyap/provider/local_provider.dart';
 
-import '../../l10n/l10n.dart';
-import '../../provider/local_provider.dart';
 
 class LanguageWidget extends StatelessWidget {
   const LanguageWidget({super.key});

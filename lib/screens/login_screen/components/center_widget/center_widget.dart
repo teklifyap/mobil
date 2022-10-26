@@ -1,10 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:untitled/utils/constants.dart';
-
-import 'center_widget_clipper.dart';
-import 'center_widget_painter.dart';
+import 'package:teklifyap/screens/login_screen/components/center_widget/center_widget_clipper.dart';
+import 'package:teklifyap/screens/login_screen/components/center_widget/center_widget_painter.dart';
+import 'package:teklifyap/utils/constants.dart';
 
 class CenterWidget extends StatelessWidget {
   final Size size;

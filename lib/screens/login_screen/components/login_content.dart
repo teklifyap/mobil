@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../../utils/constants.dart';
-import '../../../utils/helper_functions.dart';
-import '../animations/change_screen_animation.dart';
-import 'bottom_text.dart';
-import 'top_text.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:untitled/screens/language_picker/language_picker_widget.dart';
+import 'package:teklifyap/screens/language_picker/language_picker_widget.dart';
+import 'package:teklifyap/screens/login_screen/animations/change_screen_animation.dart';
+import 'package:teklifyap/screens/login_screen/components/bottom_text.dart';
+import 'package:teklifyap/screens/login_screen/components/top_text.dart';
+import 'package:teklifyap/utils/constants.dart';
+import 'package:teklifyap/utils/helper_functions.dart';
 
 enum Screens {
   createAccount,

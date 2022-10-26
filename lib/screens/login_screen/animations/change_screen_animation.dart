@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:teklifyap/screens/login_screen/components/login_content.dart';
 
-import '../components/login_content.dart';
 
 class ChangeScreenAnimation {
   static late final AnimationController topTextController;
