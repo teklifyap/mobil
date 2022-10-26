@@ -11,6 +11,7 @@ import 'package:untitled/screens/language_picker/language_picker_widget.dart';
 enum Screens {
   createAccount,
   welcomeBack,
+  forgotPassword,
 }
 
 class LoginContent extends StatefulWidget {
@@ -24,6 +25,10 @@ class _LoginContentState extends State<LoginContent>
     with TickerProviderStateMixin {
   List<Widget>? loginContent;
   List<Widget>? createAccountContent;
+  List<Widget>? forgotPasswordScreen;
+  List<Widget>? loginContent2;
+  List<Widget>? createAccountContent2;
+  List<Widget>? forgotPasswordScreen2;
 
   Widget inputField(String hint, IconData iconData, bool isObscure) {
     return Padding(
@@ -127,19 +132,59 @@ class _LoginContentState extends State<LoginContent>
     );
   }
 
-  Widget forgotPassword() {
+  Widget sendEmailButton(String title) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 50),
-      child: TextButton(
-        style: ButtonStyle(
-            overlayColor: MaterialStateProperty.all(Colors.transparent)),
+      padding: const EdgeInsets.symmetric(horizontal: 120.0, vertical: 16),
+      child: ElevatedButton(
         onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+          shape: const StadiumBorder(),
+          backgroundColor: kSecondaryColor,
+          elevation: 8,
+          shadowColor: Colors.black87,
+        ),
         child: Text(
-          AppLocalizations.of(context)!.forgotPassword,
+          title,
           style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget forgotPasswordButton() {
+    return GestureDetector(
+      onTap: () {
+        if (!ChangeScreenAnimation.isPlaying) {
+          ChangeScreenAnimation.forward(isForgotPassword: true);
+
+          ChangeScreenAnimation.currentScreen = Screens.forgotPassword;
+        }
+      },
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                fontSize: 16,
+                fontFamily: 'Montserrat',
+              ),
+              children: [
+                TextSpan(
+                  text: AppLocalizations.of(context)!.forgotPassword,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -149,10 +194,14 @@ class _LoginContentState extends State<LoginContent>
   Future<String> initialization() async {
     createAccountContent = [
       inputField(
-          AppLocalizations.of(context)!.username, Icons.person_outline, false),
+          AppLocalizations.of(context)!.name, Icons.person_outline, false),
+      inputField(
+          AppLocalizations.of(context)!.surname, Icons.person_outline, false),
       inputField(
           AppLocalizations.of(context)!.email, Icons.mail_outline, false),
       inputField(AppLocalizations.of(context)!.password,
+          Icons.lock_clock_outlined, true),
+      inputField(AppLocalizations.of(context)!.repeatPassword,
           Icons.lock_clock_outlined, true),
       loginButton(AppLocalizations.of(context)!.signUp),
       orDivider(),
@@ -160,20 +209,27 @@ class _LoginContentState extends State<LoginContent>
     ];
 
     loginContent = [
-      inputField(AppLocalizations.of(context)!.emailOrUsername,
-          Icons.mail_outline, false),
+      inputField(
+          AppLocalizations.of(context)!.email, Icons.mail_outline, false),
       inputField(AppLocalizations.of(context)!.password,
           Icons.lock_clock_outlined, true),
       loginButton(AppLocalizations.of(context)!.logIn),
-      forgotPassword(),
+      forgotPasswordButton(),
+    ];
+
+    forgotPasswordScreen = [
+      inputField(
+          AppLocalizations.of(context)!.email, Icons.mail_outline, false),
+      sendEmailButton(AppLocalizations.of(context)!.sendEmail),
     ];
 
     if (ChangeScreenAnimation.hasBeenInitialized == false) {
       ChangeScreenAnimation.initialize(
-        vsync: this,
-        createAccountItems: createAccountContent!.length,
-        loginItems: loginContent!.length,
-      );
+          vsync: this,
+          createAccountItems: createAccountContent!.length,
+          loginItems: loginContent!.length,
+          forgotPasswordItems: forgotPasswordScreen!.length,
+          isReverse: false);
     }
 
     for (var i = 0; i < createAccountContent!.length; i++) {
@@ -187,6 +243,13 @@ class _LoginContentState extends State<LoginContent>
       loginContent![i] = HelperFunctions.wrapWithAnimatedBuilder(
         animation: ChangeScreenAnimation.loginAnimations[i],
         child: loginContent![i],
+      );
+    }
+
+    for (var i = 0; i < forgotPasswordScreen!.length; i++) {
+      forgotPasswordScreen![i] = HelperFunctions.wrapWithAnimatedBuilder(
+        animation: ChangeScreenAnimation.forgotPasswordAnimations[i],
+        child: forgotPasswordScreen![i],
       );
     }
 
@@ -210,14 +273,18 @@ class _LoginContentState extends State<LoginContent>
                 const Positioned(
                     top: 50, right: 5, child: LanguagePickerWidget()),
                 const Positioned(
-                  top: 136,
-                  left: 24,
+                  top: 120,
+                  left: 12,
                   child: TopText(),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 100),
                   child: Stack(
                     children: [
+                      Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: forgotPasswordScreen!),
                       Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.stretch,

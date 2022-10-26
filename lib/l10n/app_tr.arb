@@ -1,15 +1,18 @@
 {
  "language": "Türkçe",
  "createAccount": "Hesap Oluştur",
- "username":"Kullanıcı Adı",
+ "name":"Adı",
+ "surname":"Soyadı",
  "email":"Email",
  "password":"Şifre",
+ "repeatPassword":"Şifrenizi tekrar girin",
  "signUp":"Kayıt Ol",
  "or":"Ya da",
  "alreadyHaveAnAccount":"Zaten hesabınız var mı?",
  "welcomeBack":"Hoşgeldiniz!",
- "emailOrUsername":"Email ya da Kullanıcı Adı",
  "logIn":"Giriş Yap",
  "forgotPassword":"Şifrenizi mi unuttunuz?",
- "doNotHaveAnAccount":"Hesabınız yok mu?"
+ "doNotHaveAnAccount":"Hesabınız yok mu?",
+ "forgotPasswordTitle": "Şifremi Unuttum",
+ "sendEmail": "Email Gönder"
 }

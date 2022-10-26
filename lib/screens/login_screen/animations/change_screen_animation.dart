@@ -9,17 +9,23 @@ class ChangeScreenAnimation {
   static late final AnimationController bottomTextController;
   static late final Animation<Offset> bottomTextAnimation;
 
+  static late final AnimationController forgotPasswordController;
+  static late final Animation<Offset> forgotPasswordAnimation;
+
   static final List<AnimationController> createAccountControllers = [];
   static final List<Animation<Offset>> createAccountAnimations = [];
 
   static final List<AnimationController> loginControllers = [];
   static final List<Animation<Offset>> loginAnimations = [];
 
+  static final List<AnimationController> forgotPasswordControllers = [];
+  static final List<Animation<Offset>> forgotPasswordAnimations = [];
+
   static var isPlaying = false;
-  static var currentScreen = Screens.createAccount;
+  static var currentScreen = Screens.welcomeBack;
   static bool hasBeenInitialized = false;
 
-  static Animation<Offset> _createAnimation({
+  static Animation<Offset> createCustomAnimation({
     required Offset begin,
     required Offset end,
     required AnimationController parent,
@@ -36,28 +42,43 @@ class ChangeScreenAnimation {
     required TickerProvider vsync,
     required int createAccountItems,
     required int loginItems,
+    required int forgotPasswordItems,
+    required bool isReverse,
   }) {
-    topTextController = AnimationController(
-      vsync: vsync,
-      duration: const Duration(milliseconds: 200),
-    );
+    if (!isReverse) {
+      topTextController = AnimationController(
+        vsync: vsync,
+        duration: const Duration(milliseconds: 200),
+      );
 
-    topTextAnimation = _createAnimation(
-      begin: Offset.zero,
-      end: const Offset(-1.2, 0),
-      parent: topTextController,
-    );
+      topTextAnimation = createCustomAnimation(
+        begin: Offset.zero,
+        end: const Offset(-1.7, -1),
+        parent: topTextController,
+      );
 
-    bottomTextController = AnimationController(
-      vsync: vsync,
-      duration: const Duration(milliseconds: 200),
-    );
+      bottomTextController = AnimationController(
+        vsync: vsync,
+        duration: const Duration(milliseconds: 200),
+      );
 
-    bottomTextAnimation = _createAnimation(
-      begin: Offset.zero,
-      end: const Offset(0, 1.7),
-      parent: bottomTextController,
-    );
+      bottomTextAnimation = createCustomAnimation(
+        begin: Offset.zero,
+        end: const Offset(-1, 1.7),
+        parent: bottomTextController,
+      );
+
+      forgotPasswordController = AnimationController(
+        vsync: vsync,
+        duration: const Duration(milliseconds: 200),
+      );
+
+      forgotPasswordAnimation = createCustomAnimation(
+        begin: Offset.zero,
+        end: const Offset(0, 10),
+        parent: forgotPasswordController,
+      );
+    }
 
     for (var i = 0; i < createAccountItems; i++) {
       createAccountControllers.add(
@@ -68,14 +89,12 @@ class ChangeScreenAnimation {
       );
 
       createAccountAnimations.add(
-        _createAnimation(
-          begin: Offset.zero,
-          end: const Offset(-1, 0),
+        createCustomAnimation(
+          begin: const Offset(-1, 0),
+          end: Offset.zero,
           parent: createAccountControllers[i],
         ),
       );
-
-      hasBeenInitialized = true;
     }
 
     for (var i = 0; i < loginItems; i++) {
@@ -87,13 +106,32 @@ class ChangeScreenAnimation {
       );
 
       loginAnimations.add(
-        _createAnimation(
-          begin: const Offset(1, 0),
-          end: Offset.zero,
+        createCustomAnimation(
+          begin: Offset.zero,
+          end: const Offset(1, 0),
           parent: loginControllers[i],
         ),
       );
     }
+
+    for (var i = 0; i < forgotPasswordItems; i++) {
+      forgotPasswordControllers.add(
+        AnimationController(
+          vsync: vsync,
+          duration: const Duration(milliseconds: 200),
+        ),
+      );
+
+      forgotPasswordAnimations.add(
+        createCustomAnimation(
+          begin: const Offset(-1, 0),
+          end: Offset.zero,
+          parent: forgotPasswordControllers[i],
+        ),
+      );
+    }
+
+    hasBeenInitialized = true;
   }
 
   static void dispose() {
@@ -102,23 +140,36 @@ class ChangeScreenAnimation {
       bottomTextController,
       ...createAccountControllers,
       ...loginControllers,
+      ...forgotPasswordControllers
     ]) {
       controller.dispose();
     }
+
+    hasBeenInitialized = false;
   }
 
-  static Future<void> forward() async {
+  static Future<void> forward({bool isForgotPassword = false}) async {
     isPlaying = true;
 
     topTextController.forward();
     await bottomTextController.forward();
 
-    for (final controller in [
-      ...createAccountControllers,
-      ...loginControllers,
-    ]) {
-      controller.forward();
-      await Future.delayed(const Duration(milliseconds: 100));
+    if (isForgotPassword) {
+      for (final controller in [
+        ...loginControllers,
+        ...forgotPasswordControllers,
+      ]) {
+        controller.forward();
+        await Future.delayed(const Duration(milliseconds: 50));
+      }
+    } else {
+      for (final controller in [
+        ...loginControllers,
+        ...createAccountControllers,
+      ]) {
+        controller.forward();
+        await Future.delayed(const Duration(milliseconds: 50));
+      }
     }
 
     bottomTextController.reverse();
@@ -134,11 +185,11 @@ class ChangeScreenAnimation {
     await bottomTextController.forward();
 
     for (final controller in [
-      ...loginControllers.reversed,
       ...createAccountControllers.reversed,
+      ...loginControllers.reversed,
     ]) {
       controller.reverse();
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future.delayed(const Duration(milliseconds: 50));
     }
 
     bottomTextController.reverse();

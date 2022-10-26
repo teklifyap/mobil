@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Stack(
         children: [
           Positioned(
-            top: -160,
+            top: -100,
             left: -30,
             child: topWidget(screenSize.width),
           ),
