@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:teklifyap/screens/app/app.dart';
 import 'package:teklifyap/screens/language_picker/language_picker_widget.dart';
 import 'package:teklifyap/screens/login_screen/animations/change_screen_animation.dart';
 import 'package:teklifyap/screens/login_screen/components/bottom_text.dart';
@@ -26,9 +27,6 @@ class _LoginContentState extends State<LoginContent>
   List<Widget>? loginContent;
   List<Widget>? createAccountContent;
   List<Widget>? forgotPasswordScreen;
-  List<Widget>? loginContent2;
-  List<Widget>? createAccountContent2;
-  List<Widget>? forgotPasswordScreen2;
 
   Widget inputField(String hint, IconData iconData, bool isObscure) {
     return Padding(
@@ -63,7 +61,12 @@ class _LoginContentState extends State<LoginContent>
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 135, vertical: 16),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const App()),
+          );
+        },
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 14),
           shape: const StadiumBorder(),

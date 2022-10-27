@@ -8,7 +8,7 @@ class SplashScreen extends StatefulWidget {
       this.primaryColor,
       this.primaryTitle,
       this.mainLogoFileName,
-      this.splashScreenDuration})
+      this.splashScreenDuration = const Duration(milliseconds: 1500)})
       : super(key: key);
 
   final Color? primaryColor;
