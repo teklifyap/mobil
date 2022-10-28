@@ -30,5 +30,11 @@
  "forgotPasswordTitle": "Forgot Password",
  "@forgotPasswordTitle": {},
  "sendEmail": "Send Email",
- "@sendEmail": {}
+ "@sendEmail": {},
+ "newOffer": "New Offer",
+ "@newOffer": {},
+ "offersTitle": "My offers",
+ "@offersTitle": {},
+ "noOfferInfo": "There is no offer to show, make new one!",
+ "@noOfferInfo": {}
 }

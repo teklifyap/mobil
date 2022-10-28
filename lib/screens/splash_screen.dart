@@ -65,7 +65,7 @@ class _SplashScreenState extends State<SplashScreen>
                 AppData.primaryTitle,
                 style: TextStyle(
                     fontStyle: FontStyle.italic,
-                    fontSize: animation.value * 72),
+                    fontSize: animation.value * 54),
               ),
             );
           }),

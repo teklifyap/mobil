@@ -14,5 +14,8 @@
  "forgotPassword":"Şifrenizi mi unuttunuz?",
  "doNotHaveAnAccount":"Hesabınız yok mu?",
  "forgotPasswordTitle": "Şifremi Unuttum",
- "sendEmail": "Email Gönder"
+ "sendEmail": "Email Gönder",
+ "newOffer": "Yeni teklif",
+ "offersTitle": "Tekliflerim",
+ "noOfferInfo": "Gösterilecek teklif yok, yenisini yap!"
 }

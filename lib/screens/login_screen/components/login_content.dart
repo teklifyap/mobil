@@ -57,15 +57,39 @@ class _LoginContentState extends State<LoginContent>
     );
   }
 
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (_, __, ___) => App(),
+      transitionDuration: Duration(milliseconds: 500),
+      transitionsBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+        Widget child,
+      ) {
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0.0, 1.0),
+            end: Offset.zero,
+          ).animate(animation),
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: Offset.zero,
+              end: const Offset(0.0, 1.0),
+            ).animate(secondaryAnimation),
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+
   Widget loginButton(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 135, vertical: 16),
       child: ElevatedButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const App()),
-          );
+          Navigator.of(context).push(_createRoute());
         },
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 14),
@@ -207,8 +231,6 @@ class _LoginContentState extends State<LoginContent>
       inputField(AppLocalizations.of(context)!.repeatPassword,
           Icons.lock_clock_outlined, true),
       loginButton(AppLocalizations.of(context)!.signUp),
-      orDivider(),
-      otherLoginOptions(),
     ];
 
     loginContent = [
