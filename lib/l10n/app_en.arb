@@ -36,5 +36,7 @@
  "offersTitle": "My offers",
  "@offersTitle": {},
  "noOfferInfo": "There is no offer to show, make new one!",
- "@noOfferInfo": {}
+ "@noOfferInfo": {},
+ "okay": "Ok",
+ "@okay": {}
 }

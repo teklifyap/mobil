@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:teklifyap/screens/offers_screen/components/offerContainer.dart';
+import 'package:teklifyap/screens/offers_screen/components/offer_container.dart';
 import 'package:teklifyap/utils/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

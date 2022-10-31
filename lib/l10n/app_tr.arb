@@ -17,5 +17,6 @@
  "sendEmail": "Email Gönder",
  "newOffer": "Yeni teklif",
  "offersTitle": "Tekliflerim",
- "noOfferInfo": "Gösterilecek teklif yok, yenisini yap!"
+ "noOfferInfo": "Gösterilecek teklif yok, yenisini yap!",
+ "okay": "Tamam"
 }

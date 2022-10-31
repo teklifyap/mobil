@@ -6,6 +6,8 @@ import 'package:teklifyap/screens/language_picker/language_picker_widget.dart';
 import 'package:teklifyap/screens/login_screen/animations/change_screen_animation.dart';
 import 'package:teklifyap/screens/login_screen/components/bottom_text.dart';
 import 'package:teklifyap/screens/login_screen/components/top_text.dart';
+import 'package:teklifyap/screens/login_screen/login_screen.dart';
+import 'package:teklifyap/services/services.dart';
 import 'package:teklifyap/utils/constants.dart';
 import 'package:teklifyap/utils/helper_functions.dart';
 
@@ -27,8 +29,14 @@ class _LoginContentState extends State<LoginContent>
   List<Widget>? loginContent;
   List<Widget>? createAccountContent;
   List<Widget>? forgotPasswordScreen;
+  TextEditingController emailTextController = TextEditingController();
+  TextEditingController passwordTextController = TextEditingController();
+  TextEditingController repeatPasswordTextController = TextEditingController();
+  TextEditingController nameTextController = TextEditingController();
+  TextEditingController surnameTextController = TextEditingController();
 
-  Widget inputField(String hint, IconData iconData, bool isObscure) {
+  Widget inputField(String hint, IconData iconData, bool isObscure,
+      TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 8),
       child: SizedBox(
@@ -39,6 +47,7 @@ class _LoginContentState extends State<LoginContent>
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(30),
           child: TextField(
+            controller: controller,
             obscureText: isObscure,
             textAlignVertical: TextAlignVertical.bottom,
             decoration: InputDecoration(
@@ -57,10 +66,10 @@ class _LoginContentState extends State<LoginContent>
     );
   }
 
-  Route _createRoute() {
+  Route _createRoute(Widget nextScreen) {
     return PageRouteBuilder(
-      pageBuilder: (_, __, ___) => App(),
-      transitionDuration: Duration(milliseconds: 500),
+      pageBuilder: (_, __, ___) => nextScreen,
+      transitionDuration: const Duration(milliseconds: 500),
       transitionsBuilder: (
         BuildContext context,
         Animation<double> animation,
@@ -88,8 +97,23 @@ class _LoginContentState extends State<LoginContent>
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 135, vertical: 16),
       child: ElevatedButton(
-        onPressed: () {
-          Navigator.of(context).push(_createRoute());
+        onPressed: () async {
+          if (ChangeScreenAnimation.currentScreen == Screens.createAccount) {
+            if (await HttpService.register(
+                nameTextController.text,
+                surnameTextController.text,
+                emailTextController.text,
+                passwordTextController.text)) {
+              print("kayıt başarılı");
+              Navigator.of(context).push(_createRoute(const LoginScreen()));
+            }
+          } else {
+            if (await HttpService.login(context, emailTextController.text,
+                passwordTextController.text)) {
+              HttpService.getProfile();
+              Navigator.of(context).push(_createRoute(const App()));
+            }
+          }
         },
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 14),
@@ -220,31 +244,31 @@ class _LoginContentState extends State<LoginContent>
 
   Future<String> initialization() async {
     createAccountContent = [
-      inputField(
-          AppLocalizations.of(context)!.name, Icons.person_outline, false),
-      inputField(
-          AppLocalizations.of(context)!.surname, Icons.person_outline, false),
-      inputField(
-          AppLocalizations.of(context)!.email, Icons.mail_outline, false),
+      inputField(AppLocalizations.of(context)!.name, Icons.person_outline,
+          false, nameTextController),
+      inputField(AppLocalizations.of(context)!.surname, Icons.person_outline,
+          false, surnameTextController),
+      inputField(AppLocalizations.of(context)!.email, Icons.mail_outline, false,
+          emailTextController),
       inputField(AppLocalizations.of(context)!.password,
-          Icons.lock_clock_outlined, true),
+          Icons.lock_clock_outlined, true, passwordTextController),
       inputField(AppLocalizations.of(context)!.repeatPassword,
-          Icons.lock_clock_outlined, true),
+          Icons.lock_clock_outlined, true, repeatPasswordTextController),
       loginButton(AppLocalizations.of(context)!.signUp),
     ];
 
     loginContent = [
-      inputField(
-          AppLocalizations.of(context)!.email, Icons.mail_outline, false),
+      inputField(AppLocalizations.of(context)!.email, Icons.mail_outline, false,
+          emailTextController),
       inputField(AppLocalizations.of(context)!.password,
-          Icons.lock_clock_outlined, true),
+          Icons.lock_clock_outlined, true, passwordTextController),
       loginButton(AppLocalizations.of(context)!.logIn),
       forgotPasswordButton(),
     ];
 
     forgotPasswordScreen = [
-      inputField(
-          AppLocalizations.of(context)!.email, Icons.mail_outline, false),
+      inputField(AppLocalizations.of(context)!.email, Icons.mail_outline, false,
+          emailTextController),
       sendEmailButton(AppLocalizations.of(context)!.sendEmail),
     ];
 
