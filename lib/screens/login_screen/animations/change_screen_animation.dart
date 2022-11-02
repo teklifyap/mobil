@@ -22,7 +22,7 @@ class ChangeScreenAnimation {
   static final List<Animation<Offset>> forgotPasswordAnimations = [];
 
   static var isPlaying = false;
-  static var currentScreen = Screens.welcomeBack;
+  static var currentScreen = Screens.login;
   static bool hasBeenInitialized = false;
 
   static Animation<Offset> createCustomAnimation({

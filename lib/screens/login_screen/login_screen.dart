@@ -4,7 +4,6 @@ import 'package:teklifyap/screens/login_screen/components/center_widget/center_w
 import 'package:teklifyap/screens/login_screen/components/login_content.dart';
 import 'package:teklifyap/utils/constants.dart';
 
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 

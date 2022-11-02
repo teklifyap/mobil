@@ -15,7 +15,7 @@ class BottomText extends StatefulWidget {
 class _BottomTextState extends State<BottomText> {
   @override
   void initState() {
-    ChangeScreenAnimation.bottomTextAnimation.addStatusListener((status) {
+    ChangeScreenAnimation.topTextAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         setState(() {});
       }
@@ -33,15 +33,14 @@ class _BottomTextState extends State<BottomText> {
           : GestureDetector(
               onTap: () {
                 if (!ChangeScreenAnimation.isPlaying) {
-                  ChangeScreenAnimation.currentScreen == Screens.welcomeBack
+                  ChangeScreenAnimation.currentScreen == Screens.login
                       ? ChangeScreenAnimation.forward()
                       : ChangeScreenAnimation.reverse();
 
-                  if (ChangeScreenAnimation.currentScreen ==
-                      Screens.createAccount) {
-                    ChangeScreenAnimation.currentScreen = Screens.welcomeBack;
+                  if (ChangeScreenAnimation.currentScreen == Screens.register) {
+                    ChangeScreenAnimation.currentScreen = Screens.login;
                   } else {
-                    ChangeScreenAnimation.currentScreen = Screens.createAccount;
+                    ChangeScreenAnimation.currentScreen = Screens.register;
                   }
                 }
               },
@@ -59,7 +58,7 @@ class _BottomTextState extends State<BottomText> {
                       children: [
                         TextSpan(
                           text: ChangeScreenAnimation.currentScreen ==
-                                  Screens.createAccount
+                                  Screens.register
                               ? AppLocalizations.of(context)!
                                   .alreadyHaveAnAccount
                               : AppLocalizations.of(context)!

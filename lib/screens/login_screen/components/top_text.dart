@@ -38,7 +38,7 @@ class _TopTextState extends State<TopText> {
               ),
             )
           : Text(
-              ChangeScreenAnimation.currentScreen == Screens.createAccount
+              ChangeScreenAnimation.currentScreen == Screens.register
                   ? AppLocalizations.of(context)!.createAccount
                   : AppLocalizations.of(context)!.welcomeBack,
               style: const TextStyle(
