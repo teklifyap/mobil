@@ -11,7 +11,7 @@ class OffersScreen extends StatefulWidget {
 }
 
 class _OffersScreenState extends State<OffersScreen> {
-  List offers = [
+  List<OfferContainer> offers = [
     OfferContainer(
       offerTitle: "offer title",
       offerDate: "28/10/2022",
@@ -30,7 +30,12 @@ class _OffersScreenState extends State<OffersScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => {},
-        label: Text(AppLocalizations.of(context)!.newOffer),
+        label: Row(
+          children: [
+            const Icon(Icons.add),
+            Text(AppLocalizations.of(context)!.newOffer),
+          ],
+        ),
         backgroundColor: kPrimaryColor,
       ),
       body: Column(

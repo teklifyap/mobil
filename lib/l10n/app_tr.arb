@@ -18,5 +18,17 @@
  "newOffer": "Yeni teklif",
  "offersTitle": "Tekliflerim",
  "noOfferInfo": "Gösterilecek teklif yok, yenisini yap!",
- "okay": "Tamam"
+ "okay": "Tamam",
+ "yourAccountIsNotConfirmed": "Hesabınız onaylanmamış.",
+ "wrongEmailOrPassword": "Email ya da şifre yanlış!",
+ "confirmYourAccount": "Kayıt tamamlandı. Lütfen hesabınızı mailinize gelen linkten onaylayın!",
+ "storage": "Envanter",
+ "itemPrice": "Malzeme Fiyatı",
+ "savePrice": "Fiyatı Kaydet",
+ "deleteItem": "Malzemeyi Sil",
+ "itemName": "Malzeme Adı",
+ "itemUnit": "Malzeme Birimi",
+ "addItem": "Malzeme Ekle",
+ "newItem": "Malzeme Oluştur",
+ "noItemInTheStorage": "Envanterde malzeme yok!"
 }

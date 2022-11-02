@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teklifyap/screens/login_screen/components/login_content.dart';
 
-
 class ChangeScreenAnimation {
   static late final AnimationController topTextController;
   static late final Animation<Offset> topTextAnimation;
@@ -146,6 +145,10 @@ class ChangeScreenAnimation {
     }
 
     hasBeenInitialized = false;
+  }
+
+  static void setCurrentScreen(Screens value) {
+    currentScreen = value;
   }
 
   static Future<void> forward({bool isForgotPassword = false}) async {

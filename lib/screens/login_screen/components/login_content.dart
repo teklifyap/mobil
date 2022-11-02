@@ -5,9 +5,8 @@ import 'package:teklifyap/screens/app/app.dart';
 import 'package:teklifyap/screens/language_picker/language_picker_widget.dart';
 import 'package:teklifyap/screens/login_screen/animations/change_screen_animation.dart';
 import 'package:teklifyap/screens/login_screen/components/bottom_text.dart';
-import 'package:teklifyap/screens/login_screen/components/forgotPassword.dart';
+import 'package:teklifyap/screens/login_screen/components/forgot_password.dart';
 import 'package:teklifyap/screens/login_screen/components/top_text.dart';
-import 'package:teklifyap/screens/login_screen/login_screen.dart';
 import 'package:teklifyap/services/services.dart';
 import 'package:teklifyap/utils/constants.dart';
 import 'package:teklifyap/utils/helper_functions.dart';
@@ -151,11 +150,13 @@ class _LoginContentState extends State<LoginContent>
                 nameTextController.text,
                 surnameTextController.text,
                 emailTextController.text,
-                passwordTextController.text)) {
-              // Todo: login ekranına atmıyor
-              //ChangeScreenAnimation.currentScreen == Screens.login;
-              //ChangeScreenAnimation.dispose();
-              Navigator.of(context).push(_createRoute(const LoginScreen()));
+                passwordTextController.text,
+                context)) {
+              ChangeScreenAnimation.setCurrentScreen(Screens.login);
+
+              if (!ChangeScreenAnimation.isPlaying) {
+                await ChangeScreenAnimation.reverse();
+              }
             }
           } else if (ChangeScreenAnimation.currentScreen == Screens.login &&
               _loginFormKey.currentState!.validate()) {

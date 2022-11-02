@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
+
 import 'package:teklifyap/app_data.dart';
 import 'package:teklifyap/http/api_endpoints.dart';
 import 'package:teklifyap/services/alerts.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HttpService {
   static String url = "https://teklifyap-api.oguzhanercelik.dev";
@@ -24,8 +26,13 @@ class HttpService {
       final responseBody = jsonDecode(res.body.toString());
       AppData.authToken = responseBody["data"];
       return true;
+    } else if (res.statusCode == 401) {
+      CustomAlerts.errorOccurredMessage(
+          context, AppLocalizations.of(context)!.yourAccountIsNotConfirmed);
+      throw Exception("not confirmed, while logging: \n${res.body}");
     } else {
-      CustomAlerts.errorOccurredMessage(context, "Wrong email or password!");
+      CustomAlerts.errorOccurredMessage(
+          context, AppLocalizations.of(context)!.wrongEmailOrPassword);
       throw Exception("something went wrong while logging: \n${res.body}");
     }
   }
@@ -45,8 +52,8 @@ class HttpService {
     }
   }
 
-  static Future<bool> register(
-      String name, String surname, String email, String password) async {
+  static Future<bool> register(String name, String surname, String email,
+      String password, BuildContext context) async {
     Map<String, dynamic> requestPayload = {
       "name": name,
       "surname": surname,
@@ -59,6 +66,8 @@ class HttpService {
         headers: {"Content-Type": "application/json"});
 
     if (res.statusCode == 200) {
+      CustomAlerts.errorOccurredMessage(
+          context, AppLocalizations.of(context)!.confirmYourAccount);
       return true;
     } else {
       throw Exception(
