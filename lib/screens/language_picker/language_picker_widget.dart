@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:teklifyap/l10n/l10n.dart';
 import 'package:teklifyap/provider/local_provider.dart';
 
-
 class LanguageWidget extends StatelessWidget {
   const LanguageWidget({super.key});
 
@@ -30,8 +29,7 @@ class LanguagePickerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<LocaleProvider>(context);
-    final locale = provider.locale ?? const Locale('en');
+    final locale = Localizations.localeOf(context);
 
     return DropdownButtonHideUnderline(
       child: DropdownButton(

@@ -39,6 +39,7 @@ class _LoginContentState extends State<LoginContent>
   TextEditingController nameTextController = TextEditingController();
   TextEditingController surnameTextController = TextEditingController();
 
+  // todo: hata mesajlarını lokalize et
   String? isEmptyValidator(String? value) {
     if (value == null || value.isEmpty) {
       return "This section cannot be blank";
@@ -91,7 +92,10 @@ class _LoginContentState extends State<LoginContent>
           obscureText: isObscure,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: InputDecoration(
-            prefixIcon: Icon(iconData),
+            prefixIcon: Icon(
+              iconData,
+              color: kPrimaryColor,
+            ),
             filled: true,
             fillColor: Colors.white,
             hintText: hint,
@@ -163,7 +167,7 @@ class _LoginContentState extends State<LoginContent>
             if (await HttpService.login(context, emailTextController.text,
                 passwordTextController.text)) {
               await HttpService.getProfile();
-              Navigator.of(context).push(_createRoute(const App()));
+              Navigator.of(context).push(_createRoute(App()));
             }
           } else {
             if (_forgotPasswordFormKey.currentState!.validate()) {
@@ -276,6 +280,11 @@ class _LoginContentState extends State<LoginContent>
   @override
   void dispose() {
     ChangeScreenAnimation.dispose();
+    passwordTextController.dispose();
+    registerRepeatPasswordTextController.dispose();
+    emailTextController.dispose();
+    surnameTextController.dispose();
+    nameTextController.dispose();
     super.dispose();
   }
 

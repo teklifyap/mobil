@@ -15,7 +15,7 @@
  "doNotHaveAnAccount":"Hesabınız yok mu?",
  "forgotPasswordTitle": "Şifremi Unuttum",
  "sendEmail": "Email Gönder",
- "newOffer": "Yeni teklif",
+ "newOffer": "Yeni Teklif",
  "offersTitle": "Tekliflerim",
  "noOfferInfo": "Gösterilecek teklif yok, yenisini yap!",
  "okay": "Tamam",
@@ -30,5 +30,12 @@
  "itemUnit": "Malzeme Birimi",
  "addItem": "Malzeme Ekle",
  "newItem": "Malzeme Oluştur",
- "noItemInTheStorage": "Envanterde malzeme yok!"
+ "noItemInTheStorage": "Envanterde malzeme yok, yenisini ekle!",
+ "itemValue": "Malzeme Miktarı",
+ "addOffer": "Teklif Yap",
+ "estimatedCompletion": "Tahmini bitiş",
+ "offerTitle": "Teklif başlığı",
+ "offerTo": "Teklif yapılan kurum, şahıs",
+ "date": "Tarih",
+ "profitRate": "Kar Payı"
 }

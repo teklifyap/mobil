@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:teklifyap/screens/offers_screen/offers_screen.dart';
 import 'package:teklifyap/screens/profile_screen/profile_screen.dart';
 import 'package:teklifyap/screens/storage_screen/storage_screen.dart';
 import 'package:teklifyap/utils/constants.dart';
 
-class App extends StatefulWidget {
-  const App({Key? key}) : super(key: key);
+class App extends HookWidget {
+  App({Key? key}) : super(key: key);
 
-  @override
-  State<App> createState() => _AppState();
-}
-
-class _AppState extends State<App> {
-  PageController pageController = PageController(initialPage: 1);
-  int selectedPage = 1;
-
-  List<Widget> screens = [
+  final List<Widget> screens = [
     const StorageScreen(),
     const OffersScreen(),
     const ProfileScreen()
@@ -23,6 +16,12 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    PageController pageController =
+        usePageController(initialPage: 1, keys: screens);
+    final selectedPage = useState(pageController.hasClients
+        ? pageController.page!.toInt()
+        : pageController.initialPage!.toInt());
+
     return Scaffold(
       body: PageView(controller: pageController, children: screens),
       bottomNavigationBar: BottomAppBar(
@@ -32,14 +31,12 @@ class _AppState extends State<App> {
             IconButton(
               iconSize: 32,
               icon: const Icon(Icons.warehouse),
-              color: selectedPage == 0 ? kPrimaryColor : Colors.grey,
+              color: selectedPage.value == 0 ? kPrimaryColor : Colors.grey,
               onPressed: () {
+                selectedPage.value = 0;
                 pageController.animateToPage(0,
                     duration: const Duration(seconds: 1),
                     curve: Curves.fastLinearToSlowEaseIn);
-                setState(() {
-                  selectedPage = 0;
-                });
               },
             ),
             IconButton(
@@ -47,14 +44,12 @@ class _AppState extends State<App> {
               icon: const Icon(
                 Icons.local_offer,
               ),
-              color: selectedPage == 1 ? kPrimaryColor : Colors.grey,
+              color: selectedPage.value == 1 ? kPrimaryColor : Colors.grey,
               onPressed: () {
+                selectedPage.value = 1;
                 pageController.animateToPage(1,
                     duration: const Duration(seconds: 1),
                     curve: Curves.fastLinearToSlowEaseIn);
-                setState(() {
-                  selectedPage = 1;
-                });
               },
             ),
             IconButton(
@@ -62,14 +57,12 @@ class _AppState extends State<App> {
               icon: const Icon(
                 Icons.person,
               ),
-              color: selectedPage == 2 ? kPrimaryColor : Colors.grey,
+              color: selectedPage.value == 2 ? kPrimaryColor : Colors.grey,
               onPressed: () {
+                selectedPage.value = 2;
                 pageController.animateToPage(2,
                     duration: const Duration(seconds: 1),
                     curve: Curves.fastLinearToSlowEaseIn);
-                setState(() {
-                  selectedPage = 2;
-                });
               },
             ),
           ],

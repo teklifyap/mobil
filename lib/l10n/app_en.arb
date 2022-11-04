@@ -62,5 +62,19 @@
  "newItem": "New Item",
  "@newItem": {},
  "noItemInTheStorage": "There is no item in the storage!",
- "@noItemInTheStorage": {}
+ "@noItemInTheStorage": {},
+ "itemValue": "Item Value",
+ "@itemValue": {},
+ "addOffer": "Add Offer",
+ "@addOffer": {},
+ "estimatedCompletion": "Estimated Completion",
+ "@estimatedCompletion": {},
+ "offerTitle": "Offer Title",
+ "@offerTitle": {},
+ "offerTo": "Offer to: ",
+ "@offerTo": {},
+ "date": "Date",
+ "@date": {},
+ "profitRate": "Profit Rate",
+ "@profitRate": {}
 }

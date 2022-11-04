@@ -18,9 +18,11 @@ class HttpService {
       "password": password
     };
 
-    Response res = await post(Uri.parse(ApiEndpoints.authUrl),
-        body: jsonEncode(requestPayload),
-        headers: {"Content-Type": "application/json"});
+    Response res = await post(
+      Uri.parse(ApiEndpoints.authUrl),
+      body: jsonEncode(requestPayload),
+      headers: {HttpHeaders.contentTypeHeader: "application/json"},
+    );
 
     if (res.statusCode == 200) {
       final responseBody = jsonDecode(res.body.toString());
@@ -33,7 +35,8 @@ class HttpService {
     } else {
       CustomAlerts.errorOccurredMessage(
           context, AppLocalizations.of(context)!.wrongEmailOrPassword);
-      throw Exception("something went wrong while logging: \n${res.body}");
+      throw Exception(
+          "something went wrong while logging, response body: \n${res.body}");
     }
   }
 
@@ -48,7 +51,7 @@ class HttpService {
       return true;
     } else {
       throw Exception(
-          "something went wrong while getting profile response body: \n${res.body}");
+          "something went wrong while getting profile, response body: \n${res.body}");
     }
   }
 
@@ -61,9 +64,11 @@ class HttpService {
       "password": password
     };
 
-    Response res = await post(Uri.parse(ApiEndpoints.registerURL),
+    Response res = await post(Uri.parse(ApiEndpoints.registerUrl),
         body: jsonEncode(requestPayload),
-        headers: {"Content-Type": "application/json"});
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+        });
 
     if (res.statusCode == 200) {
       CustomAlerts.errorOccurredMessage(
@@ -71,7 +76,32 @@ class HttpService {
       return true;
     } else {
       throw Exception(
-          "something went wrong while registering response body: \n${res.body}");
+          "something went wrong while registering, response body: \n${res.body}");
+    }
+  }
+
+  static Future<bool> itemCreate(
+      String name, int value, String unit, BuildContext context) async {
+    Map<String, dynamic> requestPayload = {
+      "name": name,
+      "value": value,
+      "unit": unit.toUpperCase(),
+    };
+
+    Response res = await post(
+      Uri.parse(ApiEndpoints.createItemUrl),
+      body: jsonEncode(requestPayload),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
+      },
+    );
+
+    if (res.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception(
+          "something went wrong while creating item, response body: \n${res.body}");
     }
   }
 }

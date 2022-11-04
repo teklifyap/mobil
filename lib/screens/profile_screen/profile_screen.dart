@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:teklifyap/app_data.dart';
 import 'package:teklifyap/utils/constants.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends HookWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,17 +19,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               color: kPrimaryColor,
             ),
             Text(
+              '${AppData.currentUser["name"]} ${AppData.currentUser["surname"]}',
+              style: const TextStyle(fontSize: 24),
+            ),
+            Text(
               AppData.currentUser["email"],
               style: const TextStyle(fontSize: 24),
             ),
-            Text(
-              AppData.currentUser["name"],
-              style: const TextStyle(fontSize: 24),
-            ),
-            Text(
-              AppData.currentUser["surname"],
-              style: const TextStyle(fontSize: 24),
-            )
           ],
         ),
       ),

@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:teklifyap/utils/constants.dart';
 
-class CustomInputField extends StatelessWidget {
-  const CustomInputField({Key? key, required this.labelText}) : super(key: key);
+class CustomInputField extends HookWidget {
+  const CustomInputField(
+      {Key? key, required this.labelText, required this.controller})
+      : super(key: key);
 
   final String labelText;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       decoration: InputDecoration(
           labelText: labelText,
           labelStyle: const TextStyle(color: kPrimaryColor),

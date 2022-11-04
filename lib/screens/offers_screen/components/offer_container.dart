@@ -1,24 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class OfferContainer extends StatefulWidget {
+class OfferContainer extends HookWidget {
   const OfferContainer(
       {Key? key,
       required this.offerTitle,
       required this.offerDate,
       required this.onListTileTap,
-      required this.onDelete})
+      required this.trailing})
       : super(key: key);
 
   final String offerTitle;
   final String offerDate;
   final VoidCallback onListTileTap;
-  final VoidCallback onDelete;
+  final Widget trailing;
 
-  @override
-  State<OfferContainer> createState() => _OfferContainerState();
-}
-
-class _OfferContainerState extends State<OfferContainer> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,20 +22,16 @@ class _OfferContainerState extends State<OfferContainer> {
       child: Card(
         color: Colors.white60,
         child: ListTile(
-          onTap: widget.onListTileTap,
+          onTap: onListTileTap,
           leading: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
               Icon(Icons.local_offer),
             ],
           ),
-          title: Text(widget.offerTitle),
-          subtitle: Text(widget.offerDate),
-          trailing: IconButton(
-            icon: const Icon(Icons.delete),
-            color: Colors.grey,
-            onPressed: widget.onDelete,
-          ),
+          title: Text(offerTitle),
+          subtitle: Text(offerDate),
+          trailing: trailing,
         ),
       ),
     );
