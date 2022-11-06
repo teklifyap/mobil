@@ -42,36 +42,36 @@ class _LoginContentState extends State<LoginContent>
   // todo: hata mesajlarını lokalize et
   String? isEmptyValidator(String? value) {
     if (value == null || value.isEmpty) {
-      return "This section cannot be blank";
+      return AppLocalizations.of(context)!.vldtCannotBeBlank;
     }
     return null;
   }
 
   String? emailValidator(String? value) {
     if (value == null || value.isEmpty) {
-      return "Email cannot be blank";
+      return AppLocalizations.of(context)!.vldtEmailConnotBeBlank;
     } else if (!RegExp(
             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(value)) {
-      return "Please enter a valid email";
+      return AppLocalizations.of(context)!.vldtEnterAValidEmail;
     }
     return null;
   }
 
   String? passwordValidator(String? value) {
     if (value == null || value.isEmpty) {
-      return "Password cannot be blank";
+      return AppLocalizations.of(context)!.vldtPasswordCannotBeBlank;
     } else if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z]).{8,}$').hasMatch(value)) {
-      return "Minimum 8 characters, one upper/lower case";
+      return AppLocalizations.of(context)!.vldtPasswordRequirements;
     }
     return null;
   }
 
   String? repeatPasswordValidator(String? value) {
     if (value == null || value.isEmpty) {
-      return "Password cannot be blank";
+      return AppLocalizations.of(context)!.vldtPasswordCannotBeBlank;
     } else if (value != passwordTextController.text) {
-      return "Passwords do not match";
+      return AppLocalizations.of(context)!.vldtPasswordsDoNotMatch;
     }
     return null;
   }

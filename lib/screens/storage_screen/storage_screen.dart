@@ -66,7 +66,7 @@ class StorageScreen extends HookWidget {
                   onChanged: (String? value) {
                     // This is called when the user selects an item.
                     unitDropdown.value = value!;
-                    itemUnitController = value!;
+                    itemUnitController = value;
                   },
                   items: units.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(

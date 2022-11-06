@@ -37,5 +37,11 @@
  "offerTitle": "Teklif başlığı",
  "offerTo": "Teklif yapılan kurum, şahıs",
  "date": "Tarih",
- "profitRate": "Kar Payı"
+ "profitRate": "Kar Payı",
+ "vldtCannotBeBlank": "Burası boş olamaz!",
+ "vldtEmailCannotBeBlank": "Email boş olamaz!",
+ "vldtEnterAValidEmail": "Lütfen geçerli bir email adresi giriniz!",
+ "vldtPasswordCannotBeBlank": "Şifre boş olamaz!",
+ "vldtPasswordRequirements": "Minimum 8 karakter, bir büyük/küçük karakter!",
+ "vldtPasswordsDoNotMatch": "Şifreler eşleşmiyor!"
 }

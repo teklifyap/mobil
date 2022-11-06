@@ -76,5 +76,17 @@
  "date": "Date",
  "@date": {},
  "profitRate": "Profit Rate",
- "@profitRate": {}
+ "@profitRate": {},
+ "vldtCannotBeBlank": "This section can not be blank",
+ "@vldtCannotBeBlank": {},
+ "vldtEmailConnotBeBlank": "Email can not be blank",
+ "@vldtEmailConnotBeBlank": {},
+ "vldtEnterAValidEmail": "Please enter a valid email",
+ "@vldtEnterAValidEmail": {},
+ "vldtPasswordCannotBeBlank": "Password can not be blank",
+ "@vldtPasswordCannotBeBlank": {},
+ "vldtPasswordRequirements": "Minimum 8 characters, one upper/lower case",
+ "@vldtPasswordRequirements": {},
+ "vldtPasswordsDoNotMatch": "Passwords do not match!",
+ "@vldtPasswordsDoNotMatch": {}
 }

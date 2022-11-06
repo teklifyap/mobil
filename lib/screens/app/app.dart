@@ -20,7 +20,7 @@ class App extends HookWidget {
         usePageController(initialPage: 1, keys: screens);
     final selectedPage = useState(pageController.hasClients
         ? pageController.page!.toInt()
-        : pageController.initialPage!.toInt());
+        : pageController.initialPage.toInt());
 
     return Scaffold(
       body: PageView(controller: pageController, children: screens),

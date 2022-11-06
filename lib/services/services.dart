@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
 import 'package:teklifyap/app_data.dart';
 import 'package:teklifyap/http/api_endpoints.dart';
 import 'package:teklifyap/services/alerts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:teklifyap/utils/constants.dart';
 
 class HttpService {
   static String url = "https://teklifyap-api.oguzhanercelik.dev";
@@ -18,23 +19,40 @@ class HttpService {
       "password": password
     };
 
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: kPrimaryColor,
+            ),
+          );
+        });
+
     Response res = await post(
       Uri.parse(ApiEndpoints.authUrl),
       body: jsonEncode(requestPayload),
       headers: {HttpHeaders.contentTypeHeader: "application/json"},
     );
 
+    Navigator.pop(context);
+
     if (res.statusCode == 200) {
       final responseBody = jsonDecode(res.body.toString());
       AppData.authToken = responseBody["data"];
       return true;
     } else if (res.statusCode == 401) {
-      CustomAlerts.errorOccurredMessage(
-          context, AppLocalizations.of(context)!.yourAccountIsNotConfirmed);
+      if (context.mounted) {
+        CustomAlerts.errorOccurredMessage(
+            context, AppLocalizations.of(context)!.yourAccountIsNotConfirmed);
+      }
       throw Exception("not confirmed, while logging: \n${res.body}");
     } else {
-      CustomAlerts.errorOccurredMessage(
-          context, AppLocalizations.of(context)!.wrongEmailOrPassword);
+      if (context.mounted) {
+        CustomAlerts.errorOccurredMessage(
+            context, AppLocalizations.of(context)!.wrongEmailOrPassword);
+      }
+
       throw Exception(
           "something went wrong while logging, response body: \n${res.body}");
     }
@@ -70,7 +88,7 @@ class HttpService {
           HttpHeaders.contentTypeHeader: "application/json",
         });
 
-    if (res.statusCode == 200) {
+    if (res.statusCode == 200 && context.mounted) {
       CustomAlerts.errorOccurredMessage(
           context, AppLocalizations.of(context)!.confirmYourAccount);
       return true;
