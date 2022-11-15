@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
 import 'package:teklifyap/app_data.dart';
-import 'package:teklifyap/http/api_endpoints.dart';
+import 'package:teklifyap/services/http/api_endpoints.dart';
 import 'package:teklifyap/services/alerts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:teklifyap/utils/constants.dart';
@@ -22,7 +22,7 @@ class HttpService {
     showDialog(
         context: context,
         builder: (context) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(
               color: kPrimaryColor,
             ),
