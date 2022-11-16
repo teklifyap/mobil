@@ -19,11 +19,11 @@ class ProfileScreen extends HookWidget {
               color: kPrimaryColor,
             ),
             Text(
-              '${AppData.currentUser["name"]} ${AppData.currentUser["surname"]}',
+              '${AppData.currentUser?.name} ${AppData.currentUser?.surname}',
               style: const TextStyle(fontSize: 24),
             ),
             Text(
-              AppData.currentUser["email"],
+              AppData.currentUser?.email ?? "",
               style: const TextStyle(fontSize: 24),
             ),
           ],

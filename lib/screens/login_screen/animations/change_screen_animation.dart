@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:teklifyap/screens/login_screen/components/login_content.dart';
 
 class ChangeScreenAnimation {
@@ -11,8 +12,8 @@ class ChangeScreenAnimation {
   static late final AnimationController forgotPasswordController;
   static late final Animation<Offset> forgotPasswordAnimation;
 
-  static final List<AnimationController> createAccountControllers = [];
-  static final List<Animation<Offset>> createAccountAnimations = [];
+  static final List<AnimationController> registerControllers = [];
+  static final List<Animation<Offset>> registerAnimations = [];
 
   static final List<AnimationController> loginControllers = [];
   static final List<Animation<Offset>> loginAnimations = [];
@@ -38,15 +39,13 @@ class ChangeScreenAnimation {
   }
 
   static void initialize({
-    required TickerProvider vsync,
-    required int createAccountItems,
+    required int registerItems,
     required int loginItems,
     required int forgotPasswordItems,
     required bool isReverse,
   }) {
     if (!isReverse) {
-      topTextController = AnimationController(
-        vsync: vsync,
+      topTextController = useAnimationController(
         duration: const Duration(milliseconds: 200),
       );
 
@@ -56,8 +55,7 @@ class ChangeScreenAnimation {
         parent: topTextController,
       );
 
-      bottomTextController = AnimationController(
-        vsync: vsync,
+      bottomTextController = useAnimationController(
         duration: const Duration(milliseconds: 200),
       );
 
@@ -67,8 +65,7 @@ class ChangeScreenAnimation {
         parent: bottomTextController,
       );
 
-      forgotPasswordController = AnimationController(
-        vsync: vsync,
+      forgotPasswordController = useAnimationController(
         duration: const Duration(milliseconds: 200),
       );
 
@@ -79,27 +76,25 @@ class ChangeScreenAnimation {
       );
     }
 
-    for (var i = 0; i < createAccountItems; i++) {
-      createAccountControllers.add(
-        AnimationController(
-          vsync: vsync,
+    for (var i = 0; i < registerItems; i++) {
+      registerControllers.add(
+        useAnimationController(
           duration: const Duration(milliseconds: 200),
         ),
       );
 
-      createAccountAnimations.add(
+      registerAnimations.add(
         createCustomAnimation(
           begin: const Offset(-1, 0),
           end: Offset.zero,
-          parent: createAccountControllers[i],
+          parent: registerControllers[i],
         ),
       );
     }
 
     for (var i = 0; i < loginItems; i++) {
       loginControllers.add(
-        AnimationController(
-          vsync: vsync,
+        useAnimationController(
           duration: const Duration(milliseconds: 200),
         ),
       );
@@ -115,8 +110,7 @@ class ChangeScreenAnimation {
 
     for (var i = 0; i < forgotPasswordItems; i++) {
       forgotPasswordControllers.add(
-        AnimationController(
-          vsync: vsync,
+        useAnimationController(
           duration: const Duration(milliseconds: 200),
         ),
       );
@@ -131,20 +125,6 @@ class ChangeScreenAnimation {
     }
 
     hasBeenInitialized = true;
-  }
-
-  static void dispose() {
-    for (var controller in [
-      topTextController,
-      bottomTextController,
-      ...createAccountControllers,
-      ...loginControllers,
-      ...forgotPasswordControllers
-    ]) {
-      controller.dispose();
-    }
-
-    hasBeenInitialized = false;
   }
 
   static void setCurrentScreen(Screens value) {
@@ -168,7 +148,7 @@ class ChangeScreenAnimation {
     } else {
       for (final controller in [
         ...loginControllers,
-        ...createAccountControllers,
+        ...registerControllers,
       ]) {
         controller.forward();
         await Future.delayed(const Duration(milliseconds: 50));
@@ -188,7 +168,7 @@ class ChangeScreenAnimation {
     await bottomTextController.forward();
 
     for (final controller in [
-      ...createAccountControllers.reversed,
+      ...registerControllers.reversed,
       ...loginControllers.reversed,
     ]) {
       controller.reverse();

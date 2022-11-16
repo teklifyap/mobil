@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+
+/* Local imports */
 import 'package:teklifyap/screens/app/app.dart';
 import 'package:teklifyap/screens/language_picker/language_picker_widget.dart';
 import 'package:teklifyap/screens/login_screen/animations/change_screen_animation.dart';
@@ -17,183 +19,184 @@ enum Screens {
   forgotPassword,
 }
 
-class LoginContent extends StatefulWidget {
+class LoginContent extends HookWidget {
   const LoginContent({Key? key}) : super(key: key);
 
   @override
-  State<LoginContent> createState() => _LoginContentState();
-}
+  Widget build(BuildContext context) {
+    final registerFormKey = GlobalKey<FormState>();
+    final loginFormKey = GlobalKey<FormState>();
+    final forgotPasswordFormKey = GlobalKey<FormState>();
 
-class _LoginContentState extends State<LoginContent>
-    with TickerProviderStateMixin {
-  final _registerFormKey = GlobalKey<FormState>();
-  final _loginFormKey = GlobalKey<FormState>();
-  final _forgotPasswordFormKey = GlobalKey<FormState>();
-  List<Widget>? loginScreen;
-  List<Widget>? registerScreen;
-  List<Widget>? forgotPasswordScreen;
-  TextEditingController emailTextController = TextEditingController();
-  TextEditingController passwordTextController = TextEditingController();
-  TextEditingController registerRepeatPasswordTextController =
-      TextEditingController();
-  TextEditingController nameTextController = TextEditingController();
-  TextEditingController surnameTextController = TextEditingController();
+    List<Widget>? loginScreen;
+    List<Widget>? registerScreen;
+    List<Widget>? forgotPasswordScreen;
 
-  // todo: hata mesajlarını lokalize et
-  String? isEmptyValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return AppLocalizations.of(context)!.vldtCannotBeBlank;
+    TextEditingController emailTextController = useTextEditingController();
+    TextEditingController passwordTextController = useTextEditingController();
+    TextEditingController registerRepeatPasswordTextController =
+        useTextEditingController();
+    TextEditingController nameTextController = useTextEditingController();
+    TextEditingController surnameTextController = useTextEditingController();
+
+    String? isEmptyValidator(String? value) {
+      if (value == null || value.isEmpty) {
+        return AppLocalizations.of(context)!.vldtCannotBeBlank;
+      }
+      return null;
     }
-    return null;
-  }
 
-  String? emailValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return AppLocalizations.of(context)!.vldtEmailConnotBeBlank;
-    } else if (!RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(value)) {
-      return AppLocalizations.of(context)!.vldtEnterAValidEmail;
+    String? emailValidator(String? value) {
+      if (value == null || value.isEmpty) {
+        return AppLocalizations.of(context)!.vldtEmailCannotBeBlank;
+      } else if (!RegExp(r"""
+^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+""")
+          .hasMatch(value)) {
+        return AppLocalizations.of(context)!.vldtEnterAValidEmail;
+      }
+      return null;
     }
-    return null;
-  }
 
-  String? passwordValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return AppLocalizations.of(context)!.vldtPasswordCannotBeBlank;
-    } else if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z]).{8,}$').hasMatch(value)) {
-      return AppLocalizations.of(context)!.vldtPasswordRequirements;
+    String? passwordValidator(String? value) {
+      if (value == null || value.isEmpty) {
+        return AppLocalizations.of(context)!.vldtPasswordCannotBeBlank;
+      } else if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z]).{8,}$').hasMatch(value) &&
+          ChangeScreenAnimation.currentScreen != Screens.login) {
+        return AppLocalizations.of(context)!.vldtPasswordRequirements;
+      }
+      return null;
     }
-    return null;
-  }
 
-  String? repeatPasswordValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return AppLocalizations.of(context)!.vldtPasswordCannotBeBlank;
-    } else if (value != passwordTextController.text) {
-      return AppLocalizations.of(context)!.vldtPasswordsDoNotMatch;
+    String? repeatPasswordValidator(String? value) {
+      if (value == null || value.isEmpty) {
+        return AppLocalizations.of(context)!.vldtPasswordCannotBeBlank;
+      } else if (value != passwordTextController.text) {
+        return AppLocalizations.of(context)!.vldtPasswordsDoNotMatch;
+      }
+      return null;
     }
-    return null;
-  }
 
-  Widget inputField(String hint, IconData iconData, bool isObscure,
-      TextEditingController controller, String? Function(String?)? validator) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 8),
-      child: Material(
-        elevation: 8,
-        shadowColor: Colors.black87,
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(30),
-        child: TextFormField(
-          validator: validator,
-          controller: controller,
-          textAlignVertical: TextAlignVertical.center,
-          obscureText: isObscure,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          decoration: InputDecoration(
-            prefixIcon: Icon(
-              iconData,
-              color: kPrimaryColor,
-            ),
-            filled: true,
-            fillColor: Colors.white,
-            hintText: hint,
-            errorStyle:
-                TextStyle(color: Colors.red.withOpacity(0.8), fontSize: 14),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide:
-                  BorderSide(color: Colors.red.withOpacity(0.5), width: 3.0),
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide.none,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Route _createRoute(Widget nextScreen) {
-    return PageRouteBuilder(
-      pageBuilder: (_, __, ___) => nextScreen,
-      transitionDuration: const Duration(milliseconds: 500),
-      transitionsBuilder: (
-        BuildContext context,
-        Animation<double> animation,
-        Animation<double> secondaryAnimation,
-        Widget child,
-      ) {
-        return SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(0.0, 1.0),
-            end: Offset.zero,
-          ).animate(animation),
-          child: SlideTransition(
-            position: Tween<Offset>(
-              begin: Offset.zero,
-              end: const Offset(0.0, 1.0),
-            ).animate(secondaryAnimation),
-            child: child,
-          ),
-        );
-      },
-    );
-  }
-
-  Widget multiFuncButton(String title) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 135, vertical: 16),
-      child: ElevatedButton(
-        onPressed: () async {
-          if (ChangeScreenAnimation.currentScreen == Screens.register &&
-              _registerFormKey.currentState!.validate()) {
-            if (await HttpService.register(
-                nameTextController.text,
-                surnameTextController.text,
-                emailTextController.text,
-                passwordTextController.text,
-                context)) {
-              ChangeScreenAnimation.setCurrentScreen(Screens.login);
-
-              if (!ChangeScreenAnimation.isPlaying) {
-                await ChangeScreenAnimation.reverse();
-              }
-            }
-          } else if (ChangeScreenAnimation.currentScreen == Screens.login &&
-              _loginFormKey.currentState!.validate()) {
-            if (await HttpService.login(context, emailTextController.text,
-                passwordTextController.text)) {
-              await HttpService.getProfile();
-              Navigator.of(context).push(_createRoute(App()));
-            }
-          } else {
-            if (_forgotPasswordFormKey.currentState!.validate()) {
-              // TODO: send email button func
-            }
-          }
-        },
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          shape: const StadiumBorder(),
-          backgroundColor: kSecondaryColor,
+    Widget inputField(
+        String hint,
+        IconData iconData,
+        bool isObscure,
+        TextEditingController controller,
+        String? Function(String?)? validator) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 8),
+        child: Material(
           elevation: 8,
           shadowColor: Colors.black87,
-        ),
-        child: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(30),
+          child: TextFormField(
+            validator: validator,
+            controller: controller,
+            textAlignVertical: TextAlignVertical.center,
+            obscureText: isObscure,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            decoration: InputDecoration(
+              prefixIcon: Icon(
+                iconData,
+                color: kPrimaryColor,
+              ),
+              filled: true,
+              fillColor: Colors.white,
+              hintText: hint,
+              errorStyle:
+                  TextStyle(color: Colors.red.withOpacity(0.8), fontSize: 14),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide:
+                    BorderSide(color: Colors.red.withOpacity(0.5), width: 3.0),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide.none,
+              ),
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
+    }
 
-  Future<bool> initialization() async {
+    Route createRoute(Widget nextScreen) {
+      return PageRouteBuilder(
+        pageBuilder: (_, __, ___) => nextScreen,
+        transitionDuration: const Duration(milliseconds: 500),
+        transitionsBuilder: (
+          BuildContext context,
+          Animation<double> animation,
+          Animation<double> secondaryAnimation,
+          Widget child,
+        ) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: Offset.zero,
+                end: const Offset(0.0, 1.0),
+              ).animate(secondaryAnimation),
+              child: child,
+            ),
+          );
+        },
+      );
+    }
+
+    Widget multiFuncButton(String title) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 135, vertical: 16),
+        child: ElevatedButton(
+          onPressed: () async {
+            if (ChangeScreenAnimation.currentScreen == Screens.register &&
+                registerFormKey.currentState!.validate()) {
+              if (await HttpService.register(
+                  nameTextController.text,
+                  surnameTextController.text,
+                  emailTextController.text,
+                  passwordTextController.text,
+                  context)) {
+                ChangeScreenAnimation.setCurrentScreen(Screens.login);
+
+                if (!ChangeScreenAnimation.isPlaying) {
+                  await ChangeScreenAnimation.reverse();
+                }
+              }
+            } else if (ChangeScreenAnimation.currentScreen == Screens.login &&
+                loginFormKey.currentState!.validate()) {
+              if (await HttpService.login(context, emailTextController.text,
+                  passwordTextController.text)) {
+                await HttpService.getProfile();
+                Navigator.of(context).push(createRoute(App()));
+              }
+            } else {
+              if (forgotPasswordFormKey.currentState!.validate()) {
+                // TODO: send email button func
+              }
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            shape: const StadiumBorder(),
+            backgroundColor: kSecondaryColor,
+            elevation: 8,
+            shadowColor: Colors.black87,
+          ),
+          child: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      );
+    }
+
     registerScreen = [
       inputField(AppLocalizations.of(context)!.name, Icons.person_outline,
           false, nameTextController, isEmptyValidator),
@@ -228,7 +231,7 @@ class _LoginContentState extends State<LoginContent>
       multiFuncButton(AppLocalizations.of(context)!.logIn),
       GestureDetector(
           onTap: () {
-            _forgotPasswordFormKey.currentState!.reset();
+            forgotPasswordFormKey.currentState!.reset();
             if (!ChangeScreenAnimation.isPlaying) {
               ChangeScreenAnimation.forward(isForgotPassword: true);
               ChangeScreenAnimation.currentScreen = Screens.forgotPassword;
@@ -246,106 +249,83 @@ class _LoginContentState extends State<LoginContent>
 
     if (ChangeScreenAnimation.hasBeenInitialized == false) {
       ChangeScreenAnimation.initialize(
-          vsync: this,
-          createAccountItems: registerScreen!.length,
-          loginItems: loginScreen!.length,
-          forgotPasswordItems: forgotPasswordScreen!.length,
+          registerItems: registerScreen.length,
+          loginItems: loginScreen.length,
+          forgotPasswordItems: forgotPasswordScreen.length,
           isReverse: false);
     }
 
-    for (var i = 0; i < registerScreen!.length; i++) {
-      registerScreen![i] = HelperFunctions.wrapWithAnimatedBuilder(
-        animation: ChangeScreenAnimation.createAccountAnimations[i],
-        child: registerScreen![i],
+    for (var i = 0; i < registerScreen.length; i++) {
+      registerScreen[i] = HelperFunctions.wrapWithAnimatedBuilder(
+        animation: ChangeScreenAnimation.registerAnimations[i],
+        child: registerScreen[i],
       );
     }
 
-    for (var i = 0; i < loginScreen!.length; i++) {
-      loginScreen![i] = HelperFunctions.wrapWithAnimatedBuilder(
+    for (var i = 0; i < loginScreen.length; i++) {
+      loginScreen[i] = HelperFunctions.wrapWithAnimatedBuilder(
         animation: ChangeScreenAnimation.loginAnimations[i],
-        child: loginScreen![i],
+        child: loginScreen[i],
       );
     }
 
-    for (var i = 0; i < forgotPasswordScreen!.length; i++) {
-      forgotPasswordScreen![i] = HelperFunctions.wrapWithAnimatedBuilder(
+    for (var i = 0; i < forgotPasswordScreen.length; i++) {
+      forgotPasswordScreen[i] = HelperFunctions.wrapWithAnimatedBuilder(
         animation: ChangeScreenAnimation.forgotPasswordAnimations[i],
-        child: forgotPasswordScreen![i],
+        child: forgotPasswordScreen[i],
       );
     }
 
-    return true;
-  }
-
-  @override
-  void dispose() {
-    ChangeScreenAnimation.dispose();
-    passwordTextController.dispose();
-    registerRepeatPasswordTextController.dispose();
-    emailTextController.dispose();
-    surnameTextController.dispose();
-    nameTextController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<bool>(
-        future: initialization(),
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-          if (snapshot.hasData) {
-            return Stack(
-              children: [
-                const Positioned(
-                    top: 50, right: 5, child: LanguagePickerWidget()),
-                const Positioned(
-                  top: 120,
-                  left: 12,
-                  child: TopText(),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 100),
-                  child: Stack(
-                    children: [
-                      Form(
-                        key: _forgotPasswordFormKey,
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: forgotPasswordScreen!),
-                      ),
-                      Form(
-                        key: _registerFormKey,
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: registerScreen!),
-                      ),
-                      Form(
-                        key: _loginFormKey,
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: loginScreen!),
-                      ),
-                    ],
-                  ),
-                ),
-                const Align(
-                  alignment: Alignment.bottomCenter,
-                  child: SizedBox(
-                    height: 70,
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 20),
-                      child: BottomText(),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          } else {
-            return Container();
-          }
-        });
+    return Stack(
+      children: [
+        const Positioned(top: 50, right: 5, child: LanguagePickerWidget()),
+        const Positioned(
+          top: 120,
+          left: 12,
+          child: TopText(),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 100),
+          child: Stack(
+            children: [
+              Form(
+                key: forgotPasswordFormKey,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: forgotPasswordScreen),
+              ),
+              Form(
+                key: registerFormKey,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: registerScreen),
+              ),
+              Form(
+                key: loginFormKey,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: loginScreen),
+              ),
+            ],
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: SizedBox(
+            height: 70,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: BottomText(
+                loginFormKey: loginFormKey,
+                registerFormKey: registerFormKey,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

@@ -6,7 +6,12 @@ import 'package:teklifyap/utils/helper_functions.dart';
 import 'login_content.dart';
 
 class BottomText extends StatefulWidget {
-  const BottomText({Key? key}) : super(key: key);
+  final GlobalKey<FormState> loginFormKey;
+  final GlobalKey<FormState> registerFormKey;
+
+  const BottomText(
+      {Key? key, required this.loginFormKey, required this.registerFormKey})
+      : super(key: key);
 
   @override
   State<BottomText> createState() => _BottomTextState();
@@ -39,8 +44,10 @@ class _BottomTextState extends State<BottomText> {
 
                   if (ChangeScreenAnimation.currentScreen == Screens.register) {
                     ChangeScreenAnimation.currentScreen = Screens.login;
+                    widget.loginFormKey.currentState!.reset();
                   } else {
                     ChangeScreenAnimation.currentScreen = Screens.register;
+                    widget.registerFormKey.currentState!.reset();
                   }
                 }
               },

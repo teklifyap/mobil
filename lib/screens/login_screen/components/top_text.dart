@@ -28,25 +28,26 @@ class _TopTextState extends State<TopText> {
   Widget build(BuildContext context) {
     return HelperFunctions.wrapWithAnimatedBuilder(
       animation: ChangeScreenAnimation.topTextAnimation,
-      child: ChangeScreenAnimation.currentScreen == Screens.forgotPassword
-          ? Text(
-              AppLocalizations.of(context)!.forgotPasswordTitle,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 36,
-                fontWeight: FontWeight.w600,
-              ),
-            )
-          : Text(
-              ChangeScreenAnimation.currentScreen == Screens.register
-                  ? AppLocalizations.of(context)!.createAccount
-                  : AppLocalizations.of(context)!.welcomeBack,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 36,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+      child: (() {
+        String title = "";
+        switch (ChangeScreenAnimation.currentScreen) {
+          case Screens.forgotPassword:
+            title = AppLocalizations.of(context)!.forgotPasswordTitle;
+            break;
+          case Screens.login:
+            title = AppLocalizations.of(context)!.welcomeBack;
+            break;
+          case Screens.register:
+            title = AppLocalizations.of(context)!.createAccount;
+            break;
+        }
+        return Text(title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 36,
+              fontWeight: FontWeight.w600,
+            ));
+      }()),
     );
   }
 }
