@@ -9,6 +9,7 @@ import 'package:teklifyap/services/alerts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:teklifyap/services/models/user.dart';
 import 'package:teklifyap/utils/constants.dart';
+import 'package:teklifyap/services/models/item.dart';
 
 class HttpService {
   static String url = "https://teklifyap-api.oguzhanercelik.dev";
@@ -110,7 +111,7 @@ class HttpService {
     };
 
     Response res = await post(
-      Uri.parse(ApiEndpoints.createItemUrl),
+      Uri.parse(ApiEndpoints.forItemUrl),
       body: jsonEncode(requestPayload),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
@@ -123,6 +124,41 @@ class HttpService {
     } else {
       throw Exception(
           "something went wrong while creating item, response body: \n${res.body}");
+    }
+  }
+
+  static Future<bool> getAllItems() async {
+    AppData.storageItems.clear();
+    Response res = await get(Uri.parse(ApiEndpoints.forItemUrl), headers: {
+      HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
+      HttpHeaders.contentTypeHeader: "application/json",
+    });
+
+    if (res.statusCode == 200) {
+      List<dynamic> items = jsonDecode(res.body)["data"];
+      for (var value in items) {
+        await HttpService.getItemDetails(value["id"]);
+      }
+      return true;
+    } else {
+      throw Exception(
+          "something went wrong while getting all items, response body: \n${res.body}");
+    }
+  }
+
+  static Future<bool> getItemDetails(int id) async {
+    Response res =
+        await get(Uri.parse("${ApiEndpoints.forItemUrl}/$id"), headers: {
+      HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
+      HttpHeaders.contentTypeHeader: "application/json",
+    });
+
+    if (res.statusCode == 200) {
+      AppData.storageItems.add(Item.fromJson(jsonDecode(res.body)["data"]));
+      return true;
+    } else {
+      throw Exception(
+          "something went wrong while getting item details, response body: \n${res.body}");
     }
   }
 }

@@ -170,6 +170,7 @@ class LoginContent extends HookWidget {
                 loginFormKey.currentState!.validate()) {
               if (await HttpService.login(context, emailTextController.text,
                   passwordTextController.text)) {
+                await HttpService.getAllItems();
                 await HttpService.getProfile();
                 Navigator.of(context).push(createRoute(App()));
               }

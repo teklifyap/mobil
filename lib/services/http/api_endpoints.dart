@@ -4,6 +4,6 @@ class ApiEndpoints {
       "https://teklifyap-api.oguzhanercelik.dev/api/v2/user/profile";
   static const String registerUrl =
       "https://teklifyap-api.oguzhanercelik.dev/auth/register";
-  static const String createItemUrl =
+  static const String forItemUrl =
       "https://teklifyap-api.oguzhanercelik.dev/api/v2/item";
 }

@@ -7,21 +7,23 @@ import 'package:teklifyap/services/services.dart';
 import 'package:teklifyap/utils/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+enum Units { M3, M2, KG, LT, ADET, M }
+
 class StorageScreen extends HookWidget {
   const StorageScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const List<String> units = <String>["M3", "M2", "KG", "LT", "ADET", "M"];
     final items = useState(AppData.storageItems);
     final itemsTrigger = useState(0);
     final itemNameController = useTextEditingController();
     final itemValueController = useTextEditingController();
-    String itemUnitController = units.first;
+    String itemUnitController = Units.KG.name;
 
-    void addItem(List<String> value) {
-      HttpService.itemCreate(value[0], int.parse(value[1]), value[2], context);
-      items.value.add(value);
+    void addItem(List<String> value) async {
+      await HttpService.itemCreate(
+          value[0], int.parse(value[1]), value[2], context);
+      await HttpService.getAllItems();
       itemsTrigger.value++;
       itemNameController.clear();
       itemValueController.clear();
@@ -41,7 +43,7 @@ class StorageScreen extends HookWidget {
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(30.0))),
           content: HookBuilder(builder: (context) {
-            final unitDropdown = useState(units.first);
+            final unitDropdown = useState(Units.KG.name);
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -64,16 +66,15 @@ class StorageScreen extends HookWidget {
                     color: kPrimaryColor,
                   ),
                   onChanged: (String? value) {
-                    // This is called when the user selects an item.
                     unitDropdown.value = value!;
                     itemUnitController = value;
                   },
-                  items: units.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
+                  items: Units.values
+                      .map<DropdownMenuItem<String>>((unit) => DropdownMenuItem(
+                            value: unit.name,
+                            child: Text(unit.name),
+                          ))
+                      .toList(),
                 ),
               ],
             );
@@ -144,9 +145,9 @@ class StorageScreen extends HookWidget {
                   itemCount: items.value.length,
                   itemBuilder: (context, index) {
                     return ItemContainer(
-                      itemTitle: items.value[index][0],
-                      itemValue: items.value[index][1],
-                      itemUnit: items.value[index][2],
+                      itemTitle: items.value[index].name.toString(),
+                      itemValue: items.value[index].value.toString(),
+                      itemUnit: items.value[index].unit.toString(),
                       deleteFunc: () => deleteItem(index),
                     );
                   },

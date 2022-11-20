@@ -1,3 +1,4 @@
+import 'package:teklifyap/services/models/item.dart';
 import 'package:teklifyap/services/models/user.dart';
 
 class AppData {
@@ -6,5 +7,5 @@ class AppData {
   static String authToken = "";
   static User? currentUser;
   static List<List<String>> offers = [];
-  static List<List<String>> storageItems = [];
+  static List<Item> storageItems = [];
 }
