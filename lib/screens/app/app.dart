@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:teklifyap/screens/offers_screen/offers_screen.dart';
 import 'package:teklifyap/screens/profile_screen/profile_screen.dart';
 import 'package:teklifyap/screens/storage_screen/storage_screen.dart';
-import 'package:teklifyap/utils/constants.dart';
+import 'package:teklifyap/constants.dart';
 
 class App extends HookWidget {
   App({Key? key}) : super(key: key);

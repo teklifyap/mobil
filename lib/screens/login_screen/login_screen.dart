@@ -2,7 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:teklifyap/screens/login_screen/components/center_widget/center_widget.dart';
 import 'package:teklifyap/screens/login_screen/components/login_content.dart';
-import 'package:teklifyap/utils/constants.dart';
+import 'package:teklifyap/constants.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);

@@ -22,4 +22,28 @@ class CustomAlerts {
               ],
             ));
   }
+
+  static confirmActionMessage(
+      BuildContext context, VoidCallback action, String actionMessage) {
+    showDialog(
+        context: context,
+        builder: (_) => CupertinoAlertDialog(
+              content: Text(
+                actionMessage,
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              ),
+              actions: [
+                CupertinoDialogAction(
+                  onPressed: action,
+                  child: Text(AppLocalizations.of(context)!.okay),
+                ),
+                CupertinoDialogAction(
+                  //todo: dile ekle
+                  child: const Text("vazgeç"),
+                  onPressed: () => Navigator.pop(context),
+                )
+              ],
+            ));
+  }
 }

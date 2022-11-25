@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:teklifyap/utils/constants.dart';
+import 'package:teklifyap/constants.dart';
 
 class CustomInputField extends HookWidget {
   const CustomInputField(

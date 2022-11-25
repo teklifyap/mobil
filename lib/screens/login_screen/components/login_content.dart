@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:teklifyap/app_data.dart';
 
 /* Local imports */
 import 'package:teklifyap/screens/app/app.dart';
-import 'package:teklifyap/screens/language_picker/language_picker_widget.dart';
+import 'package:teklifyap/screens/login_screen/language_picker/language_picker_widget.dart';
 import 'package:teklifyap/screens/login_screen/animations/change_screen_animation.dart';
 import 'package:teklifyap/screens/login_screen/components/bottom_text.dart';
 import 'package:teklifyap/screens/login_screen/components/forgot_password.dart';
 import 'package:teklifyap/screens/login_screen/components/top_text.dart';
-import 'package:teklifyap/services/services.dart';
-import 'package:teklifyap/utils/constants.dart';
-import 'package:teklifyap/utils/helper_functions.dart';
+import 'package:teklifyap/services/api/item_actions.dart';
+import 'package:teklifyap/services/api/user_actions.dart';
+import 'package:teklifyap/constants.dart';
+import 'package:teklifyap/screens/login_screen/helper_functions.dart';
 
 enum Screens {
   register,
@@ -154,24 +156,25 @@ class LoginContent extends HookWidget {
           onPressed: () async {
             if (ChangeScreenAnimation.currentScreen == Screens.register &&
                 registerFormKey.currentState!.validate()) {
-              if (await HttpService.register(
+              await UserActions.register(
                   nameTextController.text,
                   surnameTextController.text,
                   emailTextController.text,
                   passwordTextController.text,
-                  context)) {
-                ChangeScreenAnimation.setCurrentScreen(Screens.login);
+                  context);
+              ChangeScreenAnimation.setCurrentScreen(Screens.login);
 
-                if (!ChangeScreenAnimation.isPlaying) {
-                  await ChangeScreenAnimation.reverse();
-                }
+              if (!ChangeScreenAnimation.isPlaying) {
+                await ChangeScreenAnimation.reverse();
               }
             } else if (ChangeScreenAnimation.currentScreen == Screens.login &&
                 loginFormKey.currentState!.validate()) {
-              if (await HttpService.login(context, emailTextController.text,
-                  passwordTextController.text)) {
-                await HttpService.getAllItems();
-                await HttpService.getProfile();
+              await UserActions.login(context, emailTextController.text,
+                  passwordTextController.text);
+              await ItemActions.getAllItems();
+              AppData.triggerStorageItems();
+              await UserActions.getUser();
+              if (context.mounted) {
                 Navigator.of(context).push(createRoute(App()));
               }
             } else {

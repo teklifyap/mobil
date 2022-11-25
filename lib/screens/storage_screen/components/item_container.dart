@@ -1,35 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:teklifyap/app_data.dart';
 import 'package:teklifyap/screens/storage_screen/components/input_field.dart';
-import 'package:teklifyap/utils/constants.dart';
+import 'package:teklifyap/services/api/item_actions.dart';
+import 'package:teklifyap/services/models/item.dart';
+import 'package:teklifyap/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ItemContainer extends HookWidget {
-  const ItemContainer({
-    Key? key,
-    required this.itemTitle,
-    required this.itemValue,
-    required this.itemUnit,
-    required this.deleteFunc,
-  }) : super(key: key);
+  const ItemContainer({Key? key, required this.item}) : super(key: key);
 
-  final String itemTitle;
-  final String itemValue;
-  final String itemUnit;
-  final VoidCallback deleteFunc;
+  final Item item;
 
   @override
   Widget build(BuildContext context) {
-    final itemCodeController = useTextEditingController();
+    final itemValueController = useTextEditingController();
+
+    void deleteItem(Item item) async {
+      await ItemActions.deleteItem(item.id as int);
+      await ItemActions.getAllItems();
+      AppData.triggerStorageItems();
+      //todo: ekran yenilenmiyor
+    }
+
+    void updateItem(Item item) async {
+      item.value = double.parse(itemValueController.text);
+      itemValueController.clear();
+      await ItemActions.updateItem(item);
+      await ItemActions.getAllItems();
+      AppData.triggerStorageItems();
+      //todo: ekran yenilenmiyor
+    }
 
     Future openEditDialog() => showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text(itemTitle),
+            title: Text(item.name ?? ""),
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(30.0))),
             content: CustomInputField(
-              controller: itemCodeController,
+              controller: itemValueController,
               labelText: AppLocalizations.of(context)!.itemPrice,
             ),
             actions: [
@@ -37,7 +47,10 @@ class ItemContainer extends HookWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
-                    onPressed: () => {Navigator.pop(context)},
+                    onPressed: () {
+                      updateItem(item);
+                      Navigator.pop(context);
+                    },
                     child: Row(
                       children: [
                         const Icon(
@@ -53,7 +66,7 @@ class ItemContainer extends HookWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      deleteFunc();
+                      deleteItem(item);
                       Navigator.pop(context);
                     },
                     child: Row(
@@ -85,15 +98,15 @@ class ItemContainer extends HookWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                itemTitle,
+                item.name ?? "",
                 style: const TextStyle(color: Colors.white),
               ),
               Text(
-                itemValue,
+                '${item.value ?? 0.0}',
                 style: const TextStyle(color: Colors.black26),
               ),
               Text(
-                itemUnit,
+                item.unit ?? "",
                 style: const TextStyle(color: Colors.black26),
               ),
             ],

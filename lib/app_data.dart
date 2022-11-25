@@ -8,4 +8,9 @@ class AppData {
   static User? currentUser;
   static List<List<String>> offers = [];
   static List<Item> storageItems = [];
+  static int storageItemsTrigger = 0;
+
+  static void triggerStorageItems() {
+    storageItemsTrigger++;
+  }
 }

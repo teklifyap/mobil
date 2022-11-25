@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:teklifyap/app_data.dart';
 import 'package:teklifyap/screens/offers_screen/components/offer_container.dart';
 import 'package:teklifyap/screens/storage_screen/components/input_field.dart';
-import 'package:teklifyap/utils/constants.dart';
+import 'package:teklifyap/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OffersScreen extends HookWidget {

@@ -1,11 +1,11 @@
 class Item {
   int? _id;
   String? _name;
-  String? _value;
+  double? _value;
   String? _unit;
   String? _quantity;
 
-  Item({int? id, String? name, String? value, String? unit, String? quantity}) {
+  Item({int? id, String? name, double? value, String? unit, String? quantity}) {
     if (id != null) {
       _id = id;
     }
@@ -27,9 +27,9 @@ class Item {
 
   String? get name => _name;
 
-  String? get value => _value;
+  double? get value => _value;
 
-  set value(String? value) => _value = value;
+  set value(double? value) => _value = value;
 
   String? get unit => _unit;
 

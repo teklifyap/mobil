@@ -1,19 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:http/http.dart';
 
 import 'package:teklifyap/app_data.dart';
-import 'package:teklifyap/services/http/api_endpoints.dart';
+import 'package:teklifyap/services/api/api_endpoints.dart';
 import 'package:teklifyap/services/alerts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:teklifyap/services/models/user.dart';
-import 'package:teklifyap/utils/constants.dart';
-import 'package:teklifyap/services/models/item.dart';
+import 'package:teklifyap/constants.dart';
 
-class HttpService {
-  static String url = "https://teklifyap-api.oguzhanercelik.dev";
-
+class UserActions {
   static Future<bool> login(
       BuildContext context, String email, String password) async {
     Map<String, dynamic> requestPayload = {
@@ -87,7 +85,7 @@ class HttpService {
     }
   }
 
-  static Future<bool> getProfile() async {
+  static Future<bool> getUser() async {
     Response res = await get(Uri.parse(ApiEndpoints.getProfileUrl), headers: {
       HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
       HttpHeaders.contentTypeHeader: "application/json",
@@ -102,63 +100,18 @@ class HttpService {
     }
   }
 
-  static Future<bool> itemCreate(
-      String name, int value, String unit, BuildContext context) async {
-    Map<String, dynamic> requestPayload = {
-      "name": name,
-      "value": value,
-      "unit": unit.toUpperCase(),
-    };
-
-    Response res = await post(
-      Uri.parse(ApiEndpoints.forItemUrl),
-      body: jsonEncode(requestPayload),
-      headers: {
-        HttpHeaders.contentTypeHeader: "application/json",
-        HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
-      },
-    );
-
-    if (res.statusCode == 200) {
-      return true;
-    } else {
-      throw Exception(
-          "something went wrong while creating item, response body: \n${res.body}");
-    }
-  }
-
-  static Future<bool> getAllItems() async {
-    AppData.storageItems.clear();
-    Response res = await get(Uri.parse(ApiEndpoints.forItemUrl), headers: {
+  static Future<bool> deleteUser(BuildContext context) async {
+    Response res = await delete(Uri.parse(ApiEndpoints.forUser), headers: {
       HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
       HttpHeaders.contentTypeHeader: "application/json",
     });
-
     if (res.statusCode == 200) {
-      List<dynamic> items = jsonDecode(res.body)["data"];
-      for (var value in items) {
-        await HttpService.getItemDetails(value["id"]);
-      }
+      //todo: emin misin dialog koy
+      if (context.mounted) Phoenix.rebirth(context);
       return true;
     } else {
       throw Exception(
-          "something went wrong while getting all items, response body: \n${res.body}");
-    }
-  }
-
-  static Future<bool> getItemDetails(int id) async {
-    Response res =
-        await get(Uri.parse("${ApiEndpoints.forItemUrl}/$id"), headers: {
-      HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
-      HttpHeaders.contentTypeHeader: "application/json",
-    });
-
-    if (res.statusCode == 200) {
-      AppData.storageItems.add(Item.fromJson(jsonDecode(res.body)["data"]));
-      return true;
-    } else {
-      throw Exception(
-          "something went wrong while getting item details, response body: \n${res.body}");
+          "something went wrong while deleting profile, response body: \n${res.body}");
     }
   }
 }

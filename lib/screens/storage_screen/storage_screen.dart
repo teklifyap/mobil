@@ -3,8 +3,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:teklifyap/app_data.dart';
 import 'package:teklifyap/screens/storage_screen/components/input_field.dart';
 import 'package:teklifyap/screens/storage_screen/components/item_container.dart';
-import 'package:teklifyap/services/services.dart';
-import 'package:teklifyap/utils/constants.dart';
+import 'package:teklifyap/services/api/item_actions.dart';
+import 'package:teklifyap/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum Units { M3, M2, KG, LT, ADET, M }
@@ -15,24 +15,16 @@ class StorageScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final items = useState(AppData.storageItems);
-    final itemsTrigger = useState(0);
     final itemNameController = useTextEditingController();
     final itemValueController = useTextEditingController();
     String itemUnitController = Units.KG.name;
 
     void addItem(List<String> value) async {
-      await HttpService.itemCreate(
-          value[0], int.parse(value[1]), value[2], context);
-      await HttpService.getAllItems();
-      itemsTrigger.value++;
+      await ItemActions.createItem(value[0], value[1], value[2], context);
+      await ItemActions.getAllItems();
+      AppData.triggerStorageItems();
       itemNameController.clear();
       itemValueController.clear();
-    }
-
-    void deleteItem(int index) {
-      items.value.removeAt(index);
-      itemsTrigger.value++;
-      debugPrint("worked");
     }
 
     Future createItemDialog() async {
@@ -144,12 +136,7 @@ class StorageScreen extends HookWidget {
                       crossAxisCount: 3),
                   itemCount: items.value.length,
                   itemBuilder: (context, index) {
-                    return ItemContainer(
-                      itemTitle: items.value[index].name.toString(),
-                      itemValue: items.value[index].value.toString(),
-                      itemUnit: items.value[index].unit.toString(),
-                      deleteFunc: () => deleteItem(index),
-                    );
+                    return ItemContainer(item: items.value[index]);
                   },
                 ),
               )

@@ -1,11 +1,12 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:teklifyap/screens/login_screen/components/center_widget/center_widget_clipper.dart';
 import 'package:teklifyap/screens/login_screen/components/center_widget/center_widget_painter.dart';
-import 'package:teklifyap/utils/constants.dart';
+import 'package:teklifyap/constants.dart';
 
-class CenterWidget extends StatelessWidget {
+class CenterWidget extends HookWidget {
   final Size size;
 
   const CenterWidget({

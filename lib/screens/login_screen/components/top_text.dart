@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:teklifyap/screens/login_screen/animations/change_screen_animation.dart';
-import 'package:teklifyap/utils/helper_functions.dart';
+import 'package:teklifyap/screens/login_screen/helper_functions.dart';
 
 import 'login_content.dart';
 
