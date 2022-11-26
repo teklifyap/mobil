@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../l10n/l10n.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:teklifyap/l10n/l10n.dart';
 
 class LocaleProvider extends ChangeNotifier {
   Locale? _locale;
@@ -19,3 +19,5 @@ class LocaleProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+final localeProvider = ChangeNotifierProvider((ref) => LocaleProvider());

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:teklifyap/l10n/l10n.dart';
 import 'package:teklifyap/provider/local_provider.dart';
 
@@ -24,11 +24,11 @@ class LanguageWidget extends StatelessWidget {
   }
 }
 
-class LanguagePickerWidget extends StatelessWidget {
+class LanguagePickerWidget extends ConsumerWidget {
   const LanguagePickerWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final locale = Localizations.localeOf(context);
 
     return DropdownButtonHideUnderline(
@@ -38,12 +38,10 @@ class LanguagePickerWidget extends StatelessWidget {
         items: L10n.all.map(
           (locale) {
             final flag = L10n.getFlag(locale.languageCode);
-
             return DropdownMenuItem(
               value: locale,
               onTap: () {
-                final provider =
-                    Provider.of<LocaleProvider>(context, listen: false);
+                final provider = ref.watch(localeProvider);
 
                 provider.setLocale(locale);
               },
