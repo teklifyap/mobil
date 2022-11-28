@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:teklifyap/provider/item_provider.dart';
+import 'package:teklifyap/provider/offer_provider.dart';
+import 'package:teklifyap/provider/user_provider.dart';
 import 'package:teklifyap/screens/offers_screen/offers_screen.dart';
 import 'package:teklifyap/screens/profile_screen/profile_screen.dart';
 import 'package:teklifyap/screens/storage_screen/storage_screen.dart';
 import 'package:teklifyap/constants.dart';
 
-class App extends HookWidget {
+class App extends HookConsumerWidget {
   App({Key? key}) : super(key: key);
 
   final List<Widget> screens = [
@@ -15,7 +19,10 @@ class App extends HookWidget {
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.read(itemsProvider).getItems();
+    ref.read(userProvider).getUser();
+    ref.read(offersProvider).getOffers();
     PageController pageController =
         usePageController(initialPage: 1, keys: screens);
     final selectedPage = useState(pageController.hasClients

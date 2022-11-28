@@ -73,35 +73,34 @@ class ItemActions {
     }
   }
 
-  static Future<bool> getAllItems() async {
-    AppData.storageItems.clear();
+  static Future<List<Item>> getAllItems() async {
+    List<Item> allItems = [];
     Response res = await get(Uri.parse(ApiEndpoints.forItemUrl), headers: {
       HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
       HttpHeaders.contentTypeHeader: "application/json",
     });
 
     if (res.statusCode == 200) {
-      List<dynamic> items = jsonDecode(res.body)["data"];
-      for (var value in items) {
-        await ItemActions.getItem(value["id"]);
+      List<dynamic> items = jsonDecode(utf8.decode(res.bodyBytes))["data"];
+      for (var item in items) {
+        allItems.add(await ItemActions.getItem(item["id"]));
       }
-      return true;
+      return allItems;
     } else {
       throw Exception(
           "something went wrong while getting all items, response body: \n${res.body}");
     }
   }
 
-  static Future<bool> getItem(int id) async {
+  static Future<Item> getItem(int itemID) async {
     Response res =
-        await get(Uri.parse("${ApiEndpoints.forItemUrl}/$id"), headers: {
+        await get(Uri.parse("${ApiEndpoints.forItemUrl}/$itemID"), headers: {
       HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
       HttpHeaders.contentTypeHeader: "application/json",
     });
 
     if (res.statusCode == 200) {
-      AppData.storageItems.add(Item.fromJson(jsonDecode(res.body)["data"]));
-      return true;
+      return Item.fromJson(jsonDecode(utf8.decode(res.bodyBytes))["data"]);
     } else {
       throw Exception(
           "something went wrong while getting item details, response body: \n${res.body}");

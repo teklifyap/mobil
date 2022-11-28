@@ -1,34 +1,131 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:teklifyap/app_data.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:teklifyap/provider/item_provider.dart';
+import 'package:teklifyap/provider/offer_provider.dart';
+import 'package:teklifyap/provider/user_provider.dart';
 import 'package:teklifyap/screens/offers_screen/components/offer_container.dart';
 import 'package:teklifyap/screens/storage_screen/components/input_field.dart';
 import 'package:teklifyap/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:teklifyap/services/api/offer_actions.dart';
+import 'package:teklifyap/services/models/item.dart';
 
-class OffersScreen extends HookWidget {
+class OffersScreen extends HookConsumerWidget {
   const OffersScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final offers = useState(AppData.offers);
-    final offersTrigger = useState(0);
+  Widget build(BuildContext context, WidgetRef ref) {
     final offerTitleController = useTextEditingController();
-    final offerToWhomController = useTextEditingController();
-    int profitRate = 0;
-    int appxFinishTime = 0;
-    DateTime dateController = DateTime.now();
+    final receiverNameController = useTextEditingController();
+    final profitRateController = useTextEditingController();
+    List<TextEditingController> selectedItemsQuantities = [];
+    List<int> selectedItemIDS = [];
+    List<Map<String, dynamic>> selectedItems = [];
+    // DateTime dateController = DateTime.now();
 
-    void removeOffer(int index) {
-      offers.value.removeAt(index);
-      offersTrigger.value++;
+    void addOffer() async {
+      final profile = ref.read(userProvider);
+      await OfferActions.createOffer(
+          offerTitleController.text,
+          receiverNameController.text,
+          '${profile.user!.name} ${profile.user!.surname}',
+          double.parse(profitRateController.text),
+          selectedItems);
+      ref.read(offersProvider).getOffers();
     }
 
-    void addOffer() {
-      offers.value.add(["yeniTeklif", "YeniteklifAfsadf"]);
+    Future addItemsToOfferDialog(List<Item> addableItems) async {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text(AppLocalizations.of(context)!.selectItems),
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(30.0))),
+                content: SizedBox(
+                  width: double.maxFinite,
+                  child: addableItems.isEmpty
+                      ? Text(AppLocalizations.of(context)!.youAddedAllItems)
+                      : ListView.separated(
+                          shrinkWrap: true,
+                          itemCount: addableItems.length,
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const Divider(
+                            color: kPrimaryColor,
+                            thickness: 1.5,
+                          ),
+                          itemBuilder: (BuildContext context, int index) {
+                            return HookBuilder(
+                              builder: (BuildContext context) {
+                                final isSelected = useState(false);
+                                final quantityController =
+                                    useTextEditingController();
+                                return ListTile(
+                                    onTap: () {
+                                      //todo: eğer ürün seçilip geri tıklanırsa eklenmiş gibi sayıyor
+                                      selectedItemsQuantities
+                                          .add(quantityController);
+                                      selectedItemIDS
+                                          .add(addableItems[index].id!);
+                                      isSelected.value = !isSelected.value;
+                                    },
+                                    title: Text(addableItems[index].name ?? ""),
+                                    trailing: isSelected.value
+                                        ? SizedBox(
+                                            width: 120,
+                                            child: CustomInputField(
+                                              labelText:
+                                                  AppLocalizations.of(context)!
+                                                      .itemQuantity,
+                                              controller: quantityController,
+                                            ),
+                                          )
+                                        : Container(
+                                            width: 1,
+                                          ));
+                              },
+                            );
+                          },
+                        ),
+                ),
+                actions: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: IconButton(
+                            onPressed: () {
+                              if (addableItems.isNotEmpty) {
+                                selectedItemIDS.asMap().forEach((i, x) {
+                                  addableItems.removeWhere(
+                                      (element) => element.id == x);
+                                  selectedItems.add({
+                                    "id": x,
+                                    "quantity": selectedItemsQuantities[i].text
+                                  });
+                                });
+                              }
+
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(
+                              Icons.done,
+                              color: kPrimaryColor,
+                            )),
+                      )
+                    ],
+                  )
+                ],
+              ));
     }
 
-    Future createItemDialog() async {
+    Future createOfferDialog() async {
+      ref.read(itemsProvider).getItems();
+      final addableItems = ref.read(itemsProvider);
+      selectedItemIDS = [];
+      selectedItemsQuantities = [];
+      selectedItems = [];
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -36,8 +133,8 @@ class OffersScreen extends HookWidget {
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(30.0))),
           content: HookBuilder(builder: (context) {
-            DateTime currentDate = DateTime.now();
-            final selectedDate = useState(currentDate);
+            // DateTime currentDate = DateTime.now();
+            // final selectedDate = useState(currentDate);
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -45,41 +142,51 @@ class OffersScreen extends HookWidget {
                     controller: offerTitleController,
                     labelText: AppLocalizations.of(context)!.offerTitle),
                 CustomInputField(
-                    controller: offerToWhomController,
-                    labelText: AppLocalizations.of(context)!.offerTo),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('${AppLocalizations.of(context)!.date}: '),
-                      GestureDetector(
-                          child: Text(
-                              '${selectedDate.value.year}/${selectedDate.value.month}/${selectedDate.value.day}'),
-                          onTap: () async {
-                            DateTime? newDate = await showDatePicker(
-                              context: context,
-                              initialDate: currentDate,
-                              firstDate: DateTime(1990),
-                              lastDate: DateTime(2100),
-                            );
-
-                            if (newDate == null) {
-                              return;
-                            }
-
-                            selectedDate.value = newDate;
-                          })
-                    ],
-                  ),
-                ),
+                    controller: receiverNameController,
+                    labelText: AppLocalizations.of(context)!.offerReceiver),
+                // Padding(
+                //   padding: const EdgeInsets.only(top: 16.0),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       Text('${AppLocalizations.of(context)!.date}: '),
+                //       GestureDetector(
+                //           child: Text(
+                //               '${selectedDate.value.year}/${selectedDate.value.month}/${selectedDate.value.day}'),
+                //           onTap: () async {
+                //             DateTime? newDate = await showDatePicker(
+                //               context: context,
+                //               initialDate: currentDate,
+                //               firstDate: DateTime(1990),
+                //               lastDate: DateTime(2100),
+                //             );
+                //
+                //             if (newDate == null) {
+                //               return;
+                //             }
+                //
+                //             selectedDate.value = newDate;
+                //           })
+                //     ],
+                //   ),
+                // ),
                 CustomInputField(
-                    controller: offerToWhomController,
+                    controller: profitRateController,
                     labelText: AppLocalizations.of(context)!.profitRate),
-                CustomInputField(
-                    controller: offerToWhomController,
-                    labelText:
-                        AppLocalizations.of(context)!.estimatedCompletion),
+                TextButton(
+                    onPressed: () => addItemsToOfferDialog(addableItems.items),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.add,
+                          color: kPrimaryColor,
+                        ),
+                        Text(
+                          AppLocalizations.of(context)!.addItemsToOffer,
+                          style: const TextStyle(color: kPrimaryColor),
+                        )
+                      ],
+                    ))
               ],
             );
           }),
@@ -91,6 +198,7 @@ class OffersScreen extends HookWidget {
                   padding: const EdgeInsets.only(left: 8.0),
                   child: TextButton(
                     onPressed: () {
+                      addOffer();
                       Navigator.pop(context);
                     },
                     child: Row(
@@ -116,7 +224,7 @@ class OffersScreen extends HookWidget {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => createItemDialog(),
+        onPressed: createOfferDialog,
         label: Row(
           children: [
             const Icon(Icons.add),
@@ -129,44 +237,42 @@ class OffersScreen extends HookWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 60, left: 15),
-            child: Stack(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  offersTrigger.value.toString(),
-                  style: const TextStyle(color: Colors.white),
+                  AppLocalizations.of(context)!.offersTitle,
+                  style: const TextStyle(fontSize: 32),
                 ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    AppLocalizations.of(context)!.offersTitle,
-                    style: const TextStyle(fontSize: 32),
-                  ),
-                ),
+                IconButton(
+                    onPressed: () => {ref.read(offersProvider).getOffers()},
+                    icon: const Icon(
+                      Icons.refresh,
+                      color: kPrimaryColor,
+                      size: 32,
+                    )),
               ],
             ),
           ),
-          offers.value.isNotEmpty
-              ? Expanded(
-                  child: ListView.builder(
-                    itemCount: offers.value.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return OfferContainer(
-                        offerTitle: offers.value[index][0],
-                        offerDate: offers.value[index][1],
-                        onListTileTap: () => {},
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete),
-                          color: Colors.grey,
-                          onPressed: () => removeOffer(index),
-                        ),
-                      );
-                    },
-                  ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.only(top: 150),
-                  child: Center(
-                      child: Text(AppLocalizations.of(context)!.noOfferInfo)))
+          Consumer(builder: (context, ref, child) {
+            final offerProvider = ref.watch(offersProvider);
+            return offerProvider.offers.isNotEmpty
+                ? Expanded(
+                    child: ListView.builder(
+                      itemCount: offerProvider.offers.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return OfferContainer(
+                          offer: offerProvider.offers[index],
+                        );
+                      },
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.only(top: 150),
+                    child: Center(
+                        child:
+                            Text(AppLocalizations.of(context)!.noOfferInfo)));
+          })
         ],
       ),
     );

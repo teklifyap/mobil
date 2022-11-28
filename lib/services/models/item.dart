@@ -3,9 +3,9 @@ class Item {
   String? _name;
   double? _value;
   String? _unit;
-  String? _quantity;
+  double? _quantity;
 
-  Item({int? id, String? name, double? value, String? unit, String? quantity}) {
+  Item({int? id, String? name, double? value, String? unit, double? quantity}) {
     if (id != null) {
       _id = id;
     }
@@ -27,15 +27,17 @@ class Item {
 
   String? get name => _name;
 
+  set name(String? name) => _name = name;
+
   double? get value => _value;
 
   set value(double? value) => _value = value;
 
   String? get unit => _unit;
 
-  String? get quantity => _quantity;
+  double? get quantity => _quantity;
 
-  set quantity(String? quantity) => _quantity = quantity;
+  set quantity(double? quantity) => _quantity = quantity;
 
   Item.fromJson(Map<String, dynamic> json) {
     _id = json['id'];

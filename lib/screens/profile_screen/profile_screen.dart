@@ -1,57 +1,187 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:teklifyap/app_data.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:teklifyap/constants.dart';
+import 'package:teklifyap/provider/user_provider.dart';
+import 'package:teklifyap/screens/login_screen/language_picker/language_picker_widget.dart';
+import 'package:teklifyap/screens/storage_screen/components/input_field.dart';
 import 'package:teklifyap/services/alerts.dart';
 import 'package:teklifyap/services/api/user_actions.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:teklifyap/services/models/user.dart';
 
-class ProfileScreen extends HookWidget {
+class ProfileScreen extends HookConsumerWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.person,
-              size: 360,
-              color: kPrimaryColor,
-            ),
-            Text(
-              '${AppData.currentUser?.name} ${AppData.currentUser?.surname}',
-              style: const TextStyle(fontSize: 24),
-            ),
-            Text(
-              AppData.currentUser?.email ?? "",
-              style: const TextStyle(fontSize: 24),
-            ),
-            TextButton(
-                onPressed: () => {
-                      CustomAlerts.confirmActionMessage(context, () {
-                        UserActions.deleteUser(context);
-                        //todo: dile ekle
-                      }, "Are you sure? All data will be deleted after you confirm mail in your email")
-                    },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.delete,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final nameController = useTextEditingController();
+    final surnameController = useTextEditingController();
+    final emailController = useTextEditingController();
+    final passwordController = useTextEditingController();
+    final newPasswordController = useTextEditingController();
+
+    setControllers() {
+      final profile = ref.read(userProvider);
+      nameController.text = profile.user!.name!;
+      surnameController.text = profile.user!.surname!;
+      emailController.text = profile.user!.email!;
+      passwordController.clear();
+      newPasswordController.clear();
+    }
+
+    Future updateProfileDialog() async {
+      setControllers();
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text(AppLocalizations.of(context)!.editProfile),
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(30.0))),
+                content: HookBuilder(
+                  builder: (context) {
+                    final isPasswordChange = useState(false);
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CustomInputField(
+                            labelText: AppLocalizations.of(context)!.name,
+                            controller: nameController),
+                        CustomInputField(
+                            labelText: AppLocalizations.of(context)!.surname,
+                            controller: surnameController),
+                        CustomInputField(
+                            labelText: AppLocalizations.of(context)!.email,
+                            controller: emailController),
+                        CustomInputField(
+                            labelText: AppLocalizations.of(context)!.password,
+                            controller: passwordController),
+                        isPasswordChange.value
+                            ? CustomInputField(
+                                labelText:
+                                    AppLocalizations.of(context)!.newPassword,
+                                controller: newPasswordController)
+                            : TextButton(
+                                onPressed: () {
+                                  isPasswordChange.value = true;
+                                },
+                                child: Text(
+                                  AppLocalizations.of(context)!
+                                      .clickHereToChangePassword,
+                                  style: const TextStyle(color: kPrimaryColor),
+                                ))
+                      ],
+                    );
+                  },
+                ),
+                actions: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                          onPressed: () async {
+                            await UserActions.updateUser(
+                                User(
+                                    id: 999,
+                                    name: nameController.text,
+                                    surname: surnameController.text,
+                                    email: emailController.text),
+                                passwordController.text,
+                                newPasswordController.text);
+                            ref.read(userProvider).getUser();
+                            if (context.mounted) Navigator.pop(context);
+                          },
+                          icon: const Icon(
+                            Icons.done,
+                            color: kPrimaryColor,
+                          ))
+                    ],
+                  )
+                ],
+              ));
+    }
+
+    return Consumer(
+      builder: (context, ref, child) {
+        final profileProvider = ref.watch(userProvider);
+        ref.read(userProvider).getUser();
+        return Scaffold(
+          body: Center(
+            child: Stack(
+              children: [
+                const Positioned(
+                    top: 50, right: 5, child: LanguagePickerWidget()),
+                Positioned(
+                  top: 100,
+                  right: 10,
+                  child: IconButton(
+                    onPressed: updateProfileDialog,
+                    icon: const Icon(
+                      Icons.edit,
                       color: kPrimaryColor,
                     ),
+                  ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        alignment: Alignment.center,
+                        child: Container(
+                          width: 150,
+                          height: 150,
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: kPrimaryColor,
+                          ),
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                              '${profileProvider.user!.name!.substring(0, 1)}${profileProvider.user!.surname!.substring(0, 1)}',
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 48)),
+                        ),
+                      ),
+                    ),
                     Text(
-                      "Delete my account!",
-                      //todo: dile bunu ekle
-                      style: TextStyle(color: kPrimaryColor),
-                    )
+                      '${profileProvider.user!.name} ${profileProvider.user!.surname}',
+                      style: const TextStyle(fontSize: 24),
+                    ),
+                    Text(
+                      profileProvider.user!.email ?? "",
+                      style: const TextStyle(fontSize: 24),
+                    ),
+                    TextButton(
+                        onPressed: () => {
+                              CustomAlerts.confirmActionMessage(context, () {
+                                UserActions.deleteUser(context);
+                              },
+                                  AppLocalizations.of(context)!
+                                      .confirmAccountDelete)
+                            },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.delete,
+                              color: kPrimaryColor,
+                            ),
+                            Text(
+                              AppLocalizations.of(context)!.deleteMyAccount,
+                              style: const TextStyle(color: kPrimaryColor),
+                            )
+                          ],
+                        )),
                   ],
-                ))
-          ],
-        ),
-      ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

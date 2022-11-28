@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:teklifyap/app_data.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:teklifyap/provider/item_provider.dart';
 import 'package:teklifyap/screens/storage_screen/components/input_field.dart';
 import 'package:teklifyap/screens/storage_screen/components/item_container.dart';
 import 'package:teklifyap/services/api/item_actions.dart';
 import 'package:teklifyap/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+// ignore: constant_identifier_names
 enum Units { M3, M2, KG, LT, ADET, M }
 
-class StorageScreen extends HookWidget {
+class StorageScreen extends HookConsumerWidget {
   const StorageScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final items = useState(AppData.storageItems);
+  Widget build(BuildContext context, WidgetRef ref) {
     final itemNameController = useTextEditingController();
     final itemValueController = useTextEditingController();
     String itemUnitController = Units.KG.name;
 
     void addItem(List<String> value) async {
       await ItemActions.createItem(value[0], value[1], value[2], context);
-      await ItemActions.getAllItems();
-      AppData.triggerStorageItems();
+      ref.read(itemsProvider).getItems();
       itemNameController.clear();
       itemValueController.clear();
     }
@@ -120,31 +120,43 @@ class StorageScreen extends HookWidget {
       ),
       body: Column(children: [
         Padding(
-          padding: const EdgeInsets.only(top: 60, left: 15),
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: Text(
-              AppLocalizations.of(context)!.storage,
-              style: const TextStyle(fontSize: 32),
-            ),
-          ),
-        ),
-        items.value.isNotEmpty
-            ? Expanded(
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3),
-                  itemCount: items.value.length,
-                  itemBuilder: (context, index) {
-                    return ItemContainer(item: items.value[index]);
-                  },
+            padding: const EdgeInsets.only(top: 60, left: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  AppLocalizations.of(context)!.storage,
+                  style: const TextStyle(fontSize: 32),
                 ),
-              )
-            : Padding(
-                padding: const EdgeInsets.only(top: 150),
-                child: Center(
-                    child:
-                        Text(AppLocalizations.of(context)!.noItemInTheStorage)))
+                IconButton(
+                    onPressed: () => {ref.read(itemsProvider).getItems()},
+                    icon: const Icon(
+                      Icons.refresh,
+                      color: kPrimaryColor,
+                      size: 32,
+                    )),
+              ],
+            )),
+        Consumer(builder: (context, ref, child) {
+          final itemProvider = ref.watch(itemsProvider);
+          return itemProvider.items.isNotEmpty
+              ? Expanded(
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3),
+                    itemCount: itemProvider.items.length,
+                    itemBuilder: (context, index) {
+                      return ItemContainer(item: itemProvider.items[index]);
+                    },
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(top: 150),
+                  child: Center(
+                      child: Text(
+                          AppLocalizations.of(context)!.noItemInTheStorage)));
+        })
       ]),
     );
   }

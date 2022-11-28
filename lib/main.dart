@@ -17,24 +17,24 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final languageProvider = ref.watch(localeProvider);
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: kBackgroundColor,
-        textTheme: Theme.of(context).textTheme.apply(bodyColor: kPrimaryColor),
-      ),
-      supportedLocales: L10n.all,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate
-      ],
-      locale: languageProvider.locale,
-      home: const SplashScreen(
-        primaryColor: kPrimaryColor,
-      ),
-    );
+    return Consumer(builder: (context, ref, child) {
+      final languageProvider = ref.watch(localeProvider);
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          textTheme:
+              Theme.of(context).textTheme.apply(bodyColor: kPrimaryColor),
+        ),
+        supportedLocales: L10n.all,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate
+        ],
+        locale: languageProvider.locale,
+        home: const SplashScreen(),
+      );
+    });
   }
 }
