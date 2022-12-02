@@ -38,7 +38,7 @@ class App extends HookConsumerWidget {
             IconButton(
               iconSize: 32,
               icon: const Icon(Icons.warehouse),
-              color: selectedPage.value == 0 ? kPrimaryColor : Colors.grey,
+              color: selectedPage.value == 0 ? kPrimaryColor : kSecondaryColor,
               onPressed: () {
                 selectedPage.value = 0;
                 pageController.animateToPage(0,
@@ -51,7 +51,7 @@ class App extends HookConsumerWidget {
               icon: const Icon(
                 Icons.local_offer,
               ),
-              color: selectedPage.value == 1 ? kPrimaryColor : Colors.grey,
+              color: selectedPage.value == 1 ? kPrimaryColor : kSecondaryColor,
               onPressed: () {
                 selectedPage.value = 1;
                 pageController.animateToPage(1,
@@ -64,7 +64,7 @@ class App extends HookConsumerWidget {
               icon: const Icon(
                 Icons.person,
               ),
-              color: selectedPage.value == 2 ? kPrimaryColor : Colors.grey,
+              color: selectedPage.value == 2 ? kPrimaryColor : kSecondaryColor,
               onPressed: () {
                 selectedPage.value = 2;
                 pageController.animateToPage(2,

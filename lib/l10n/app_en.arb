@@ -132,5 +132,7 @@
  "clickHereToChangePassword": "Click here to change password",
  "@clickHereToChangePassword": {},
  "newPassword": "New Password",
- "@newPassword": {}
+ "@newPassword": {},
+ "offerExported": "Offer exported and has been sent to your mail!",
+ "@offerExported": {}
 }

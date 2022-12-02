@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:teklifyap/app_data.dart';
+import 'package:teklifyap/constants.dart';
 import 'package:teklifyap/services/api/api_endpoints.dart';
 import 'package:teklifyap/services/models/offer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OfferActions {
   static Future<bool> createOffer(
@@ -165,6 +168,44 @@ class OfferActions {
     } else {
       throw Exception(
           'something went wrong while deleting item: $itemID from offer: ${offer.id}, ${offer.title}. response body: \n${res.body}');
+    }
+  }
+
+  static Future<bool> exportOffer(BuildContext context, Offer offer) async {
+    Response res = await get(
+        Uri.parse('${ApiEndpoints.forOfferUrl}/export/${offer.id}'),
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
+        });
+
+    if (res.statusCode == 200) {
+      if (context.mounted) {
+        final offerExportedAlert = SnackBar(
+            backgroundColor: kSecondaryColor,
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(right: 8.0),
+                  child: Icon(
+                    Icons.done,
+                    color: kPrimaryColor,
+                  ),
+                ),
+                Text(
+                  AppLocalizations.of(context)!.offerExported,
+                  style: const TextStyle(color: kPrimaryColor),
+                )
+              ],
+            ));
+        ScaffoldMessenger.of(context).showSnackBar(offerExportedAlert);
+      }
+
+      return true;
+    } else {
+      throw Exception(
+          'something went wrong while exporting offer: ${offer.id}, ${offer.title}. response body: \n${res.body}');
     }
   }
 }

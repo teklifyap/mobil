@@ -293,6 +293,10 @@ class OfferContainer extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
+              onPressed: () => OfferActions.exportOffer(context, offer),
+              icon: const Icon(Icons.print),
+            ),
+            IconButton(
               onPressed: () => editOffer(),
               icon: const Icon(Icons.edit),
             ),

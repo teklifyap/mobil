@@ -57,7 +57,7 @@
  "offerUsername": "Kullanıcı adı",
  "saveOffer": "Teklifi kaydet",
  "addItemsToOffer": "Teklife malzeme ekle",
- "offerStatus": "Offer Status",
+ "offerStatus": "Teklif durumu",
  "confirmed": "Onaylandı",
  "notConfirmed": "Onaylanmadı",
  "seeOfferItems": "Teklif malzemelerini gör",
@@ -65,5 +65,6 @@
  "cancel": "İptal et",
  "editProfile": "Profili düzenle",
  "clickHereToChangePassword": "Şifreyi değiştirmek için tıklayın",
- "newPassword": "Yeni şifre"
+ "newPassword": "Yeni şifre",
+ "offerExported": "Teklif dışa aktarılıp mailinize gönderildi!"
 }
