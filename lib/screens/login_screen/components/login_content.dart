@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:teklifyap/provider/employee_provider.dart';
+import 'package:teklifyap/provider/item_provider.dart';
+import 'package:teklifyap/provider/offer_provider.dart';
+import 'package:teklifyap/provider/user_provider.dart';
 
 /* Local imports */
 import 'package:teklifyap/screens/app/app.dart';
@@ -19,11 +24,11 @@ enum Screens {
   forgotPassword,
 }
 
-class LoginContent extends HookWidget {
+class LoginContent extends HookConsumerWidget {
   const LoginContent({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final registerFormKey = GlobalKey<FormState>();
     final loginFormKey = GlobalKey<FormState>();
     final forgotPasswordFormKey = GlobalKey<FormState>();
@@ -167,10 +172,24 @@ class LoginContent extends HookWidget {
               }
             } else if (ChangeScreenAnimation.currentScreen == Screens.login &&
                 loginFormKey.currentState!.validate()) {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const Center(
+                      child: CircularProgressIndicator.adaptive(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(kPrimaryColor)),
+                    );
+                  });
               await UserActions.login(context, emailTextController.text,
                   passwordTextController.text);
-              await UserActions.getUser();
+              //load data
+              ref.read(itemsProvider).getItems();
+              ref.read(userProvider).getUser();
+              ref.read(offersProvider).getOffers();
+              ref.read(employeesProvider).getEmployees();
               if (context.mounted) {
+                Navigator.pop(context);
                 Navigator.of(context).push(createRoute(App()));
               }
             } else {

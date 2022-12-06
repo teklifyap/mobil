@@ -7,6 +7,7 @@ import 'package:teklifyap/screens/storage_screen/components/item_container.dart'
 import 'package:teklifyap/services/api/item_actions.dart';
 import 'package:teklifyap/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:teklifyap/services/models/item.dart';
 
 // ignore: constant_identifier_names
 enum Units { M3, M2, KG, LT, ADET, M }
@@ -20,8 +21,8 @@ class StorageScreen extends HookConsumerWidget {
     final itemValueController = useTextEditingController();
     String itemUnitController = Units.KG.name;
 
-    void addItem(List<String> value) async {
-      await ItemActions.createItem(value[0], value[1], value[2], context);
+    void addItem(Item item) async {
+      await ItemActions.createItem(item);
       ref.read(itemsProvider).getItems();
       itemNameController.clear();
       itemValueController.clear();
@@ -79,11 +80,10 @@ class StorageScreen extends HookConsumerWidget {
                   padding: const EdgeInsets.only(left: 8.0),
                   child: TextButton(
                     onPressed: () {
-                      addItem([
-                        itemNameController.text,
-                        itemValueController.text,
-                        itemUnitController,
-                      ]);
+                      addItem(Item(
+                          name: itemNameController.text,
+                          value: double.parse(itemValueController.text),
+                          unit: itemUnitController));
                       Navigator.pop(context);
                     },
                     child: Row(

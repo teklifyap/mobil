@@ -66,5 +66,15 @@
  "editProfile": "Profili düzenle",
  "clickHereToChangePassword": "Şifreyi değiştirmek için tıklayın",
  "newPassword": "Yeni şifre",
- "offerExported": "Teklif dışa aktarılıp mailinize gönderildi!"
+ "offerExported": "Teklif dışa aktarılıp mailinize gönderildi!",
+ "editEmployee": "Çalışanı Düzenle",
+ "employeeName": "Çalışan İsmi",
+ "employeeSurname": "Çalışan Soyismi",
+ "employeeSave": "Çalışanı Kaydet",
+ "employeeDelete": "Çalışanı Sil",
+ "employeeNew": "Yeni Çalışan",
+ "employeeSalary": "Çalışan Maaşı",
+ "employeeAdd": "Çalışan Ekle",
+ "employees": "Çalışanlar",
+ "noEmployee": "Çalışan kimse yok!"
 }

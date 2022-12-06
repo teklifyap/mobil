@@ -10,6 +10,7 @@ import 'package:teklifyap/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:teklifyap/services/api/offer_actions.dart';
 import 'package:teklifyap/services/models/item.dart';
+import 'package:teklifyap/services/models/offer.dart';
 
 class OffersScreen extends HookConsumerWidget {
   const OffersScreen({Key? key}) : super(key: key);
@@ -21,17 +22,17 @@ class OffersScreen extends HookConsumerWidget {
     final profitRateController = useTextEditingController();
     List<TextEditingController> selectedItemsQuantities = [];
     List<int> selectedItemIDS = [];
-    List<Map<String, dynamic>> selectedItems = [];
+    List<Item> selectedItems = [];
     // DateTime dateController = DateTime.now();
 
     void addOffer() async {
       final profile = ref.read(userProvider);
-      await OfferActions.createOffer(
-          offerTitleController.text,
-          receiverNameController.text,
-          '${profile.user!.name} ${profile.user!.surname}',
-          double.parse(profitRateController.text),
-          selectedItems);
+      await OfferActions.createOffer(Offer(
+          title: offerTitleController.text,
+          receiverName: receiverNameController.text,
+          userName: '${profile.user!.name} ${profile.user!.surname}',
+          profitRate: double.parse(profitRateController.text),
+          items: selectedItems));
       ref.read(offersProvider).getOffers();
     }
 
@@ -100,10 +101,10 @@ class OffersScreen extends HookConsumerWidget {
                                 selectedItemIDS.asMap().forEach((i, x) {
                                   addableItems.removeWhere(
                                       (element) => element.id == x);
-                                  selectedItems.add({
-                                    "id": x,
-                                    "quantity": selectedItemsQuantities[i].text
-                                  });
+                                  selectedItems.add(Item(
+                                      id: x,
+                                      quantity: double.parse(
+                                          selectedItemsQuantities[i].text)));
                                 });
                               }
 

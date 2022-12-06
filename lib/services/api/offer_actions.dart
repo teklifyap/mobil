@@ -6,22 +6,20 @@ import 'package:http/http.dart';
 import 'package:teklifyap/app_data.dart';
 import 'package:teklifyap/constants.dart';
 import 'package:teklifyap/services/api/api_endpoints.dart';
+import 'package:teklifyap/services/models/item.dart';
 import 'package:teklifyap/services/models/offer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OfferActions {
   static Future<bool> createOffer(
-      String title,
-      String receiverName,
-      String userName,
-      double profitRate,
-      List<Map<String, dynamic>> items) async {
+    Offer offer,
+  ) async {
     Map<String, dynamic> requestPayload = {
-      "title": title,
-      "receiverName": receiverName,
-      "userName": userName,
-      "profitRate": profitRate,
-      "items": items,
+      "title": offer.title,
+      "receiverName": offer.receiverName,
+      "userName": offer.userName,
+      "profitRate": offer.profitRate,
+      "items": offer.items,
     };
 
     Response res = await post(Uri.parse(ApiEndpoints.forOfferUrl),
@@ -136,8 +134,7 @@ class OfferActions {
     }
   }
 
-  static Future<bool> addItemToOffer(
-      Offer offer, Map<String, dynamic> item) async {
+  static Future<bool> addItemToOffer(Offer offer, Item item) async {
     Response res = await post(
         Uri.parse('${ApiEndpoints.forOfferUrl}/item?offer=${offer.id}'),
         body: jsonEncode(item),

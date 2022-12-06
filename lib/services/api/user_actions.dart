@@ -9,7 +9,6 @@ import 'package:teklifyap/app_data.dart';
 import 'package:teklifyap/services/api/api_endpoints.dart';
 import 'package:teklifyap/services/alerts.dart';
 import 'package:teklifyap/services/models/user.dart';
-import 'package:teklifyap/constants.dart';
 
 class UserActions {
   static Future<bool> login(
@@ -19,24 +18,11 @@ class UserActions {
       "password": password
     };
 
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator.adaptive(
-                valueColor: AlwaysStoppedAnimation<Color>(kPrimaryColor)),
-          );
-        });
-
     Response res = await post(
       Uri.parse(ApiEndpoints.authUrl),
       body: jsonEncode(requestPayload),
       headers: {HttpHeaders.contentTypeHeader: "application/json"},
     );
-
-    if (context.mounted) {
-      Navigator.pop(context);
-    }
 
     if (res.statusCode == 200) {
       final responseBody = jsonDecode(utf8.decode(res.bodyBytes));

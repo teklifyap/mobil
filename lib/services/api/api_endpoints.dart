@@ -10,4 +10,6 @@ class ApiEndpoints {
       "https://teklifyap-api.oguzhanercelik.dev/api/v2/user";
   static const String forOfferUrl =
       "https://teklifyap-api.oguzhanercelik.dev/api/v2/offer";
+  static const String forEmployee =
+      "https://teklifyap-api.oguzhanercelik.dev/api/v2/employee";
 }

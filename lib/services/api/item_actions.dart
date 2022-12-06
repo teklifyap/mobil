@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
 import 'package:teklifyap/app_data.dart';
@@ -8,12 +7,11 @@ import 'package:teklifyap/services/api/api_endpoints.dart';
 import 'package:teklifyap/services/models/item.dart';
 
 class ItemActions {
-  static Future<bool> createItem(
-      String name, String value, String unit, BuildContext context) async {
+  static Future<bool> createItem(Item item) async {
     Map<String, dynamic> requestPayload = {
-      "name": name,
-      "value": double.parse(value),
-      "unit": unit.toUpperCase(),
+      "name": item.name,
+      "value": item.value,
+      "unit": item.unit?.toUpperCase(),
     };
 
     Response res = await post(

@@ -29,7 +29,7 @@ class OfferContainer extends HookConsumerWidget {
     final profitRateController = useTextEditingController();
     List<TextEditingController> selectedItemsQuantities = [];
     List<int> selectedItemIDS = [];
-    List<Map<String, dynamic>> selectedItems = [];
+    List<Item> selectedItems = [];
     final itemProvider = ref.read(itemsProvider);
 
     setEditInputFields() {
@@ -44,7 +44,7 @@ class OfferContainer extends HookConsumerWidget {
       ref.read(offersProvider).getOffers();
     }
 
-    Future addItemsToOffer(List<Map<String, dynamic>> items) async {
+    Future addItemsToOffer(List<Item> items) async {
       for (var item in items) {
         await OfferActions.addItemToOffer(offer, item);
       }
@@ -127,10 +127,10 @@ class OfferContainer extends HookConsumerWidget {
                         child: IconButton(
                             onPressed: () async {
                               selectedItemIDS.asMap().forEach((i, x) {
-                                selectedItems.add({
-                                  "id": x,
-                                  "quantity": selectedItemsQuantities[i].text
-                                });
+                                selectedItems.add(Item(
+                                    id: x,
+                                    quantity: double.parse(
+                                        selectedItemsQuantities[i].text)));
                               });
                               await addItemsToOffer(selectedItems);
                               if (context.mounted) Navigator.pop(context);
