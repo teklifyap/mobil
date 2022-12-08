@@ -1,59 +1,43 @@
 class Item {
-  int? _id;
-  String? _name;
-  double? _value;
-  String? _unit;
-  double? _quantity;
+  int? id;
+  String? name;
+  double? value;
+  String? unit;
+  double? quantity;
 
   Item({int? id, String? name, double? value, String? unit, double? quantity}) {
     if (id != null) {
-      _id = id;
+      this.id = id;
     }
     if (name != null) {
-      _name = name;
+      this.name = name;
     }
     if (value != null) {
-      _value = value;
+      this.value = value;
     }
     if (unit != null) {
-      _unit = unit;
+      this.unit = unit;
     }
     if (quantity != null) {
-      _quantity = quantity;
+      this.quantity = quantity;
     }
   }
 
-  int? get id => _id;
-
-  String? get name => _name;
-
-  set name(String? name) => _name = name;
-
-  double? get value => _value;
-
-  set value(double? value) => _value = value;
-
-  String? get unit => _unit;
-
-  double? get quantity => _quantity;
-
-  set quantity(double? quantity) => _quantity = quantity;
-
   Item.fromJson(Map<String, dynamic> json) {
-    _id = json['id'];
-    _name = json['name'];
-    _value = json['value'];
-    _unit = json['unit'];
-    _quantity = json['quantity'];
+    id = json['id'];
+    name = json['name'];
+    value = json['value'];
+    unit = json['unit'];
+    quantity = json['quantity'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = _id;
-    data['name'] = _name;
-    data['value'] = _value;
-    data['unit'] = _unit;
-    data['quantity'] = _quantity;
+    data['id'] = id;
+    data['name'] = name;
+    data['value'] = value;
+    data['unit'] = unit;
+    data['quantity'] = quantity;
     return data;
   }
 }
