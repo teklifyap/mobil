@@ -5,23 +5,7 @@ class Item {
   String? unit;
   double? quantity;
 
-  Item({int? id, String? name, double? value, String? unit, double? quantity}) {
-    if (id != null) {
-      this.id = id;
-    }
-    if (name != null) {
-      this.name = name;
-    }
-    if (value != null) {
-      this.value = value;
-    }
-    if (unit != null) {
-      this.unit = unit;
-    }
-    if (quantity != null) {
-      this.quantity = quantity;
-    }
-  }
+  Item({this.id, this.name, this.value, this.unit, this.quantity});
 
   Item.fromJson(Map<String, dynamic> json) {
     id = json['id'];

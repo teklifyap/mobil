@@ -15,7 +15,7 @@ class EmployeeActions {
     };
 
     Response res = await post(
-      Uri.parse(ApiEndpoints.forEmployee),
+      Uri.parse(ApiEndpoints.employeeUrl),
       body: jsonEncode(requestPayload),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
@@ -33,7 +33,7 @@ class EmployeeActions {
 
   static Future<List<Employee>> getAllEmployees() async {
     List<Employee> allEmployees = [];
-    Response res = await get(Uri.parse(ApiEndpoints.forEmployee), headers: {
+    Response res = await get(Uri.parse(ApiEndpoints.employeeUrl), headers: {
       HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
       HttpHeaders.contentTypeHeader: "application/json",
     });
@@ -52,7 +52,7 @@ class EmployeeActions {
 
   static Future<Employee> getEmployee(int employeeID) async {
     Response res = await get(
-        Uri.parse("${ApiEndpoints.forEmployee}/$employeeID"),
+        Uri.parse("${ApiEndpoints.employeeUrl}/$employeeID"),
         headers: {
           HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
           HttpHeaders.contentTypeHeader: "application/json",
@@ -73,7 +73,7 @@ class EmployeeActions {
     };
 
     Response res = await put(
-      Uri.parse('${ApiEndpoints.forEmployee}/${employee.id}'),
+      Uri.parse('${ApiEndpoints.employeeUrl}/${employee.id}'),
       body: jsonEncode(requestPayload),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
@@ -91,7 +91,7 @@ class EmployeeActions {
 
   static Future<bool> deleteEmployee(int employeeID) async {
     Response res = await delete(
-      Uri.parse('${ApiEndpoints.forEmployee}/$employeeID'),
+      Uri.parse('${ApiEndpoints.employeeUrl}/$employeeID'),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',

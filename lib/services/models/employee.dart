@@ -4,20 +4,7 @@ class Employee {
   String? surname;
   String? salary;
 
-  Employee({int? id, String? name, String? surname, String? salary}) {
-    if (id != null) {
-      this.id = id;
-    }
-    if (name != null) {
-      this.name = name;
-    }
-    if (surname != null) {
-      this.surname = surname;
-    }
-    if (salary != null) {
-      this.salary = salary;
-    }
-  }
+  Employee({this.id, this.name, this.surname, this.salary});
 
   Employee.fromJson(Map<String, dynamic> json) {
     id = json['id'];

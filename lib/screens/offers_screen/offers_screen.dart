@@ -122,7 +122,11 @@ class OffersScreen extends HookConsumerWidget {
                                   selectedItems.add(Item(
                                       id: x,
                                       quantity: double.parse(
-                                          selectedItemsQuantities[i].text)));
+                                          selectedItemsQuantities[i].text),
+                                      value: ref
+                                          .read(itemsProvider)
+                                          .items[i]
+                                          .value));
                                 });
                               }
                               Navigator.pop(context);

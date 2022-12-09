@@ -11,36 +11,14 @@ class Offer {
   List<Item>? items;
 
   Offer(
-      {int? id,
-      String? title,
-      String? date,
+      {this.id,
+      this.title,
+      this.date,
       this.status = false,
-      String? userName,
-      String? receiverName,
-      double? profitRate,
-      List<Item>? items}) {
-    if (id != null) {
-      this.id = id;
-    }
-    if (title != null) {
-      this.title = title;
-    }
-    if (date != null) {
-      this.date = date;
-    }
-    if (userName != null) {
-      this.userName = userName;
-    }
-    if (receiverName != null) {
-      this.receiverName = receiverName;
-    }
-    if (profitRate != null) {
-      this.profitRate = profitRate;
-    }
-    if (items != null) {
-      this.items = items;
-    }
-  }
+      this.userName,
+      this.receiverName,
+      this.profitRate,
+      this.items});
 
   Offer.fromJson(Map<String, dynamic> json) {
     id = json['id'];

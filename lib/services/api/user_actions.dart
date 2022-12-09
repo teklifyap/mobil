@@ -54,7 +54,7 @@ class UserActions {
       "password": password
     };
 
-    Response res = await post(Uri.parse(ApiEndpoints.registerUrl),
+    Response res = await post(Uri.parse('${ApiEndpoints.authUrl}/register'),
         body: jsonEncode(requestPayload),
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
@@ -71,7 +71,7 @@ class UserActions {
   }
 
   static Future<User> getUser() async {
-    Response res = await get(Uri.parse(ApiEndpoints.forProfileUrl), headers: {
+    Response res = await get(Uri.parse(ApiEndpoints.profileUrl), headers: {
       HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
       HttpHeaders.contentTypeHeader: "application/json",
     });
@@ -85,7 +85,7 @@ class UserActions {
   }
 
   static Future<bool> deleteUser(BuildContext context) async {
-    Response res = await delete(Uri.parse(ApiEndpoints.forUserUrl), headers: {
+    Response res = await delete(Uri.parse(ApiEndpoints.userUrl), headers: {
       HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
       HttpHeaders.contentTypeHeader: "application/json",
     });
@@ -112,7 +112,7 @@ class UserActions {
     }
 
     Response res = await put(
-      Uri.parse(ApiEndpoints.forProfileUrl),
+      Uri.parse(ApiEndpoints.profileUrl),
       body: jsonEncode(requestPayload),
       headers: {
         HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',

@@ -6,6 +6,7 @@ import 'package:teklifyap/provider/employee_provider.dart';
 import 'package:teklifyap/provider/item_provider.dart';
 import 'package:teklifyap/provider/offer_provider.dart';
 import 'package:teklifyap/provider/user_provider.dart';
+import 'package:teklifyap/provider/worksite_provider.dart';
 
 /* Local imports */
 import 'package:teklifyap/screens/app/app.dart';
@@ -166,7 +167,6 @@ class LoginContent extends HookConsumerWidget {
                   passwordTextController.text,
                   context);
               ChangeScreenAnimation.setCurrentScreen(Screens.login);
-
               if (!ChangeScreenAnimation.isPlaying) {
                 await ChangeScreenAnimation.reverse();
               }
@@ -188,6 +188,7 @@ class LoginContent extends HookConsumerWidget {
               ref.read(userProvider).getUser();
               ref.read(offersProvider).getOffers();
               ref.read(employeesProvider).getEmployees();
+              ref.read(worksitesProvider).getWorksites();
               if (context.mounted) {
                 Navigator.pop(context);
                 Navigator.of(context).push(createRoute(App()));

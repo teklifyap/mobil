@@ -4,12 +4,11 @@ import 'package:teklifyap/services/api/offer_actions.dart';
 import 'package:teklifyap/services/models/offer.dart';
 
 class OfferProvider extends ChangeNotifier {
-  List<Offer> _offers = [];
-
-  List<Offer> get offers => _offers;
+  List<Offer> offers = [];
 
   void getOffers() async {
-    _offers = await OfferActions.getAllOffers();
+    offers = await OfferActions.getAllOffers();
+    offers = List.from(offers.reversed);
     notifyListeners();
   }
 }
