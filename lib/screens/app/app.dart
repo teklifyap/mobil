@@ -6,6 +6,7 @@ import 'package:teklifyap/screens/offers_screen/offers_screen.dart';
 import 'package:teklifyap/screens/profile_screen/profile_screen.dart';
 import 'package:teklifyap/screens/storage_screen/storage_screen.dart';
 import 'package:teklifyap/constants.dart';
+import 'package:teklifyap/screens/worksites_screen/worksites_screen.dart';
 
 class App extends HookConsumerWidget {
   App({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class App extends HookConsumerWidget {
     const StorageScreen(),
     const OffersScreen(),
     const EmployeeScreen(),
+    const WorksitesScreen(),
     const ProfileScreen(),
   ];
 
@@ -26,7 +28,13 @@ class App extends HookConsumerWidget {
         : pageController.initialPage.toInt());
 
     return Scaffold(
-      body: PageView(controller: pageController, children: screens),
+      body: PageView(
+        controller: pageController,
+        children: screens,
+        onPageChanged: (changedPage) {
+          selectedPage.value = changedPage;
+        },
+      ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -71,12 +79,25 @@ class App extends HookConsumerWidget {
             IconButton(
               iconSize: 32,
               icon: const Icon(
-                Icons.person_outline,
+                Icons.apartment,
               ),
               color: selectedPage.value == 3 ? kPrimaryColor : kSecondaryColor,
               onPressed: () {
                 selectedPage.value = 3;
                 pageController.animateToPage(3,
+                    duration: const Duration(seconds: 1),
+                    curve: Curves.fastLinearToSlowEaseIn);
+              },
+            ),
+            IconButton(
+              iconSize: 32,
+              icon: const Icon(
+                Icons.person_outline,
+              ),
+              color: selectedPage.value == 4 ? kPrimaryColor : kSecondaryColor,
+              onPressed: () {
+                selectedPage.value = 4;
+                pageController.animateToPage(4,
                     duration: const Duration(seconds: 1),
                     curve: Curves.fastLinearToSlowEaseIn);
               },

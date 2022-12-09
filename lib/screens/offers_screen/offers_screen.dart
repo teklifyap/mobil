@@ -63,11 +63,15 @@ class OffersScreen extends HookConsumerWidget {
                                     useTextEditingController();
                                 return ListTile(
                                     onTap: () {
-                                      //todo: eğer ürün seçilip geri tıklanırsa eklenmiş gibi sayıyor
-                                      selectedItemsQuantities
-                                          .add(quantityController);
-                                      selectedItemIDS
-                                          .add(addableItems[index].id!);
+                                      if (isSelected.value) {
+                                        selectedItemIDS.removeLast();
+                                        selectedItemsQuantities.removeLast();
+                                      } else {
+                                        selectedItemsQuantities
+                                            .add(quantityController);
+                                        selectedItemIDS
+                                            .add(addableItems[index].id!);
+                                      }
                                       isSelected.value = !isSelected.value;
                                     },
                                     title: Text(addableItems[index].name ?? ""),
@@ -98,16 +102,33 @@ class OffersScreen extends HookConsumerWidget {
                         child: IconButton(
                             onPressed: () {
                               if (addableItems.isNotEmpty) {
+                                var itemsToRemove = [];
+                                selectedItemsQuantities
+                                    .asMap()
+                                    .forEach((key, value) {
+                                  if (value.text.isEmpty) {
+                                    itemsToRemove.add(key);
+                                  }
+                                });
+                                if (itemsToRemove.isNotEmpty) {
+                                  itemsToRemove.asMap().forEach((key, value) {
+                                    selectedItemsQuantities.removeAt(value);
+                                    selectedItemIDS.removeAt(value);
+                                  });
+                                }
                                 selectedItemIDS.asMap().forEach((i, x) {
                                   addableItems.removeWhere(
                                       (element) => element.id == x);
                                   selectedItems.add(Item(
                                       id: x,
                                       quantity: double.parse(
-                                          selectedItemsQuantities[i].text)));
+                                          selectedItemsQuantities[i].text),
+                                      value: ref
+                                          .read(itemsProvider)
+                                          .items[i]
+                                          .value));
                                 });
                               }
-
                               Navigator.pop(context);
                             },
                             icon: const Icon(
@@ -177,6 +198,7 @@ class OffersScreen extends HookConsumerWidget {
                 TextButton(
                     onPressed: () => addItemsToOfferDialog(addableItems.items),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Icon(
                           Icons.add,

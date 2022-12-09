@@ -22,7 +22,7 @@ class OfferActions {
       "items": offer.items,
     };
 
-    Response res = await post(Uri.parse(ApiEndpoints.forOfferUrl),
+    Response res = await post(Uri.parse(ApiEndpoints.offerUrl),
         body: jsonEncode(requestPayload),
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
@@ -40,7 +40,7 @@ class OfferActions {
   static Future<Offer> getOffer(int offerID) async {
     Response res = await get(
       Uri.parse(
-        '${ApiEndpoints.forOfferUrl}/$offerID',
+        '${ApiEndpoints.offerUrl}/$offerID',
       ),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
@@ -65,7 +65,7 @@ class OfferActions {
     };
 
     Response res = await put(
-      Uri.parse('${ApiEndpoints.forOfferUrl}/${offer.id}'),
+      Uri.parse('${ApiEndpoints.offerUrl}/${offer.id}'),
       body: jsonEncode(requestPayload),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
@@ -83,7 +83,7 @@ class OfferActions {
 
   static Future<bool> deleteOffer(int offerID) async {
     Response res = await delete(
-      Uri.parse('${ApiEndpoints.forOfferUrl}/$offerID'),
+      Uri.parse('${ApiEndpoints.offerUrl}/$offerID'),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
@@ -100,7 +100,7 @@ class OfferActions {
 
   static Future<bool> changeOfferStatus(int offerID) async {
     Response res = await put(
-      Uri.parse('${ApiEndpoints.forOfferUrl}/status/$offerID'),
+      Uri.parse('${ApiEndpoints.offerUrl}/status/$offerID'),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
@@ -117,7 +117,7 @@ class OfferActions {
 
   static Future<List<Offer>> getAllOffers() async {
     List<Offer> allOffers = [];
-    Response res = await get(Uri.parse(ApiEndpoints.forOfferUrl), headers: {
+    Response res = await get(Uri.parse(ApiEndpoints.offerUrl), headers: {
       HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
       HttpHeaders.contentTypeHeader: "application/json",
     });
@@ -136,7 +136,7 @@ class OfferActions {
 
   static Future<bool> addItemToOffer(Offer offer, Item item) async {
     Response res = await post(
-        Uri.parse('${ApiEndpoints.forOfferUrl}/item?offer=${offer.id}'),
+        Uri.parse('${ApiEndpoints.offerUrl}/item?offer=${offer.id}'),
         body: jsonEncode(item),
         headers: {
           HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
@@ -153,7 +153,7 @@ class OfferActions {
 
   static Future<bool> deleteItemFromOffer(Offer offer, int itemID) async {
     Response res = await delete(
-      Uri.parse('${ApiEndpoints.forOfferUrl}/item/$itemID?offer=${offer.id}'),
+      Uri.parse('${ApiEndpoints.offerUrl}/item/$itemID?offer=${offer.id}'),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
@@ -170,7 +170,7 @@ class OfferActions {
 
   static Future<bool> exportOffer(BuildContext context, Offer offer) async {
     Response res = await get(
-        Uri.parse('${ApiEndpoints.forOfferUrl}/export/${offer.id}'),
+        Uri.parse('${ApiEndpoints.offerUrl}/export/${offer.id}'),
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',

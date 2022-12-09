@@ -15,7 +15,7 @@ class ItemActions {
     };
 
     Response res = await post(
-      Uri.parse(ApiEndpoints.forItemUrl),
+      Uri.parse(ApiEndpoints.itemUrl),
       body: jsonEncode(requestPayload),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
@@ -33,7 +33,7 @@ class ItemActions {
 
   static Future<bool> deleteItem(int itemID) async {
     Response res = await delete(
-      Uri.parse('${ApiEndpoints.forItemUrl}/$itemID'),
+      Uri.parse('${ApiEndpoints.itemUrl}/$itemID'),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
@@ -55,7 +55,7 @@ class ItemActions {
     };
 
     Response res = await put(
-      Uri.parse('${ApiEndpoints.forItemUrl}/${item.id}'),
+      Uri.parse('${ApiEndpoints.itemUrl}/${item.id}'),
       body: jsonEncode(requestPayload),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
@@ -73,7 +73,7 @@ class ItemActions {
 
   static Future<List<Item>> getAllItems() async {
     List<Item> allItems = [];
-    Response res = await get(Uri.parse(ApiEndpoints.forItemUrl), headers: {
+    Response res = await get(Uri.parse(ApiEndpoints.itemUrl), headers: {
       HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
       HttpHeaders.contentTypeHeader: "application/json",
     });
@@ -92,7 +92,7 @@ class ItemActions {
 
   static Future<Item> getItem(int itemID) async {
     Response res =
-        await get(Uri.parse("${ApiEndpoints.forItemUrl}/$itemID"), headers: {
+        await get(Uri.parse("${ApiEndpoints.itemUrl}/$itemID"), headers: {
       HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
       HttpHeaders.contentTypeHeader: "application/json",
     });

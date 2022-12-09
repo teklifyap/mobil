@@ -104,7 +104,6 @@ class ProfileScreen extends HookConsumerWidget {
     return Consumer(
       builder: (context, ref, child) {
         final profileProvider = ref.watch(userProvider);
-        ref.read(userProvider).getUser();
         return Scaffold(
           body: Center(
             child: Stack(

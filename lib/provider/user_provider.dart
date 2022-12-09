@@ -4,12 +4,10 @@ import 'package:teklifyap/services/api/user_actions.dart';
 import 'package:teklifyap/services/models/user.dart';
 
 class UserProvider extends ChangeNotifier {
-  User? _user;
-
-  User? get user => _user;
+  User? user;
 
   void getUser() async {
-    _user = await UserActions.getUser();
+    user = await UserActions.getUser();
     notifyListeners();
   }
 }
