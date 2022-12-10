@@ -22,7 +22,7 @@ class App extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     PageController pageController =
-        usePageController(initialPage: 0, keys: screens);
+        usePageController(initialPage: 2, keys: screens);
     final selectedPage = useState(pageController.hasClients
         ? pageController.page!.toInt()
         : pageController.initialPage.toInt());
