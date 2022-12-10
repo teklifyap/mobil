@@ -183,6 +183,7 @@ class LoginContent extends HookConsumerWidget {
                   });
               await UserActions.login(context, emailTextController.text,
                   passwordTextController.text);
+
               //load data
               ref.read(itemsProvider).getItems();
               ref.read(userProvider).getUser();

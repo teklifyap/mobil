@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart';
 
 import 'package:teklifyap/app_data.dart';
+import 'package:teklifyap/services/alerts.dart';
 import 'package:teklifyap/services/api/api_endpoints.dart';
 import 'package:teklifyap/services/models/worksite.dart';
 
@@ -39,12 +40,16 @@ class WorksiteActions {
       HttpHeaders.contentTypeHeader: "application/json",
     });
 
-    if (res.statusCode == 200) {
-      List<dynamic> worksite = jsonDecode(utf8.decode(res.bodyBytes))["data"];
-      for (var worksite in worksite) {
-        allWorksites.add(await WorksiteActions.getWorksite(worksite["id"]));
+    if (res.statusCode == 200 || res.statusCode == 500) {
+      List<dynamic>? worksites = jsonDecode(utf8.decode(res.bodyBytes))["data"];
+      if (worksites != null) {
+        for (var worksite in worksites) {
+          allWorksites.add(await WorksiteActions.getWorksite(worksite["id"]));
+        }
+        return allWorksites;
+      } else {
+        return [];
       }
-      return allWorksites;
     } else {
       throw Exception(
           "something went wrong while getting all worksites, response body: \n${res.body}");

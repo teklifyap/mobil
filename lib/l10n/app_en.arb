@@ -179,5 +179,7 @@
  "worksiteSelectOffer": "Select Offer",
  "@worksiteSelectOffer": {},
  "worksites": "Worksites",
- "@worksites": {}
+ "@worksites": {},
+ "worksitePickLocation": "Click to pick location!",
+ "@worksitePickLocation": {}
 }

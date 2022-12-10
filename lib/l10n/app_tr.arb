@@ -88,5 +88,7 @@
  "worksiteSeeLocation": "Şantiyenin Konumunu Gör",
  "worksiteNew": "Yeni Şantiye",
  "worksiteSelectOffer": "Teklif Seç",
- "worksites": "Şantiyelerim"
+ "worksites": "Şantiyelerim",
+ "worksitePickLocation": "Konum seçmek için tıklayın!",
+ "@worksitePickLocation": {}
 }
