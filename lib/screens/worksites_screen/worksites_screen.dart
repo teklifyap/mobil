@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:teklifyap/constants.dart';
@@ -14,6 +13,9 @@ import 'package:teklifyap/screens/storage_screen/components/input_field.dart';
 import 'package:teklifyap/screens/worksites_screen/components/worksite_container.dart';
 import 'package:teklifyap/services/api/worksite_actions.dart';
 import 'package:teklifyap/services/models/worksite.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:google_maps_flutter/google_maps_flutter.dart'
+    if (kIsWeb) 'package:google_maps_flutter_web/google_maps_flutter_web.dart' as platform;
 
 class WorksitesScreen extends HookConsumerWidget {
   const WorksitesScreen({Key? key}) : super(key: key);
@@ -39,13 +41,14 @@ class WorksitesScreen extends HookConsumerWidget {
     }
 
     Future newWorksiteDialog() async {
+      Completer<platform.GoogleMapController> mapController = Completer();
       worksiteAddressController.clear();
       worksiteNameController.clear();
       // ignore: unused_local_variable
       LocationPermission permission = await Geolocator.requestPermission();
       Position currentPosition = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.medium);
-      Completer<GoogleMapController> mapController = Completer();
+
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -110,8 +113,8 @@ class WorksitesScreen extends HookConsumerWidget {
                     ),
                     HookBuilder(builder: (context) {
                       final height = MediaQuery.of(context).size.height;
-                      final CameraPosition startingPoint = CameraPosition(
-                        target: LatLng(currentPosition.latitude,
+                      final platform.CameraPosition startingPoint = platform.CameraPosition(
+                        target: platform.LatLng(currentPosition.latitude,
                             currentPosition.longitude),
                         zoom: 15,
                       );
@@ -119,7 +122,7 @@ class WorksitesScreen extends HookConsumerWidget {
                       worksiteLocationX = currentPosition.latitude;
                       worksiteLocationY = currentPosition.longitude;
 
-                      void onCameraMove(CameraPosition position) {
+                      void onCameraMove(platform.CameraPosition position) {
                         worksiteLocationX = position.target.latitude;
                         worksiteLocationY = position.target.longitude;
                       }
@@ -130,11 +133,11 @@ class WorksitesScreen extends HookConsumerWidget {
                           height: height / 2.5,
                           child: Stack(
                             children: [
-                              GoogleMap(
+                              platform.GoogleMap(
                                 onCameraMove: onCameraMove,
-                                mapType: MapType.terrain,
+                                mapType: platform.MapType.terrain,
                                 initialCameraPosition: startingPoint,
-                                onMapCreated: (GoogleMapController controller) {
+                                onMapCreated: (platform.GoogleMapController controller) {
                                   mapController.complete(controller);
                                 },
                               ),
@@ -261,7 +264,7 @@ class WorksitesScreen extends HookConsumerWidget {
                     padding: const EdgeInsets.only(top: 150),
                     child: Center(
                         child:
-                            Text(AppLocalizations.of(context)!.noOfferInfo)));
+                            Text(AppLocalizations.of(context)!.noOfferInfo))); //todo: dile ekle no worksite
           })
         ],
       ),
