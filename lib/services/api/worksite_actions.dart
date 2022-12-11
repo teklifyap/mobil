@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:http/http.dart';
 
 import 'package:teklifyap/app_data.dart';
-import 'package:teklifyap/services/alerts.dart';
 import 'package:teklifyap/services/api/api_endpoints.dart';
 import 'package:teklifyap/services/models/worksite.dart';
 

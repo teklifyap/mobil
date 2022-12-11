@@ -30,7 +30,8 @@ class OfferContainer extends HookConsumerWidget {
     List<TextEditingController> selectedItemsQuantities = [];
     List<int> selectedItemIDS = [];
     List<Item> selectedItems = [];
-    final itemProvider = ref.read(itemsProvider);
+    var itemProvider = [...ref.read(itemsProvider).items];
+    itemProvider.removeWhere((element) => element.value == 0);
 
     setEditInputFields() {
       offerTitleController.text = offer.title!;
@@ -66,13 +67,12 @@ class OfferContainer extends HookConsumerWidget {
                   width: double.maxFinite,
                   child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: itemProvider.items.length,
+                    itemCount: itemProvider.length,
                     itemBuilder: (BuildContext context, int index) {
-                      if (selectedItemIDS
-                          .contains(itemProvider.items[index].id)) {
+                      if (selectedItemIDS.contains(itemProvider[index].id)) {
                         return null;
                       } else if (selectedItemIDS.length ==
-                          itemProvider.items.length) {
+                          itemProvider.length) {
                         return Text(
                             AppLocalizations.of(context)!.youAddedAllItems);
                       } else {
@@ -80,7 +80,7 @@ class OfferContainer extends HookConsumerWidget {
                         for (var element in offer.items!) {
                           offerIds.add(element.id!);
                         }
-                        if (offerIds.contains(itemProvider.items[index].id)) {
+                        if (offerIds.contains(itemProvider[index].id)) {
                           return Container();
                         } else {
                           return HookBuilder(
@@ -94,10 +94,9 @@ class OfferContainer extends HookConsumerWidget {
                                     selectedItemsQuantities
                                         .add(quantityController);
                                     selectedItemIDS
-                                        .add(itemProvider.items[index].id!);
+                                        .add(itemProvider[index].id!);
                                   },
-                                  title: Text(
-                                      itemProvider.items[index].name ?? ""),
+                                  title: Text(itemProvider[index].name ?? ""),
                                   trailing: isSelected.value
                                       ? SizedBox(
                                           width: 80,
@@ -172,7 +171,7 @@ class OfferContainer extends HookConsumerWidget {
                     : Text(
                         AppLocalizations.of(context)!.thereIsNoItemInTheOffer),
                 actions: [
-                  offer.items!.length != itemProvider.items.length
+                  offer.items!.length != itemProvider.length
                       ? TextButton(
                           onPressed: addItemsToOfferDialog,
                           child: Row(

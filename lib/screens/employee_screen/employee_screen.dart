@@ -8,6 +8,7 @@ import 'package:teklifyap/screens/employee_screen/components/employee_container.
 import 'package:teklifyap/screens/storage_screen/components/input_field.dart';
 import 'package:teklifyap/services/api/employee_actions.dart';
 import 'package:teklifyap/services/models/employee.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class EmployeeScreen extends HookConsumerWidget {
   const EmployeeScreen({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class EmployeeScreen extends HookConsumerWidget {
     final employeeNameController = useTextEditingController();
     final employeeSurnameController = useTextEditingController();
     final employeeSalaryController = useTextEditingController();
+    final width = MediaQuery.of(context).size.width;
 
     void newEmployee(Employee employee) async {
       await EmployeeActions.newEmployee(employee);
@@ -118,9 +120,9 @@ class EmployeeScreen extends HookConsumerWidget {
           return employeeProvider.employees.isNotEmpty
               ? Expanded(
                   child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount:
+                            kIsWeb ? (width <= 1000 ? width ~/ 150 : 8) : 3),
                     itemCount: employeeProvider.employees.length,
                     itemBuilder: (context, index) {
                       return EmployeeContainer(

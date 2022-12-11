@@ -50,9 +50,9 @@
  "addItemToOffer": "Teklife Malzeme Ekle",
  "itemQuantity": "Malzeme Sayısı",
  "selectItems": "Malzeme Seç",
- "youAddedAllItems": "Bütün malzemeleri zaten eklediniz!",
+ "youAddedAllItems": "Fiyatı olan bütün malzemeleri zaten eklediniz!",
  "thereIsNoItemInTheOffer": "Teklifte malzeme yok!",
- "offerAlreadyHasAllYourItems": "Teklif bütün malzemelere zaten sahip!",
+ "offerAlreadyHasAllYourItems": "Teklif fiyatı olan bütün malzemelere zaten sahip!",
  "editOffer": "Teklifi Düzenle",
  "offerUsername": "Kullanıcı Adı",
  "saveOffer": "Teklifi Kaydet",
@@ -90,5 +90,7 @@
  "worksiteSelectOffer": "Teklif Seç",
  "worksites": "Şantiyelerim",
  "worksitePickLocation": "Konum seçmek için tıklayın!",
- "@worksitePickLocation": {}
+ "worksiteNo": "Şantiye yok, yenisini ekle!",
+ "thereIsNoItemWithValue": "Fiyatı olan ürün yok, ürünlerin fiyatını güncelle!",
+ "alertForZeroValue": "Fiyatı olmayan malzemeler var kullanmak için güncelleyin!"
 }

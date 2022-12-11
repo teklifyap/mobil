@@ -19,7 +19,7 @@ class WorksiteContainer extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<Employee> selectedEmployees = [];
-    final employeeProvider = ref.read(employeesProvider);
+    final employeeProvider = [...ref.read(employeesProvider).employees];
 
     void deleteOffer(Worksite worksite) async {
       await WorksiteActions.deleteWorksite(worksite.id!);
@@ -47,15 +47,14 @@ class WorksiteContainer extends HookConsumerWidget {
                   width: double.maxFinite,
                   child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: employeeProvider.employees.length,
+                    itemCount: employeeProvider.length,
                     itemBuilder: (BuildContext context, int index) {
                       if (worksite.employees!.indexWhere((element) =>
-                              element.id ==
-                              employeeProvider.employees[index].id) !=
+                              element.id == employeeProvider[index].id) !=
                           -1) {
                         return null;
                       } else if (selectedEmployees.length ==
-                          employeeProvider.employees.length) {
+                          employeeProvider.length) {
                         return Text(AppLocalizations.of(context)!
                             .worksiteAllEmployeesAdded);
                       } else {
@@ -66,15 +65,14 @@ class WorksiteContainer extends HookConsumerWidget {
                               if (isSelected.value) {
                                 isSelected.value = false;
                                 selectedEmployees
-                                    .remove(employeeProvider.employees[index]);
+                                    .remove(employeeProvider[index]);
                               } else {
-                                selectedEmployees
-                                    .add(employeeProvider.employees[index]);
+                                selectedEmployees.add(employeeProvider[index]);
                                 isSelected.value = true;
                               }
                             },
                             title: Text(
-                                '${employeeProvider.employees[index].name} ${employeeProvider.employees[index].surname}'),
+                                '${employeeProvider[index].name} ${employeeProvider[index].surname}'),
                             trailing: isSelected.value
                                 ? Text(
                                     AppLocalizations.of(context)!.worksiteAdded)
@@ -132,8 +130,7 @@ class WorksiteContainer extends HookConsumerWidget {
                         )
                       : Text(AppLocalizations.of(context)!.worksiteNoEmployee),
                   actions: [
-                    worksite.employees!.length !=
-                            employeeProvider.employees.length
+                    worksite.employees!.length != employeeProvider.length
                         ? TextButton(
                             onPressed: addEmployeesToOfferDialog,
                             child: Row(

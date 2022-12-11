@@ -13,9 +13,12 @@ import 'package:teklifyap/screens/storage_screen/components/input_field.dart';
 import 'package:teklifyap/screens/worksites_screen/components/worksite_container.dart';
 import 'package:teklifyap/services/api/worksite_actions.dart';
 import 'package:teklifyap/services/models/worksite.dart';
+
+// ignore: unused_import
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_maps_flutter/google_maps_flutter.dart'
-    if (kIsWeb) 'package:google_maps_flutter_web/google_maps_flutter_web.dart' as platform;
+    if (kIsWeb) 'package:google_maps_flutter_web/google_maps_flutter_web.dart'
+    as platform;
 
 class WorksitesScreen extends HookConsumerWidget {
   const WorksitesScreen({Key? key}) : super(key: key);
@@ -48,7 +51,7 @@ class WorksitesScreen extends HookConsumerWidget {
       LocationPermission permission = await Geolocator.requestPermission();
       Position currentPosition = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.medium);
-
+      // ignore:, use_build_context_synchronously
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -113,7 +116,8 @@ class WorksitesScreen extends HookConsumerWidget {
                     ),
                     HookBuilder(builder: (context) {
                       final height = MediaQuery.of(context).size.height;
-                      final platform.CameraPosition startingPoint = platform.CameraPosition(
+                      final platform.CameraPosition startingPoint =
+                          platform.CameraPosition(
                         target: platform.LatLng(currentPosition.latitude,
                             currentPosition.longitude),
                         zoom: 15,
@@ -137,7 +141,8 @@ class WorksitesScreen extends HookConsumerWidget {
                                 onCameraMove: onCameraMove,
                                 mapType: platform.MapType.terrain,
                                 initialCameraPosition: startingPoint,
-                                onMapCreated: (platform.GoogleMapController controller) {
+                                onMapCreated:
+                                    (platform.GoogleMapController controller) {
                                   mapController.complete(controller);
                                 },
                               ),
@@ -200,7 +205,7 @@ class WorksitesScreen extends HookConsumerWidget {
                           color: kPrimaryColor,
                         ),
                         Text(
-                          AppLocalizations.of(context)!.addOffer,
+                          AppLocalizations.of(context)!.worksiteNew,
                           style: const TextStyle(color: kPrimaryColor),
                         )
                       ],
@@ -263,8 +268,7 @@ class WorksitesScreen extends HookConsumerWidget {
                 : Padding(
                     padding: const EdgeInsets.only(top: 150),
                     child: Center(
-                        child:
-                            Text(AppLocalizations.of(context)!.noOfferInfo))); //todo: dile ekle no worksite
+                        child: Text(AppLocalizations.of(context)!.worksiteNo)));
           })
         ],
       ),
