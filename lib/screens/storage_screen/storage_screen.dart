@@ -8,6 +8,7 @@ import 'package:teklifyap/services/api/item_actions.dart';
 import 'package:teklifyap/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:teklifyap/services/models/item.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 // ignore: constant_identifier_names
 enum Units { M3, M2, KG, LT, ADET, M }
@@ -20,6 +21,8 @@ class StorageScreen extends HookConsumerWidget {
     final itemNameController = useTextEditingController();
     final itemValueController = useTextEditingController();
     String itemUnitController = Units.KG.name;
+    final width = MediaQuery.of(context).size.width;
+    var items = [...ref.read(itemsProvider).items];
 
     void addItem(Item item) async {
       await ItemActions.createItem(item);
@@ -139,12 +142,25 @@ class StorageScreen extends HookConsumerWidget {
             )),
         Consumer(builder: (context, ref, child) {
           final itemProvider = ref.watch(itemsProvider);
+          if (items
+              .where((element) => element.value == 0)
+              .toList()
+              .isNotEmpty) {
+            Future.delayed(Duration.zero, () {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  backgroundColor: kSecondaryColor,
+                  content: Text(
+                    AppLocalizations.of(context)!.alertForZeroValue,
+                    style: const TextStyle(color: kPrimaryColor),
+                  )));
+            });
+          }
           return itemProvider.items.isNotEmpty
               ? Expanded(
                   child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount:
+                            kIsWeb ? (width <= 1000 ? width ~/ 150 : 8) : 3),
                     itemCount: itemProvider.items.length,
                     itemBuilder: (context, index) {
                       return ItemContainer(item: itemProvider.items[index]);

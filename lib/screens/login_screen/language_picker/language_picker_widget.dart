@@ -42,7 +42,6 @@ class LanguagePickerWidget extends ConsumerWidget {
               value: locale,
               onTap: () {
                 final provider = ref.watch(localeProvider);
-
                 provider.setLocale(locale);
               },
               child: Center(

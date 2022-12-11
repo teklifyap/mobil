@@ -144,7 +144,8 @@ class OffersScreen extends HookConsumerWidget {
 
     Future createOfferDialog() async {
       ref.read(itemsProvider).getItems();
-      final addableItems = ref.read(itemsProvider);
+      var addableItems = [...ref.read(itemsProvider).items];
+      addableItems.removeWhere((element) => element.value == 0);
       selectedItemIDS = [];
       selectedItemsQuantities = [];
       selectedItems = [];
@@ -196,7 +197,7 @@ class OffersScreen extends HookConsumerWidget {
                     controller: profitRateController,
                     labelText: AppLocalizations.of(context)!.profitRate),
                 TextButton(
-                    onPressed: () => addItemsToOfferDialog(addableItems.items),
+                    onPressed: () => addItemsToOfferDialog(addableItems),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

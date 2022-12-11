@@ -24,6 +24,7 @@ class SplashScreen extends HookWidget {
 
     navigateToLoginPage() async {
       await Future.delayed(splashScreenDuration!);
+      // ignore: use_build_context_synchronously
       if (!context.mounted) return;
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => const LoginScreen()));
