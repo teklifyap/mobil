@@ -22,6 +22,7 @@ class StorageScreen extends HookConsumerWidget {
     final itemValueController = useTextEditingController();
     String itemUnitController = Units.KG.name;
     final width = MediaQuery.of(context).size.width;
+    
     var items = [...ref.read(itemsProvider).items];
 
     void addItem(Item item) async {
