@@ -23,6 +23,16 @@ class StorageScreen extends HookConsumerWidget {
     String itemUnitController = Units.KG.name;
     final width = MediaQuery.of(context).size.width;
     var items = [...ref.read(itemsProvider).items];
+    if (items.where((element) => element.value == 0).toList().isNotEmpty) {
+      Future.delayed(Duration.zero, () {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: kSecondaryColor,
+            content: Text(
+              AppLocalizations.of(context)!.alertForZeroValue,
+              style: const TextStyle(color: kPrimaryColor),
+            )));
+      });
+    }
 
     void addItem(Item item) async {
       await ItemActions.createItem(item);
@@ -142,19 +152,6 @@ class StorageScreen extends HookConsumerWidget {
             )),
         Consumer(builder: (context, ref, child) {
           final itemProvider = ref.watch(itemsProvider);
-          if (items
-              .where((element) => element.value == 0)
-              .toList()
-              .isNotEmpty) {
-            Future.delayed(Duration.zero, () {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  backgroundColor: kSecondaryColor,
-                  content: Text(
-                    AppLocalizations.of(context)!.alertForZeroValue,
-                    style: const TextStyle(color: kPrimaryColor),
-                  )));
-            });
-          }
           return itemProvider.items.isNotEmpty
               ? Expanded(
                   child: GridView.builder(

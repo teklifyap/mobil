@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:teklifyap/provider/employee_provider.dart';
-import 'package:teklifyap/provider/item_provider.dart';
-import 'package:teklifyap/provider/offer_provider.dart';
-import 'package:teklifyap/provider/user_provider.dart';
-import 'package:teklifyap/provider/worksite_provider.dart';
 
 /* Local imports */
 import 'package:teklifyap/screens/app/app.dart';
@@ -183,13 +178,6 @@ class LoginContent extends HookConsumerWidget {
                   });
               await UserActions.login(context, emailTextController.text,
                   passwordTextController.text);
-
-              //load data
-              ref.read(itemsProvider).getItems();
-              ref.read(userProvider).getUser();
-              ref.read(offersProvider).getOffers();
-              ref.read(employeesProvider).getEmployees();
-              ref.read(worksitesProvider).getWorksites();
               if (context.mounted) {
                 Navigator.pop(context);
                 Navigator.of(context).push(createRoute(App()));
