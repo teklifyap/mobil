@@ -176,9 +176,9 @@ class LoginContent extends HookConsumerWidget {
                               AlwaysStoppedAnimation<Color>(kPrimaryColor)),
                     );
                   });
-              await UserActions.login(context, emailTextController.text,
-                  passwordTextController.text);
-              if (context.mounted) {
+              bool success = await UserActions.login(context,
+                  emailTextController.text, passwordTextController.text);
+              if (context.mounted && success) {
                 Navigator.pop(context);
                 Navigator.of(context).push(createRoute(App()));
               }
