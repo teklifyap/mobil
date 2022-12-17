@@ -29,25 +29,31 @@ class EmployeeScreen extends HookConsumerWidget {
     }
 
     Future newEmployeeDialog() async {
+      final formKey = GlobalKey<FormState>();
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: Text(AppLocalizations.of(context)!.employeeNew),
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(30.0))),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CustomInputField(
-                  controller: employeeNameController,
-                  labelText: AppLocalizations.of(context)!.employeeName),
-              CustomInputField(
-                  controller: employeeSurnameController,
-                  labelText: AppLocalizations.of(context)!.employeeSurname),
-              CustomInputField(
-                  controller: employeeSalaryController,
-                  labelText: AppLocalizations.of(context)!.employeeSalary),
-            ],
+          content: SingleChildScrollView(
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomInputField(
+                      controller: employeeNameController,
+                      labelText: AppLocalizations.of(context)!.employeeName),
+                  CustomInputField(
+                      controller: employeeSurnameController,
+                      labelText: AppLocalizations.of(context)!.employeeSurname),
+                  CustomInputField(
+                      controller: employeeSalaryController,
+                      labelText: AppLocalizations.of(context)!.employeeSalary),
+                ],
+              ),
+            ),
           ),
           actions: [
             Row(
@@ -57,11 +63,13 @@ class EmployeeScreen extends HookConsumerWidget {
                   padding: const EdgeInsets.only(left: 8.0),
                   child: TextButton(
                     onPressed: () {
-                      newEmployee(Employee(
-                          name: employeeNameController.text,
-                          surname: employeeSurnameController.text,
-                          salary: employeeSalaryController.text));
-                      Navigator.pop(context);
+                      if (formKey.currentState!.validate()) {
+                        newEmployee(Employee(
+                            name: employeeNameController.text,
+                            surname: employeeSurnameController.text,
+                            salary: employeeSalaryController.text));
+                        Navigator.pop(context);
+                      }
                     },
                     child: Row(
                       children: [

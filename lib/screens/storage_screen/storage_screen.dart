@@ -24,6 +24,16 @@ class StorageScreen extends HookConsumerWidget {
     final width = MediaQuery.of(context).size.width;
     
     var items = [...ref.read(itemsProvider).items];
+    if (items.where((element) => element.value == 0).toList().isNotEmpty) {
+      Future.delayed(Duration.zero, () {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: kSecondaryColor,
+            content: Text(
+              AppLocalizations.of(context)!.alertForZeroValue,
+              style: const TextStyle(color: kPrimaryColor),
+            )));
+      });
+    }
 
     void addItem(Item item) async {
       await ItemActions.createItem(item);
@@ -33,49 +43,56 @@ class StorageScreen extends HookConsumerWidget {
     }
 
     Future createItemDialog() async {
+      final formKey = GlobalKey<FormState>();
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: Text(AppLocalizations.of(context)!.newItem),
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(30.0))),
-          content: HookBuilder(builder: (context) {
-            final unitDropdown = useState(Units.KG.name);
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CustomInputField(
-                    controller: itemNameController,
-                    labelText: AppLocalizations.of(context)!.itemName),
-                CustomInputField(
-                    controller: itemValueController,
-                    labelText: AppLocalizations.of(context)!.itemValue),
-                DropdownButton<String>(
-                  value: unitDropdown.value,
-                  icon: const Icon(
-                    Icons.arrow_downward,
-                    color: kPrimaryColor,
-                  ),
-                  elevation: 16,
-                  style: const TextStyle(color: kPrimaryColor),
-                  underline: Container(
-                    height: 2,
-                    color: kPrimaryColor,
-                  ),
-                  onChanged: (String? value) {
-                    unitDropdown.value = value!;
-                    itemUnitController = value;
-                  },
-                  items: Units.values
-                      .map<DropdownMenuItem<String>>((unit) => DropdownMenuItem(
-                            value: unit.name,
-                            child: Text(unit.name),
-                          ))
-                      .toList(),
+          content: SingleChildScrollView(
+            child: HookBuilder(builder: (context) {
+              final unitDropdown = useState(Units.KG.name);
+              return Form(
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomInputField(
+                        controller: itemNameController,
+                        labelText: AppLocalizations.of(context)!.itemName),
+                    CustomInputField(
+                        controller: itemValueController,
+                        labelText: AppLocalizations.of(context)!.itemValue),
+                    DropdownButton<String>(
+                      value: unitDropdown.value,
+                      icon: const Icon(
+                        Icons.arrow_downward,
+                        color: kPrimaryColor,
+                      ),
+                      elevation: 16,
+                      style: const TextStyle(color: kPrimaryColor),
+                      underline: Container(
+                        height: 2,
+                        color: kPrimaryColor,
+                      ),
+                      onChanged: (String? value) {
+                        unitDropdown.value = value!;
+                        itemUnitController = value;
+                      },
+                      items: Units.values
+                          .map<DropdownMenuItem<String>>(
+                              (unit) => DropdownMenuItem(
+                                    value: unit.name,
+                                    child: Text(unit.name),
+                                  ))
+                          .toList(),
+                    ),
+                  ],
                 ),
-              ],
-            );
-          }),
+              );
+            }),
+          ),
           actions: [
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -84,11 +101,13 @@ class StorageScreen extends HookConsumerWidget {
                   padding: const EdgeInsets.only(left: 8.0),
                   child: TextButton(
                     onPressed: () {
-                      addItem(Item(
-                          name: itemNameController.text,
-                          value: double.parse(itemValueController.text),
-                          unit: itemUnitController));
-                      Navigator.pop(context);
+                      if (formKey.currentState!.validate()) {
+                        addItem(Item(
+                            name: itemNameController.text,
+                            value: double.parse(itemValueController.text),
+                            unit: itemUnitController));
+                        Navigator.pop(context);
+                      }
                     },
                     child: Row(
                       children: [
@@ -143,19 +162,6 @@ class StorageScreen extends HookConsumerWidget {
             )),
         Consumer(builder: (context, ref, child) {
           final itemProvider = ref.watch(itemsProvider);
-          if (items
-              .where((element) => element.value == 0)
-              .toList()
-              .isNotEmpty) {
-            Future.delayed(Duration.zero, () {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  backgroundColor: kSecondaryColor,
-                  content: Text(
-                    AppLocalizations.of(context)!.alertForZeroValue,
-                    style: const TextStyle(color: kPrimaryColor),
-                  )));
-            });
-          }
           return itemProvider.items.isNotEmpty
               ? Expanded(
                   child: GridView.builder(

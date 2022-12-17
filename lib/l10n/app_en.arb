@@ -187,5 +187,7 @@
  "thereIsNoItemWithValue": "There is no item with price, update items!",
  "@thereIsNoItemWithValue": {},
  "alertForZeroValue": "There is items with no price, update them to use!",
- "@alertForZeroValue": {}
+ "@alertForZeroValue": {},
+ "offerThereIsNone": "There is no offer or none of them confirmed!",
+ "@offerThereIsNone": {}
 }

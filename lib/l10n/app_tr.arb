@@ -92,5 +92,6 @@
  "worksitePickLocation": "Konum seçmek için tıklayın!",
  "worksiteNo": "Şantiye yok, yenisini ekle!",
  "thereIsNoItemWithValue": "Fiyatı olan ürün yok, ürünlerin fiyatını güncelle!",
- "alertForZeroValue": "Fiyatı olmayan malzemeler var kullanmak için güncelleyin!"
+ "alertForZeroValue": "Fiyatı olmayan malzemeler var kullanmak için güncelleyin!",
+ "offerThereIsNone": "There is no offer or none of them confirmed!"
 }

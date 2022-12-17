@@ -30,12 +30,14 @@ class UserActions {
       return true;
     } else if (res.statusCode == 401) {
       if (context.mounted) {
+        Navigator.pop(context);
         CustomAlerts.errorOccurredMessage(
             context, AppLocalizations.of(context)!.yourAccountIsNotConfirmed);
       }
       throw Exception("not confirmed, while logging: \n${res.body}");
     } else {
       if (context.mounted) {
+        Navigator.pop(context);
         CustomAlerts.errorOccurredMessage(
             context, AppLocalizations.of(context)!.wrongEmailOrPassword);
       }

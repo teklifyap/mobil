@@ -31,6 +31,7 @@ class ProfileScreen extends HookConsumerWidget {
     }
 
     Future updateProfileDialog() async {
+      final formKey = GlobalKey<FormState>();
       setControllers();
       showDialog(
           context: context,
@@ -41,36 +42,44 @@ class ProfileScreen extends HookConsumerWidget {
                 content: HookBuilder(
                   builder: (context) {
                     final isPasswordChange = useState(false);
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CustomInputField(
-                            labelText: AppLocalizations.of(context)!.name,
-                            controller: nameController),
-                        CustomInputField(
-                            labelText: AppLocalizations.of(context)!.surname,
-                            controller: surnameController),
-                        CustomInputField(
-                            labelText: AppLocalizations.of(context)!.email,
-                            controller: emailController),
-                        CustomInputField(
-                            labelText: AppLocalizations.of(context)!.password,
-                            controller: passwordController),
-                        isPasswordChange.value
-                            ? CustomInputField(
+                    return Form(
+                      key: formKey,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CustomInputField(
+                                labelText: AppLocalizations.of(context)!.name,
+                                controller: nameController),
+                            CustomInputField(
                                 labelText:
-                                    AppLocalizations.of(context)!.newPassword,
-                                controller: newPasswordController)
-                            : TextButton(
-                                onPressed: () {
-                                  isPasswordChange.value = true;
-                                },
-                                child: Text(
-                                  AppLocalizations.of(context)!
-                                      .clickHereToChangePassword,
-                                  style: const TextStyle(color: kPrimaryColor),
-                                ))
-                      ],
+                                    AppLocalizations.of(context)!.surname,
+                                controller: surnameController),
+                            CustomInputField(
+                                labelText: AppLocalizations.of(context)!.email,
+                                controller: emailController),
+                            CustomInputField(
+                                labelText:
+                                    AppLocalizations.of(context)!.password,
+                                controller: passwordController),
+                            isPasswordChange.value
+                                ? CustomInputField(
+                                    labelText: AppLocalizations.of(context)!
+                                        .newPassword,
+                                    controller: newPasswordController)
+                                : TextButton(
+                                    onPressed: () {
+                                      isPasswordChange.value = true;
+                                    },
+                                    child: Text(
+                                      AppLocalizations.of(context)!
+                                          .clickHereToChangePassword,
+                                      style:
+                                          const TextStyle(color: kPrimaryColor),
+                                    ))
+                          ],
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -80,16 +89,18 @@ class ProfileScreen extends HookConsumerWidget {
                     children: [
                       IconButton(
                           onPressed: () async {
-                            await UserActions.updateUser(
-                                User(
-                                    id: 999,
-                                    name: nameController.text,
-                                    surname: surnameController.text,
-                                    email: emailController.text),
-                                passwordController.text,
-                                newPasswordController.text);
-                            ref.read(userProvider).getUser();
-                            if (context.mounted) Navigator.pop(context);
+                            if (formKey.currentState!.validate()) {
+                              await UserActions.updateUser(
+                                  User(
+                                      id: 999,
+                                      name: nameController.text,
+                                      surname: surnameController.text,
+                                      email: emailController.text),
+                                  passwordController.text,
+                                  newPasswordController.text);
+                              ref.read(userProvider).getUser();
+                              if (context.mounted) Navigator.pop(context);
+                            }
                           },
                           icon: const Icon(
                             Icons.done,
