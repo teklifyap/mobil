@@ -13,6 +13,7 @@ import 'package:teklifyap/screens/login_screen/components/top_text.dart';
 import 'package:teklifyap/services/api/user_actions.dart';
 import 'package:teklifyap/constants.dart';
 import 'package:teklifyap/screens/login_screen/helper_functions.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 enum Screens {
   register,
@@ -25,6 +26,7 @@ class LoginContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isBiggerThan700px = kIsWeb && MediaQuery.sizeOf(context).width > 700;
     final registerFormKey = GlobalKey<FormState>();
     final loginFormKey = GlobalKey<FormState>();
     final forgotPasswordFormKey = GlobalKey<FormState>();
@@ -83,42 +85,56 @@ class LoginContent extends HookConsumerWidget {
         bool isObscure,
         TextEditingController controller,
         String? Function(String?)? validator) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 8),
-        child: Material(
-          elevation: 8,
-          shadowColor: Colors.black87,
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(30),
-          child: TextFormField(
-            validator: validator,
-            controller: controller,
-            textAlignVertical: TextAlignVertical.center,
-            obscureText: isObscure,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            decoration: InputDecoration(
-              prefixIcon: Icon(
-                iconData,
-                color: kPrimaryColor,
-              ),
-              filled: true,
-              fillColor: Colors.white,
-              hintText: hint,
-              errorStyle:
-                  TextStyle(color: Colors.red.withOpacity(0.8), fontSize: 14),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30),
-                borderSide:
-                    BorderSide(color: Colors.red.withOpacity(0.5), width: 3.0),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30),
-                borderSide: BorderSide.none,
+      return HookBuilder(builder: (context) {
+        final showPassword = useState(isObscure);
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 8),
+          child: Material(
+            elevation: 8,
+            shadowColor: Colors.black87,
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(30),
+            child: TextFormField(
+              validator: validator,
+              controller: controller,
+              textAlignVertical: TextAlignVertical.center,
+              obscureText: showPassword.value,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              decoration: InputDecoration(
+                suffixIcon: isObscure
+                    ? Padding(
+                        padding: const EdgeInsets.only(right: 3.0),
+                        child: InkWell(
+                          onTap: () => showPassword.value = !showPassword.value,
+                          child: const Icon(
+                            Icons.remove_red_eye_outlined,
+                            color: kPrimaryColor,
+                          ),
+                        ))
+                    : null,
+                prefixIcon: Icon(
+                  iconData,
+                  color: kPrimaryColor,
+                ),
+                filled: true,
+                fillColor: Colors.white,
+                hintText: hint,
+                errorStyle:
+                    TextStyle(color: Colors.red.withOpacity(0.8), fontSize: 14),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: BorderSide(
+                      color: Colors.red.withOpacity(0.5), width: 3.0),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: BorderSide.none,
+                ),
               ),
             ),
           ),
-        ),
-      );
+        );
+      });
     }
 
     Route createRoute(Widget nextScreen) {
