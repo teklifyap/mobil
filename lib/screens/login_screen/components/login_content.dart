@@ -26,7 +26,7 @@ class LoginContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isBiggerThan700px = kIsWeb && MediaQuery.sizeOf(context).width > 700;
+    // final isBiggerThan700px = kIsWeb && MediaQuery.of(context).size.width > 700;
     final registerFormKey = GlobalKey<FormState>();
     final loginFormKey = GlobalKey<FormState>();
     final forgotPasswordFormKey = GlobalKey<FormState>();
