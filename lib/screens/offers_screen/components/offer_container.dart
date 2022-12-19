@@ -205,6 +205,7 @@ class OfferContainer extends HookConsumerWidget {
 
     Future editOffer() async {
       setEditInputFields();
+      final formKey = GlobalKey<FormState>();
       showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -212,22 +213,27 @@ class OfferContainer extends HookConsumerWidget {
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(30.0)),
                 ),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CustomInputField(
-                        labelText: AppLocalizations.of(context)!.offerTitle,
-                        controller: offerTitleController),
-                    CustomInputField(
-                        labelText: AppLocalizations.of(context)!.offerUsername,
-                        controller: userNameController),
-                    CustomInputField(
-                        labelText: AppLocalizations.of(context)!.offerReceiver,
-                        controller: receiverNameController),
-                    CustomInputField(
-                        labelText: AppLocalizations.of(context)!.profitRate,
-                        controller: profitRateController)
-                  ],
+                content: Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CustomInputField(
+                          labelText: AppLocalizations.of(context)!.offerTitle,
+                          controller: offerTitleController),
+                      CustomInputField(
+                          labelText:
+                              AppLocalizations.of(context)!.offerUsername,
+                          controller: userNameController),
+                      CustomInputField(
+                          labelText:
+                              AppLocalizations.of(context)!.offerReceiver,
+                          controller: receiverNameController),
+                      CustomInputField(
+                          labelText: AppLocalizations.of(context)!.profitRate,
+                          controller: profitRateController)
+                    ],
+                  ),
                 ),
                 actions: [
                   Row(
@@ -235,14 +241,16 @@ class OfferContainer extends HookConsumerWidget {
                     children: [
                       TextButton(
                         onPressed: () {
-                          updateOffer(Offer(
-                              id: offer.id!,
-                              title: offerTitleController.text,
-                              userName: userNameController.text,
-                              receiverName: receiverNameController.text,
-                              profitRate:
-                                  double.parse(profitRateController.text)));
-                          Navigator.pop(context);
+                          if (formKey.currentState!.validate()) {
+                            updateOffer(Offer(
+                                id: offer.id!,
+                                title: offerTitleController.text,
+                                userName: userNameController.text,
+                                receiverName: receiverNameController.text,
+                                profitRate:
+                                    double.parse(profitRateController.text)));
+                            Navigator.pop(context);
+                          }
                         },
                         child: Row(
                           children: [
