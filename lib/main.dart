@@ -19,6 +19,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Consumer(builder: (context, ref, child) {
       final languageProvider = ref.watch(localeProvider);
+      
       return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

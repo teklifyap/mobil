@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  teklifyap-web:
+    build: .
+    restart: always
+    ports:
+      - 3500:80
+    volumes:
+      - /var/www/teklifyap-web:/var/www/teklifyap-web
