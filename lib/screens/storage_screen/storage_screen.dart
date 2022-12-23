@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:teklifyap/provider/item_provider.dart';
-import 'package:teklifyap/screens/storage_screen/components/input_field.dart';
+import 'package:teklifyap/custom%20widgets/custom_dialog.dart';
+import 'package:teklifyap/providers/item_provider.dart';
+import 'package:teklifyap/custom%20widgets/input_field.dart';
 import 'package:teklifyap/screens/storage_screen/components/item_container.dart';
 import 'package:teklifyap/services/api/item_actions.dart';
 import 'package:teklifyap/constants.dart';
@@ -41,97 +43,57 @@ class StorageScreen extends HookConsumerWidget {
       itemValueController.clear();
     }
 
-    Future createItemDialog() async {
-      final formKey = GlobalKey<FormState>();
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context)!.newItem),
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(30.0))),
-          content: SingleChildScrollView(
-            child: HookBuilder(builder: (context) {
-              final unitDropdown = useState(Units.KG.name);
-              return Form(
-                key: formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CustomInputField(
-                        controller: itemNameController,
-                        labelText: AppLocalizations.of(context)!.itemName),
-                    CustomInputField(
-                        controller: itemValueController,
-                        labelText: AppLocalizations.of(context)!.itemValue),
-                    DropdownButton<String>(
-                      value: unitDropdown.value,
-                      icon: const Icon(
-                        Icons.arrow_downward,
-                        color: kPrimaryColor,
-                      ),
-                      elevation: 16,
-                      style: const TextStyle(color: kPrimaryColor),
-                      underline: Container(
-                        height: 2,
-                        color: kPrimaryColor,
-                      ),
-                      onChanged: (String? value) {
-                        unitDropdown.value = value!;
-                        itemUnitController = value;
-                      },
-                      items: Units.values
-                          .map<DropdownMenuItem<String>>(
-                              (unit) => DropdownMenuItem(
-                                    value: unit.name,
-                                    child: Text(unit.name),
-                                  ))
-                          .toList(),
-                    ),
-                  ],
-                ),
-              );
-            }),
-          ),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: TextButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        addItem(Item(
-                            name: itemNameController.text,
-                            value: double.parse(itemValueController.text),
-                            unit: itemUnitController));
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.add,
-                          color: kPrimaryColor,
-                        ),
-                        Text(
-                          AppLocalizations.of(context)!.addItem,
-                          style: const TextStyle(color: kPrimaryColor),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-    }
-
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: createItemDialog,
+        onPressed: () => CustomDialogs.basicAddOrCreateDialog(
+            content: [
+              CustomInputField(
+                  controller: itemNameController,
+                  labelText: AppLocalizations.of(context)!.itemName),
+              CustomInputField(
+                controller: itemValueController,
+                labelText: AppLocalizations.of(context)!.itemValue,
+                textInputType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              ),
+              HookBuilder(builder: ((context) {
+                final unitDropdown = useState(Units.KG.name);
+                return DropdownButton<String>(
+                  value: unitDropdown.value,
+                  icon: const Icon(
+                    Icons.arrow_downward,
+                    color: kPrimaryColor,
+                  ),
+                  elevation: 16,
+                  style: const TextStyle(color: kPrimaryColor),
+                  underline: Container(
+                    height: 2,
+                    color: kPrimaryColor,
+                  ),
+                  onChanged: (String? value) {
+                    unitDropdown.value = value!;
+                    itemUnitController = value;
+                  },
+                  items: Units.values
+                      .map<DropdownMenuItem<String>>((unit) => DropdownMenuItem(
+                            value: unit.name,
+                            child: Text(unit.name),
+                          ))
+                      .toList(),
+                );
+              }))
+            ],
+            title: AppLocalizations.of(context)!.newItem,
+            actionText: AppLocalizations.of(context)!.addItem,
+            actionIcon: Icons.add,
+            action: () {
+              addItem(Item(
+                  name: itemNameController.text,
+                  value: double.parse(itemValueController.text),
+                  unit: itemUnitController));
+              Navigator.pop(context);
+            },
+            context: context),
         label: Row(
           children: [
             const Icon(Icons.add),

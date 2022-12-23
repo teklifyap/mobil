@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:teklifyap/constants.dart';
-import 'package:teklifyap/provider/worksite_provider.dart';
+import 'package:teklifyap/providers/worksite_provider.dart';
 import 'package:teklifyap/services/api/worksite_actions.dart';
 import 'package:teklifyap/services/models/employee.dart';
 import 'package:teklifyap/services/models/worksite.dart';

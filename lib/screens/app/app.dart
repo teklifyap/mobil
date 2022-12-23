@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:teklifyap/provider/employee_provider.dart';
-import 'package:teklifyap/provider/item_provider.dart';
-import 'package:teklifyap/provider/offer_provider.dart';
-import 'package:teklifyap/provider/user_provider.dart';
-import 'package:teklifyap/provider/worksite_provider.dart';
+import 'package:teklifyap/providers/employee_provider.dart';
+import 'package:teklifyap/providers/item_provider.dart';
+import 'package:teklifyap/providers/offer_provider.dart';
+import 'package:teklifyap/providers/user_provider.dart';
+import 'package:teklifyap/providers/worksite_provider.dart';
 import 'package:teklifyap/screens/employee_screen/employee_screen.dart';
 import 'package:teklifyap/screens/offers_screen/offers_screen.dart';
 import 'package:teklifyap/screens/profile_screen/profile_screen.dart';

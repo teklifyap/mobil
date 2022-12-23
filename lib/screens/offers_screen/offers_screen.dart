@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:teklifyap/provider/item_provider.dart';
-import 'package:teklifyap/provider/offer_provider.dart';
-import 'package:teklifyap/provider/user_provider.dart';
+import 'package:teklifyap/providers/item_provider.dart';
+import 'package:teklifyap/providers/offer_provider.dart';
+import 'package:teklifyap/providers/user_provider.dart';
 import 'package:teklifyap/screens/offers_screen/components/offer_container.dart';
-import 'package:teklifyap/screens/storage_screen/components/input_field.dart';
+import 'package:teklifyap/custom%20widgets/input_field.dart';
 import 'package:teklifyap/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:teklifyap/services/api/offer_actions.dart';

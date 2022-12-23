@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:teklifyap/constants.dart';
-import 'package:teklifyap/provider/offer_provider.dart';
+import 'package:teklifyap/providers/offer_provider.dart';
 import 'package:teklifyap/services/api/offer_actions.dart';
 import 'package:teklifyap/services/models/item.dart';
 import 'package:teklifyap/services/models/offer.dart';

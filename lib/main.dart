@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:teklifyap/l10n/l10n.dart';
-import 'package:teklifyap/provider/local_provider.dart';
+import 'package:teklifyap/providers/local_provider.dart';
 import 'package:teklifyap/screens/splash_screen.dart';
 import 'package:teklifyap/constants.dart';
 
