@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:teklifyap/constants.dart';
-import 'package:teklifyap/provider/user_provider.dart';
+import 'package:teklifyap/custom%20widgets/custom_dialog.dart';
+import 'package:teklifyap/providers/user_provider.dart';
 import 'package:teklifyap/screens/login_screen/language_picker/language_picker_widget.dart';
-import 'package:teklifyap/screens/storage_screen/components/input_field.dart';
+import 'package:teklifyap/custom%20widgets/input_field.dart';
 import 'package:teklifyap/services/alerts.dart';
 import 'package:teklifyap/services/api/user_actions.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -30,87 +31,76 @@ class ProfileScreen extends HookConsumerWidget {
       newPasswordController.clear();
     }
 
-    Future updateProfileDialog() async {
-      final formKey = GlobalKey<FormState>();
-      setControllers();
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: Text(AppLocalizations.of(context)!.editProfile),
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(30.0))),
-                content: HookBuilder(
-                  builder: (context) {
-                    final isPasswordChange = useState(false);
-                    return Form(
-                      key: formKey,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CustomInputField(
-                                labelText: AppLocalizations.of(context)!.name,
-                                controller: nameController),
-                            CustomInputField(
-                                labelText:
-                                    AppLocalizations.of(context)!.surname,
-                                controller: surnameController),
-                            CustomInputField(
-                                labelText: AppLocalizations.of(context)!.email,
-                                controller: emailController),
-                            CustomInputField(
-                                labelText:
-                                    AppLocalizations.of(context)!.password,
-                                controller: passwordController),
-                            isPasswordChange.value
-                                ? CustomInputField(
-                                    labelText: AppLocalizations.of(context)!
-                                        .newPassword,
-                                    controller: newPasswordController)
-                                : TextButton(
-                                    onPressed: () {
-                                      isPasswordChange.value = true;
-                                    },
-                                    child: Text(
-                                      AppLocalizations.of(context)!
-                                          .clickHereToChangePassword,
-                                      style:
-                                          const TextStyle(color: kPrimaryColor),
-                                    ))
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                actions: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                          onPressed: () async {
-                            if (formKey.currentState!.validate()) {
-                              await UserActions.updateUser(
-                                  User(
-                                      id: 999,
-                                      name: nameController.text,
-                                      surname: surnameController.text,
-                                      email: emailController.text),
-                                  passwordController.text,
-                                  newPasswordController.text);
-                              ref.read(userProvider).getUser();
-                              if (context.mounted) Navigator.pop(context);
-                            }
-                          },
-                          icon: const Icon(
-                            Icons.done,
-                            color: kPrimaryColor,
-                          ))
-                    ],
-                  )
-                ],
-              ));
-    }
+    // Future updateProfileDialog() async {
+    //   final formKey = GlobalKey<FormState>();
+    //   setControllers();
+    //   showDialog(
+    //       context: context,
+    //       builder: (context) => AlertDialog(
+    //             title: Text(AppLocalizations.of(context)!.editProfile),
+    //             shape: const RoundedRectangleBorder(
+    //                 borderRadius: BorderRadius.all(Radius.circular(30.0))),
+    //             content: HookBuilder(
+    //               builder: (context) {
+    //                 final isPasswordChange = useState(false);
+    //                 return Form(
+    //                   key: formKey,
+    //                   child: SingleChildScrollView(
+    //                     child: Column(
+    //                       mainAxisSize: MainAxisSize.min,
+    //                       children: [
+    //                         CustomInputField(
+    //                             labelText: AppLocalizations.of(context)!.name,
+    //                             controller: nameController),
+    //                         CustomInputField(
+    //                             labelText:
+    //                                 AppLocalizations.of(context)!.surname,
+    //                             controller: surnameController),
+    //                         CustomInputField(
+    //                             labelText: AppLocalizations.of(context)!.email,
+    //                             controller: emailController),
+    //                         CustomInputField(
+    //                             labelText:
+    //                                 AppLocalizations.of(context)!.password,
+    //                             controller: passwordController),
+    //                         isPasswordChange.value
+    //                             ? CustomInputField(
+    //                                 labelText: AppLocalizations.of(context)!
+    //                                     .newPassword,
+    //                                 controller: newPasswordController)
+    //                             : TextButton(
+    //                                 onPressed: () {
+    //                                   isPasswordChange.value = true;
+    //                                 },
+    //                                 child: Text(
+    //                                   AppLocalizations.of(context)!
+    //                                       .clickHereToChangePassword,
+    //                                   style:
+    //                                       const TextStyle(color: kPrimaryColor),
+    //                                 ))
+    //                       ],
+    //                     ),
+    //                   ),
+    //                 );
+    //               },
+    //             ),
+    //             actions: [
+    //               Row(
+    //                 mainAxisAlignment: MainAxisAlignment.end,
+    //                 children: [
+    //                   IconButton(
+    //                       onPressed: () async {
+    //                         if (formKey.currentState!.validate()) {}
+    //                       },
+    //                       icon: const Icon(
+    //                         Icons.done,
+    //                         color: kPrimaryColor,
+    //                       ))
+    //                 ],
+    //               )
+    //             ],
+    //           ));
+    // }
 
     return Consumer(
       builder: (context, ref, child) {
@@ -125,7 +115,64 @@ class ProfileScreen extends HookConsumerWidget {
                   top: 100,
                   right: 10,
                   child: IconButton(
-                    onPressed: updateProfileDialog,
+                    onPressed: () {
+                      setControllers();
+                      CustomDialogs.basicEditDialog(
+                          context: context,
+                          title: AppLocalizations.of(context)!.editProfile,
+                          content: [
+                            CustomInputField(
+                                labelText: AppLocalizations.of(context)!.name,
+                                controller: nameController),
+                            CustomInputField(
+                                labelText:
+                                    AppLocalizations.of(context)!.surname,
+                                controller: surnameController),
+                            CustomInputField(
+                                labelText: AppLocalizations.of(context)!.email,
+                                controller: emailController),
+                            CustomInputField(
+                                labelText:
+                                    AppLocalizations.of(context)!.password,
+                                controller: passwordController),
+                            HookBuilder(builder: (context) {
+                              final isPasswordChange = useState(false);
+                              return isPasswordChange.value
+                                  ? CustomInputField(
+                                      labelText: AppLocalizations.of(context)!
+                                          .newPassword,
+                                      controller: newPasswordController)
+                                  : TextButton(
+                                      onPressed: () {
+                                        isPasswordChange.value = true;
+                                      },
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .clickHereToChangePassword,
+                                        style: const TextStyle(
+                                            color: kPrimaryColor),
+                                      ));
+                            })
+                          ],
+                          leftButtonAction: null,
+                          rightButtonAction: () async {
+                            await UserActions.updateUser(
+                                User(
+                                    id: 999,
+                                    name: nameController.text,
+                                    surname: surnameController.text,
+                                    email: emailController.text),
+                                passwordController.text,
+                                newPasswordController.text);
+                            ref.read(userProvider).getUser();
+                            if (context.mounted) Navigator.pop(context);
+                          },
+                          leftButtonIcon: null,
+                          rightButtonIcon: Icons.done,
+                          leftButtonText: null,
+                          rightButtonText: "",
+                          doesRightButtonNeedValidation: true);
+                    },
                     icon: const Icon(
                       Icons.edit,
                       color: kPrimaryColor,

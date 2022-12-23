@@ -13,7 +13,7 @@ import 'package:teklifyap/screens/login_screen/components/top_text.dart';
 import 'package:teklifyap/services/api/user_actions.dart';
 import 'package:teklifyap/constants.dart';
 import 'package:teklifyap/screens/login_screen/helper_functions.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+// import 'package:flutter/foundation.dart' show kIsWeb;
 
 enum Screens {
   register,
@@ -26,7 +26,6 @@ class LoginContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final isBiggerThan700px = kIsWeb && MediaQuery.of(context).size.width > 700;
     final registerFormKey = GlobalKey<FormState>();
     final loginFormKey = GlobalKey<FormState>();
     final forgotPasswordFormKey = GlobalKey<FormState>();

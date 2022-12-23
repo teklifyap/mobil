@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:teklifyap/l10n/l10n.dart';
-import 'package:teklifyap/provider/local_provider.dart';
+import 'package:teklifyap/providers/local_provider.dart';
 
 class LanguageWidget extends StatelessWidget {
   const LanguageWidget({super.key});
