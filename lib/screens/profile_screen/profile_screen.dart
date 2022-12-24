@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:teklifyap/constants.dart';
 import 'package:teklifyap/custom%20widgets/custom_dialog.dart';
@@ -30,77 +31,6 @@ class ProfileScreen extends HookConsumerWidget {
       passwordController.clear();
       newPasswordController.clear();
     }
-
-    // Future updateProfileDialog() async {
-    //   final formKey = GlobalKey<FormState>();
-    //   setControllers();
-    //   showDialog(
-    //       context: context,
-    //       builder: (context) => AlertDialog(
-    //             title: Text(AppLocalizations.of(context)!.editProfile),
-    //             shape: const RoundedRectangleBorder(
-    //                 borderRadius: BorderRadius.all(Radius.circular(30.0))),
-    //             content: HookBuilder(
-    //               builder: (context) {
-    //                 final isPasswordChange = useState(false);
-    //                 return Form(
-    //                   key: formKey,
-    //                   child: SingleChildScrollView(
-    //                     child: Column(
-    //                       mainAxisSize: MainAxisSize.min,
-    //                       children: [
-    //                         CustomInputField(
-    //                             labelText: AppLocalizations.of(context)!.name,
-    //                             controller: nameController),
-    //                         CustomInputField(
-    //                             labelText:
-    //                                 AppLocalizations.of(context)!.surname,
-    //                             controller: surnameController),
-    //                         CustomInputField(
-    //                             labelText: AppLocalizations.of(context)!.email,
-    //                             controller: emailController),
-    //                         CustomInputField(
-    //                             labelText:
-    //                                 AppLocalizations.of(context)!.password,
-    //                             controller: passwordController),
-    //                         isPasswordChange.value
-    //                             ? CustomInputField(
-    //                                 labelText: AppLocalizations.of(context)!
-    //                                     .newPassword,
-    //                                 controller: newPasswordController)
-    //                             : TextButton(
-    //                                 onPressed: () {
-    //                                   isPasswordChange.value = true;
-    //                                 },
-    //                                 child: Text(
-    //                                   AppLocalizations.of(context)!
-    //                                       .clickHereToChangePassword,
-    //                                   style:
-    //                                       const TextStyle(color: kPrimaryColor),
-    //                                 ))
-    //                       ],
-    //                     ),
-    //                   ),
-    //                 );
-    //               },
-    //             ),
-    //             actions: [
-    //               Row(
-    //                 mainAxisAlignment: MainAxisAlignment.end,
-    //                 children: [
-    //                   IconButton(
-    //                       onPressed: () async {
-    //                         if (formKey.currentState!.validate()) {}
-    //                       },
-    //                       icon: const Icon(
-    //                         Icons.done,
-    //                         color: kPrimaryColor,
-    //                       ))
-    //                 ],
-    //               )
-    //             ],
-    //           ));
-    // }
 
     return Consumer(
       builder: (context, ref, child) {
@@ -175,6 +105,31 @@ class ProfileScreen extends HookConsumerWidget {
                     },
                     icon: const Icon(
                       Icons.edit,
+                      color: kPrimaryColor,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 150,
+                  right: 10,
+                  child: IconButton(
+                    onPressed: () {
+                      UserActions.removeUserToken();
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const Center(
+                              child: CircularProgressIndicator.adaptive(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      kPrimaryColor)),
+                            );
+                          });
+                      Future.delayed(const Duration(seconds: 1)).then((value) {
+                        if (context.mounted) Phoenix.rebirth(context);
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.logout,
                       color: kPrimaryColor,
                     ),
                   ),

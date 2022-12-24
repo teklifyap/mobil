@@ -3,10 +3,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:teklifyap/constants.dart';
 import 'package:teklifyap/providers/employee_provider.dart';
+import 'package:teklifyap/providers/offer_provider.dart';
 import 'package:teklifyap/providers/worksite_provider.dart';
 import 'package:teklifyap/screens/worksites_screen/components/employee_container_for_worksite.dart';
 import 'package:teklifyap/services/api/worksite_actions.dart';
 import 'package:teklifyap/services/models/employee.dart';
+import 'package:teklifyap/services/models/offer.dart';
 import 'package:teklifyap/services/models/worksite.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -199,8 +201,56 @@ class WorksiteContainer extends HookConsumerWidget {
                 '${AppLocalizations.of(context)!.date}: ${worksite.date?.substring(0, 10)}'),
           ),
           ListTile(
+              onTap: () {
+                ref.read(offersProvider).getOffers();
+                debugPrint(worksite.toString());
+                Offer offer = ref.read(offersProvider).offers.firstWhere(
+                      (element) => element.title == worksite.offerName,
+                    );
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(30.0))),
+                        content: SingleChildScrollView(
+                            child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ListTile(
+                              title: Text(
+                                  '${AppLocalizations.of(context)!.offerTitle}: ${offer.title}'),
+                            ),
+                            ListTile(
+                              title: Text(
+                                  '${AppLocalizations.of(context)!.offerUsername}: ${offer.userName}'),
+                            ),
+                            ListTile(
+                              title: Text(
+                                  '${AppLocalizations.of(context)!.offerReceiver}: ${offer.receiverName}'),
+                            ),
+                            ListTile(
+                              title: Text(
+                                  '${AppLocalizations.of(context)!.date}: ${offer.date?.substring(0, 10)}'),
+                            ),
+                            ListTile(
+                              title: Text(
+                                  '${AppLocalizations.of(context)!.offerStatus}: ${offer.status ? AppLocalizations.of(context)!.confirmed : AppLocalizations.of(context)!.notConfirmed}'),
+                            ),
+                            ListTile(
+                                title: Text(
+                                    '${AppLocalizations.of(context)!.profitRate}: ${offer.profitRate!}')),
+                          ],
+                        )),
+                      );
+                    });
+              },
+              subtitle: Text(
+                  AppLocalizations.of(context)!.offerClickToSeeDetails,
+                  style: const TextStyle(fontSize: 12, color: kSecondaryColor)),
               title: Text(
-                  '${AppLocalizations.of(context)!.worksiteOfferName}: ${worksite.offerName}')),
+                  '${AppLocalizations.of(context)!.worksiteOffer}: ${worksite.offerName}')),
           ListTile(
               title: Text(
                   '${AppLocalizations.of(context)!.worksiteAddress}: ${worksite.address}')),
@@ -236,7 +286,7 @@ class WorksiteContainer extends HookConsumerWidget {
                   'https://www.google.com/maps/search/?api=1&query=${worksite.locationX},${worksite.locationY}';
               await canLaunchUrlString(url)
                   ? await launchUrlString(url)
-                  : throw 'could not launch $url';
+                  : throw 'could not launch ${worksite.name}';
             },
           )
         ],

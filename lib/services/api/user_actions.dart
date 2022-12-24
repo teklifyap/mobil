@@ -9,8 +9,23 @@ import 'package:teklifyap/app_data.dart';
 import 'package:teklifyap/services/api/api_endpoints.dart';
 import 'package:teklifyap/services/alerts.dart';
 import 'package:teklifyap/services/models/user.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserActions {
+  static const storage = FlutterSecureStorage();
+
+  static Future<void> storeUserToken(String authToken) async {
+    await storage.write(key: "authToken", value: authToken);
+  }
+
+  static Future<String?> getUserToken() async {
+    return await storage.read(key: "authToken");
+  }
+
+  static Future<void> removeUserToken() async {
+    await storage.delete(key: "authToken");
+  }
+
   static Future<bool> login(
       BuildContext context, String email, String password) async {
     Map<String, dynamic> requestPayload = {
@@ -26,7 +41,9 @@ class UserActions {
 
     if (res.statusCode == 200) {
       final responseBody = jsonDecode(utf8.decode(res.bodyBytes));
-      AppData.authToken = responseBody["data"];
+      String token = responseBody["data"];
+      AppData.authToken = token;
+      storeUserToken(token);
       return true;
     } else if (res.statusCode == 401) {
       if (context.mounted) {

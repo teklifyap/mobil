@@ -8,7 +8,9 @@ class OfferProvider extends ChangeNotifier {
 
   void getOffers() async {
     offers = await OfferActions.getAllOffers();
-    offers = List.from(offers.reversed);
+    offers.sort(
+      (a, b) => b.id!.compareTo(a.id!),
+    );
     notifyListeners();
   }
 }

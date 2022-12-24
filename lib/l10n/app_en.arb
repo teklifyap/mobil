@@ -166,7 +166,7 @@
  "worksiteNoEmployee": "Worksite has no employee!",
  "@worksiteNoEmployee": {},
  "@worksiteUsername": {},
- "worksiteOfferName": "Worksite Offer Name",
+ "worksiteOffer": "Worksite Offer",
  "@worksiteOfferName": {},
  "worksiteAddress": "Worksite Address",
  "@worksiteAddress": {},
@@ -189,5 +189,11 @@
  "alertForZeroValue": "There is items with no price, update them to use!",
  "@alertForZeroValue": {},
  "offerThereIsNone": "There is no offer or none of them confirmed!",
- "@offerThereIsNone": {}
+ "@offerThereIsNone": {},
+ "itemNoPrice": "No price!",
+ "@itemNoPrice": {},
+ "offerCouldNotExported": "Offer couldn't exported, please try again later!",
+ "@offerCouldNotExported": {},
+ "offerClickToSeeDetails": "Click to see details",
+ "@offerClickToSeeDetails": {}
 }
