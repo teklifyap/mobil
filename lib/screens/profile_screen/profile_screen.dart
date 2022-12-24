@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:teklifyap/constants.dart';
 import 'package:teklifyap/custom%20widgets/custom_dialog.dart';
@@ -104,6 +105,31 @@ class ProfileScreen extends HookConsumerWidget {
                     },
                     icon: const Icon(
                       Icons.edit,
+                      color: kPrimaryColor,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 150,
+                  right: 10,
+                  child: IconButton(
+                    onPressed: () {
+                      UserActions.removeUserToken();
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const Center(
+                              child: CircularProgressIndicator.adaptive(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      kPrimaryColor)),
+                            );
+                          });
+                      Future.delayed(const Duration(seconds: 1)).then((value) {
+                        if (context.mounted) Phoenix.rebirth(context);
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.logout,
                       color: kPrimaryColor,
                     ),
                   ),
