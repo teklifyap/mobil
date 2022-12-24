@@ -8,7 +8,9 @@ class ItemProvider extends ChangeNotifier {
 
   void getItems() async {
     items = await ItemActions.getAllItems();
-    items = List.from(items.reversed);
+    items.sort(
+      (a, b) => b.id!.compareTo(a.id!),
+    );
     notifyListeners();
   }
 }

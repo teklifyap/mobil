@@ -82,7 +82,7 @@
  "worksiteAdded": "Eklendi!",
  "worksiteClickToAdd": "Eklemek için tıkla",
  "worksiteNoEmployee": "Şantiyede çalışan işçi yok!",
- "worksiteOfferName": "Şantiye Teklifi Ismi",
+ "worksiteOffer": "Şantiye Teklifi",
  "worksiteAddress": "Şantiye Adresi",
  "worksiteSeeEmployees": "Çalışanları Gör",
  "worksiteSeeLocation": "Şantiyenin Konumunu Gör",
@@ -93,5 +93,8 @@
  "worksiteNo": "Şantiye yok, yenisini ekle!",
  "thereIsNoItemWithValue": "Fiyatı olan ürün yok, ürünlerin fiyatını güncelle!",
  "alertForZeroValue": "Fiyatı olmayan malzemeler var kullanmak için güncelleyin!",
- "offerThereIsNone": "There is no offer or none of them confirmed!"
+ "offerThereIsNone": "Teklif yok ya da hiçbir teklif onaylanmamış!",
+ "itemNoPrice": "Fiyat yok!",
+ "offerCouldNotExported": "Teklif dışa aktarılamadı, lütfen tekrar deneyiniz!",
+ "offerClickToSeeDetails": "Detayları görmek için tıkla!"
 }

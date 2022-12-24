@@ -29,9 +29,11 @@ class StorageScreen extends HookConsumerWidget {
       Future.delayed(Duration.zero, () {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             backgroundColor: kSecondaryColor,
-            content: Text(
-              AppLocalizations.of(context)!.alertForZeroValue,
-              style: const TextStyle(color: kPrimaryColor),
+            content: Center(
+              child: Text(
+                AppLocalizations.of(context)!.alertForZeroValue,
+                style: const TextStyle(color: kPrimaryColor),
+              ),
             )));
       });
     }

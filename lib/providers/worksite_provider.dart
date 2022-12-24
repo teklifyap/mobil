@@ -8,7 +8,9 @@ class WorksiteProvider extends ChangeNotifier {
 
   void getWorksites() async {
     worksites = await WorksiteActions.getAllWorksites();
-    worksites = List.from(worksites.reversed);
+    worksites.sort(
+      (a, b) => b.id!.compareTo(a.id!),
+    );
     notifyListeners();
   }
 }

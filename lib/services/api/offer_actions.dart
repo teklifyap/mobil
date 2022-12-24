@@ -201,6 +201,27 @@ class OfferActions {
 
       return true;
     } else {
+      if (context.mounted) {
+        final offerExportedAlert = SnackBar(
+            backgroundColor: kSecondaryColor,
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(right: 8.0),
+                  child: Icon(
+                    Icons.done,
+                    color: kPrimaryColor,
+                  ),
+                ),
+                Text(
+                  AppLocalizations.of(context)!.offerCouldNotExported,
+                  style: const TextStyle(color: kPrimaryColor),
+                )
+              ],
+            ));
+        ScaffoldMessenger.of(context).showSnackBar(offerExportedAlert);
+      }
       throw Exception(
           'something went wrong while exporting offer: ${offer.id}, ${offer.title}. response body: \n${res.body}');
     }

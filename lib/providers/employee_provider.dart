@@ -8,7 +8,9 @@ class EmployeeProvider extends ChangeNotifier {
 
   void getEmployees() async {
     employees = await EmployeeActions.getAllEmployees();
-    employees = List.from(employees.reversed);
+    employees.sort(
+      (a, b) => b.id!.compareTo(a.id!),
+    );
     notifyListeners();
   }
 }

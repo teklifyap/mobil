@@ -56,4 +56,9 @@ class Worksite {
     }
     return data;
   }
+
+  @override
+  String toString() {
+    return '$id, $name, $userName, $date, $offerName, $address, $locationX, $locationY ';
+  }
 }

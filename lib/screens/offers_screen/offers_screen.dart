@@ -150,6 +150,9 @@ class OffersScreen extends HookConsumerWidget {
       selectedItemIDS = [];
       selectedItemsQuantities = [];
       selectedItems = [];
+      offerTitleController.clear();
+      receiverNameController.clear();
+      profitRateController.clear();
       showDialog(
         context: context,
         builder: (context) => AlertDialog(

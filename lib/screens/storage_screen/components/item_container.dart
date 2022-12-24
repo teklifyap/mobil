@@ -80,7 +80,7 @@ class ItemContainer extends HookConsumerWidget {
                 style: const TextStyle(color: Colors.white),
               ),
               Text(
-                '${item.value ?? 0.0}',
+                '${item.value == 0 ? AppLocalizations.of(context)!.itemNoPrice : item.value}',
                 style: const TextStyle(color: Colors.black26),
               ),
               Text(
