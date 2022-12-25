@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:http/http.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:teklifyap/app_data.dart';
 import 'package:teklifyap/services/api/api_endpoints.dart';
@@ -12,21 +11,21 @@ import 'package:teklifyap/services/models/user.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserActions {
-  static const storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
 
-  static Future<void> storeUserToken(String authToken) async {
+  Future<void> storeUserToken(String authToken) async {
     await storage.write(key: "authToken", value: authToken);
   }
 
-  static Future<String?> getUserToken() async {
+  Future<String?> getUserToken() async {
     return await storage.read(key: "authToken");
   }
 
-  static Future<void> removeUserToken() async {
+  Future<void> removeUserToken() async {
     await storage.delete(key: "authToken");
   }
 
-  static Future<bool> login(
+  Future<bool> login(
       BuildContext context, String email, String password) async {
     Map<String, dynamic> requestPayload = {
       "email": email,
@@ -64,7 +63,7 @@ class UserActions {
     }
   }
 
-  static Future<bool> register(String name, String surname, String email,
+  Future<bool> register(String name, String surname, String email,
       String password, BuildContext context) async {
     Map<String, dynamic> requestPayload = {
       "name": name,
@@ -89,7 +88,7 @@ class UserActions {
     }
   }
 
-  static Future<User> getUser() async {
+  Future<User> getUser() async {
     Response res = await get(Uri.parse(ApiEndpoints.profileUrl), headers: {
       HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
       HttpHeaders.contentTypeHeader: "application/json",
@@ -103,7 +102,7 @@ class UserActions {
     }
   }
 
-  static Future<bool> deleteUser(BuildContext context) async {
+  Future<bool> deleteUser(BuildContext context) async {
     Response res = await delete(Uri.parse(ApiEndpoints.userUrl), headers: {
       HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
       HttpHeaders.contentTypeHeader: "application/json",
@@ -117,7 +116,7 @@ class UserActions {
     }
   }
 
-  static Future<bool> updateUser(
+  Future<bool> updateUser(
       User updatedUser, String currentPassword, String? newPassword) async {
     Map<String, dynamic> requestPayload = {
       "name": updatedUser.name,

@@ -3,10 +3,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:teklifyap/constants.dart';
-import 'package:teklifyap/custom%20widgets/custom_dialog.dart';
+import 'package:teklifyap/custom_widgets/custom_dialog.dart';
 import 'package:teklifyap/providers/user_provider.dart';
 import 'package:teklifyap/screens/login_screen/language_picker/language_picker_widget.dart';
-import 'package:teklifyap/custom%20widgets/input_field.dart';
+import 'package:teklifyap/custom_widgets/input_field.dart';
 import 'package:teklifyap/services/alerts.dart';
 import 'package:teklifyap/services/api/user_actions.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -25,9 +25,9 @@ class ProfileScreen extends HookConsumerWidget {
 
     setControllers() {
       final profile = ref.read(userProvider);
-      nameController.text = profile.user!.name!;
-      surnameController.text = profile.user!.surname!;
-      emailController.text = profile.user!.email!;
+      nameController.text = profile!.name!;
+      surnameController.text = profile.surname!;
+      emailController.text = profile.email!;
       passwordController.clear();
       newPasswordController.clear();
     }
@@ -47,7 +47,7 @@ class ProfileScreen extends HookConsumerWidget {
                   child: IconButton(
                     onPressed: () {
                       setControllers();
-                      CustomDialogs.basicEditDialog(
+                      CustomDialogs().basicEditDialog(
                           context: context,
                           title: AppLocalizations.of(context)!.editProfile,
                           content: [
@@ -86,7 +86,7 @@ class ProfileScreen extends HookConsumerWidget {
                           ],
                           leftButtonAction: null,
                           rightButtonAction: () async {
-                            await UserActions.updateUser(
+                            await UserActions().updateUser(
                                 User(
                                     id: 999,
                                     name: nameController.text,
@@ -94,8 +94,7 @@ class ProfileScreen extends HookConsumerWidget {
                                     email: emailController.text),
                                 passwordController.text,
                                 newPasswordController.text);
-                            ref.read(userProvider).getUser();
-                            if (context.mounted) Navigator.pop(context);
+                            ref.read(userProvider.notifier).getUser();
                           },
                           leftButtonIcon: null,
                           rightButtonIcon: Icons.done,
@@ -114,7 +113,7 @@ class ProfileScreen extends HookConsumerWidget {
                   right: 10,
                   child: IconButton(
                     onPressed: () {
-                      UserActions.removeUserToken();
+                      UserActions().removeUserToken();
                       showDialog(
                           context: context,
                           builder: (context) {
@@ -152,24 +151,24 @@ class ProfileScreen extends HookConsumerWidget {
                           ),
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                              '${profileProvider.user!.name!.substring(0, 1)}${profileProvider.user!.surname!.substring(0, 1)}',
+                              '${profileProvider!.name!.substring(0, 1)}${profileProvider.surname!.substring(0, 1)}',
                               style: const TextStyle(
                                   color: Colors.white, fontSize: 48)),
                         ),
                       ),
                     ),
                     Text(
-                      '${profileProvider.user!.name} ${profileProvider.user!.surname}',
+                      '${profileProvider.name} ${profileProvider.surname}',
                       style: const TextStyle(fontSize: 24),
                     ),
                     Text(
-                      profileProvider.user!.email ?? "",
+                      profileProvider.email ?? "",
                       style: const TextStyle(fontSize: 24),
                     ),
                     TextButton(
                         onPressed: () => {
                               CustomAlerts.confirmActionMessage(context, () {
-                                UserActions.deleteUser(context);
+                                UserActions().deleteUser(context);
                               },
                                   AppLocalizations.of(context)!
                                       .confirmAccountDelete)

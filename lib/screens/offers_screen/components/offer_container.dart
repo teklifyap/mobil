@@ -5,7 +5,7 @@ import 'package:teklifyap/constants.dart';
 import 'package:teklifyap/providers/item_provider.dart';
 import 'package:teklifyap/providers/offer_provider.dart';
 import 'package:teklifyap/screens/offers_screen/components/item_container_for_offer.dart';
-import 'package:teklifyap/custom%20widgets/input_field.dart';
+import 'package:teklifyap/custom_widgets/input_field.dart';
 import 'package:teklifyap/services/api/offer_actions.dart';
 import 'package:teklifyap/services/models/item.dart';
 import 'package:teklifyap/services/models/offer.dart';
@@ -30,7 +30,7 @@ class OfferContainer extends HookConsumerWidget {
     List<TextEditingController> selectedItemsQuantities = [];
     List<int> selectedItemIDS = [];
     List<Item> selectedItems = [];
-    var itemProvider = [...ref.read(itemsProvider).items];
+    var itemProvider = [...ref.read(itemsProvider)];
     itemProvider.removeWhere((element) => element.value == 0);
 
     setEditInputFields() {
@@ -41,15 +41,15 @@ class OfferContainer extends HookConsumerWidget {
     }
 
     Future changeOfferStatus() async {
-      await OfferActions.changeOfferStatus(offer.id!);
-      ref.read(offersProvider).getOffers();
+      await OfferActions().changeOfferStatus(offer.id!);
+      ref.read(offersProvider.notifier).getOffers();
     }
 
     Future addItemsToOffer(List<Item> items) async {
       for (var item in items) {
-        await OfferActions.addItemToOffer(offer, item);
+        await OfferActions().addItemToOffer(offer, item);
       }
-      ref.read(offersProvider).getOffers();
+      ref.read(offersProvider.notifier).getOffers();
       if (context.mounted) Navigator.pop(context);
     }
 
@@ -199,8 +199,8 @@ class OfferContainer extends HookConsumerWidget {
     }
 
     void updateOffer(Offer newOffer) async {
-      await OfferActions.updateOffer(newOffer);
-      ref.read(offersProvider).getOffers();
+      await OfferActions().updateOffer(newOffer);
+      ref.read(offersProvider.notifier).getOffers();
     }
 
     Future editOffer() async {
@@ -272,8 +272,8 @@ class OfferContainer extends HookConsumerWidget {
     }
 
     void deleteOffer(Offer offer) async {
-      await OfferActions.deleteOffer(offer.id as int);
-      ref.read(offersProvider).getOffers();
+      await OfferActions().deleteOffer(offer.id as int);
+      ref.read(offersProvider.notifier).getOffers();
     }
 
     return Padding(
@@ -300,7 +300,7 @@ class OfferContainer extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              onPressed: () => OfferActions.exportOffer(context, offer),
+              onPressed: () => OfferActions().exportOffer(context, offer),
               icon: const Icon(Icons.print),
             ),
             IconButton(

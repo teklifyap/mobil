@@ -1,18 +1,17 @@
-import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:teklifyap/services/api/offer_actions.dart';
 import 'package:teklifyap/services/models/offer.dart';
 
-class OfferProvider extends ChangeNotifier {
-  List<Offer> offers = [];
+class OfferProvider extends StateNotifier<List<Offer>> {
+  OfferProvider() : super([]);
 
   void getOffers() async {
-    offers = await OfferActions.getAllOffers();
-    offers.sort(
+    state = await OfferActions().getAllOffers();
+    state.sort(
       (a, b) => b.id!.compareTo(a.id!),
     );
-    notifyListeners();
   }
 }
 
-final offersProvider = ChangeNotifierProvider((ref) => OfferProvider());
+final offersProvider =
+    StateNotifierProvider<OfferProvider, List<Offer>>((ref) => OfferProvider());

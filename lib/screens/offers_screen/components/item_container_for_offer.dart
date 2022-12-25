@@ -22,8 +22,8 @@ class ItemContainerForOffer extends HookConsumerWidget {
           '${AppLocalizations.of(context)!.profitRate}: ${offer.profitRate}\n${AppLocalizations.of(context)!.itemQuantity}: ${item.quantity}\n${AppLocalizations.of(context)!.itemValue}: ${item.value}\n= ${(offer.profitRate!) * (item.quantity!) * (item.value!)}'),
       trailing: IconButton(
         onPressed: () {
-          OfferActions.deleteItemFromOffer(offer, item.id!);
-          ref.read(offersProvider).getOffers();
+          OfferActions().deleteItemFromOffer(offer, item.id!);
+          ref.read(offersProvider.notifier).getOffers();
           Navigator.pop(context);
         },
         icon: const Icon(

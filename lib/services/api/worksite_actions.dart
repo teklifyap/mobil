@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart';
-
 import 'package:teklifyap/app_data.dart';
 import 'package:teklifyap/services/api/api_endpoints.dart';
 import 'package:teklifyap/services/models/worksite.dart';
 
 class WorksiteActions {
-  static Future<bool> createWorksite(Worksite worksite) async {
+  Future<bool> createWorksite(Worksite worksite) async {
     Map<String, dynamic> requestPayload = {
       "name": worksite.name,
       "offerId": worksite.offerID,
@@ -32,7 +31,7 @@ class WorksiteActions {
     }
   }
 
-  static Future<List<Worksite>> getAllWorksites() async {
+  Future<List<Worksite>> getAllWorksites() async {
     List<Worksite> allWorksites = [];
     Response res = await get(Uri.parse(ApiEndpoints.worksiteUrl), headers: {
       HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
@@ -43,7 +42,7 @@ class WorksiteActions {
       List<dynamic>? worksites = jsonDecode(utf8.decode(res.bodyBytes))["data"];
       if (worksites != null) {
         for (var worksite in worksites) {
-          allWorksites.add(await WorksiteActions.getWorksite(worksite["id"]));
+          allWorksites.add(await WorksiteActions().getWorksite(worksite["id"]));
         }
         return allWorksites;
       } else {
@@ -55,7 +54,7 @@ class WorksiteActions {
     }
   }
 
-  static Future<Worksite> getWorksite(int worksiteID) async {
+  Future<Worksite> getWorksite(int worksiteID) async {
     Response res = await get(
       Uri.parse(
         '${ApiEndpoints.worksiteUrl}/$worksiteID',
@@ -74,7 +73,7 @@ class WorksiteActions {
     }
   }
 
-  static Future<bool> deleteWorksite(int worksiteID) async {
+  Future<bool> deleteWorksite(int worksiteID) async {
     Response res = await delete(
       Uri.parse('${ApiEndpoints.worksiteUrl}/$worksiteID'),
       headers: {
@@ -91,7 +90,7 @@ class WorksiteActions {
     }
   }
 
-  static Future<bool> employeeManagingForWorksite(
+  Future<bool> employeeManagingForWorksite(
       String process, int worksiteID, int employeeID) async {
     Response res;
     if (process == "add") {

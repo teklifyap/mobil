@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:teklifyap/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // ignore: must_be_immutable
-class CustomInputField extends HookWidget {
+class CustomInputField extends StatelessWidget {
   CustomInputField({
     Key? key,
     this.inputFormatters,

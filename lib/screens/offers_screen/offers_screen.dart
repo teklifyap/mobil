@@ -5,7 +5,7 @@ import 'package:teklifyap/providers/item_provider.dart';
 import 'package:teklifyap/providers/offer_provider.dart';
 import 'package:teklifyap/providers/user_provider.dart';
 import 'package:teklifyap/screens/offers_screen/components/offer_container.dart';
-import 'package:teklifyap/custom%20widgets/input_field.dart';
+import 'package:teklifyap/custom_widgets/input_field.dart';
 import 'package:teklifyap/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:teklifyap/services/api/offer_actions.dart';
@@ -27,13 +27,13 @@ class OffersScreen extends HookConsumerWidget {
 
     void addOffer() async {
       final profile = ref.read(userProvider);
-      await OfferActions.createOffer(Offer(
+      await OfferActions().createOffer(Offer(
           title: offerTitleController.text,
           receiverName: receiverNameController.text,
-          userName: '${profile.user!.name} ${profile.user!.surname}',
+          userName: '${profile!.name} ${profile.surname}',
           profitRate: double.parse(profitRateController.text),
           items: selectedItems));
-      ref.read(offersProvider).getOffers();
+      ref.read(offersProvider.notifier).getOffers();
     }
 
     Future addItemsToOfferDialog(List<Item> addableItems) async {
@@ -123,10 +123,7 @@ class OffersScreen extends HookConsumerWidget {
                                       id: x,
                                       quantity: double.parse(
                                           selectedItemsQuantities[i].text),
-                                      value: ref
-                                          .read(itemsProvider)
-                                          .items[i]
-                                          .value));
+                                      value: ref.read(itemsProvider)[i].value));
                                 });
                               }
                               Navigator.pop(context);
@@ -144,8 +141,8 @@ class OffersScreen extends HookConsumerWidget {
 
     Future createOfferDialog() async {
       final formKey = GlobalKey<FormState>();
-      ref.read(itemsProvider).getItems();
-      var addableItems = [...ref.read(itemsProvider).items];
+      ref.read(itemsProvider.notifier).getItems();
+      var addableItems = [...ref.read(itemsProvider)];
       addableItems.removeWhere((element) => element.value == 0);
       selectedItemIDS = [];
       selectedItemsQuantities = [];
@@ -280,7 +277,8 @@ class OffersScreen extends HookConsumerWidget {
                   style: const TextStyle(fontSize: 32),
                 ),
                 IconButton(
-                    onPressed: () => {ref.read(offersProvider).getOffers()},
+                    onPressed: () =>
+                        {ref.read(offersProvider.notifier).getOffers()},
                     icon: const Icon(
                       Icons.refresh,
                       color: kPrimaryColor,
@@ -291,13 +289,13 @@ class OffersScreen extends HookConsumerWidget {
           ),
           Consumer(builder: (context, ref, child) {
             final offerProvider = ref.watch(offersProvider);
-            return offerProvider.offers.isNotEmpty
+            return offerProvider.isNotEmpty
                 ? Expanded(
                     child: ListView.builder(
-                      itemCount: offerProvider.offers.length,
+                      itemCount: offerProvider.length,
                       itemBuilder: (BuildContext context, int index) {
                         return OfferContainer(
-                          offer: offerProvider.offers[index],
+                          offer: offerProvider[index],
                         );
                       },
                     ),

@@ -9,7 +9,7 @@ import 'package:teklifyap/constants.dart';
 import 'package:teklifyap/providers/offer_provider.dart';
 import 'package:teklifyap/providers/user_provider.dart';
 import 'package:teklifyap/providers/worksite_provider.dart';
-import 'package:teklifyap/custom%20widgets/input_field.dart';
+import 'package:teklifyap/custom_widgets/input_field.dart';
 import 'package:teklifyap/screens/worksites_screen/components/worksite_container.dart';
 import 'package:teklifyap/services/api/worksite_actions.dart';
 import 'package:teklifyap/services/models/offer.dart';
@@ -34,14 +34,14 @@ class WorksitesScreen extends HookConsumerWidget {
 
     void newWorksite() async {
       final profile = ref.read(userProvider);
-      await WorksiteActions.createWorksite(Worksite(
+      await WorksiteActions().createWorksite(Worksite(
           name: worksiteNameController.text,
           offerID: offerID,
-          userName: '${profile.user!.name} ${profile.user!.surname}',
+          userName: '${profile!.name} ${profile.surname}',
           address: worksiteAddressController.text,
           locationX: worksiteLocationX,
           locationY: worksiteLocationY));
-      ref.read(worksitesProvider).getWorksites();
+      ref.read(worksitesProvider.notifier).getWorksites();
     }
 
     Future newWorksiteDialog() async {
@@ -49,8 +49,8 @@ class WorksitesScreen extends HookConsumerWidget {
       Completer<platform.GoogleMapController> mapController = Completer();
       worksiteAddressController.clear();
       worksiteNameController.clear();
-      ref.read(offersProvider).getOffers();
-      List<Offer> offers = [...ref.read(offersProvider).offers];
+      ref.read(offersProvider.notifier).getOffers();
+      List<Offer> offers = [...ref.read(offersProvider)];
       offers.removeWhere((element) => element.status == false);
       // ignore: unused_local_variable
       LocationPermission permission = await Geolocator.requestPermission();
@@ -263,7 +263,7 @@ class WorksitesScreen extends HookConsumerWidget {
                 ),
                 IconButton(
                     onPressed: () =>
-                        {ref.read(worksitesProvider).getWorksites()},
+                        {ref.read(worksitesProvider.notifier).getWorksites()},
                     icon: const Icon(
                       Icons.refresh,
                       color: kPrimaryColor,
@@ -274,13 +274,13 @@ class WorksitesScreen extends HookConsumerWidget {
           ),
           Consumer(builder: (context, ref, child) {
             final worksiteProvider = ref.watch(worksitesProvider);
-            return worksiteProvider.worksites.isNotEmpty
+            return worksiteProvider.isNotEmpty
                 ? Expanded(
                     child: ListView.builder(
-                      itemCount: worksiteProvider.worksites.length,
+                      itemCount: worksiteProvider.length,
                       itemBuilder: (BuildContext context, int index) {
                         return WorksiteContainer(
-                          worksite: worksiteProvider.worksites[index],
+                          worksite: worksiteProvider[index],
                         );
                       },
                     ),

@@ -11,12 +11,12 @@ class SplashScreen extends HookWidget {
       {Key? key,
       this.primaryTitle,
       this.mainLogoFileName,
-      this.splashScreenDuration = const Duration(milliseconds: 2000)})
+      this.splashScreenDuration = const Duration(milliseconds: 1500)})
       : super(key: key);
 
   final String? primaryTitle;
   final String? mainLogoFileName;
-  final Duration? splashScreenDuration;
+  final Duration splashScreenDuration;
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +27,12 @@ class SplashScreen extends HookWidget {
 
     navigateToLoginPage() async {
       Widget screenToNavigate = const LoginScreen();
-      userToken = await UserActions.getUserToken();
+      userToken = await UserActions().getUserToken();
       if (userToken != null) {
-        debugPrint("not null");
         AppData.authToken = userToken ?? "";
         screenToNavigate = App();
       }
-      await Future.delayed(splashScreenDuration!);
+      await Future.delayed(splashScreenDuration);
       // ignore: use_build_context_synchronously
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => screenToNavigate));
@@ -50,28 +49,21 @@ class SplashScreen extends HookWidget {
       body: FutureBuilder(
           future: initialize(context),
           builder: (context, snap) {
-            return GrowingText(controller: animationController);
+            return TweenAnimationBuilder(
+                tween: Tween<double>(begin: 160, end: 640),
+                duration: splashScreenDuration,
+                builder: (context, value, child) {
+                  return Center(
+                    child: Text(
+                      AppData.primaryTitle,
+                      style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          fontSize: value / 10,
+                          color: kPrimaryColor),
+                    ),
+                  );
+                });
           }),
-    );
-  }
-}
-
-class GrowingText extends AnimatedWidget {
-  GrowingText({super.key, required AnimationController controller})
-      : super(
-            listenable: Tween<double>(begin: 16, end: 54).animate(controller));
-
-  @override
-  Widget build(BuildContext context) {
-    Animation<double> animation = listenable as Animation<double>;
-    return Center(
-      child: Text(
-        AppData.primaryTitle,
-        style: TextStyle(
-            fontStyle: FontStyle.italic,
-            fontSize: animation.value,
-            color: kPrimaryColor),
-      ),
     );
   }
 }

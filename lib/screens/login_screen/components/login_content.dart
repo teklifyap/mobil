@@ -170,7 +170,7 @@ class LoginContent extends HookConsumerWidget {
           onPressed: () async {
             if (ChangeScreenAnimation.currentScreen == Screens.register &&
                 registerFormKey.currentState!.validate()) {
-              await UserActions.register(
+              await UserActions().register(
                   nameTextController.text,
                   surnameTextController.text,
                   emailTextController.text,
@@ -191,7 +191,7 @@ class LoginContent extends HookConsumerWidget {
                               AlwaysStoppedAnimation<Color>(kPrimaryColor)),
                     );
                   });
-              bool success = await UserActions.login(context,
+              bool success = await UserActions().login(context,
                   emailTextController.text, passwordTextController.text);
               if (context.mounted && success) {
                 Navigator.pop(context);

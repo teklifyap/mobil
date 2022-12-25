@@ -1,18 +1,16 @@
-import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:teklifyap/services/api/item_actions.dart';
 import 'package:teklifyap/services/models/item.dart';
 
-class ItemProvider extends ChangeNotifier {
-  List<Item> items = [];
-
+class ItemProvider extends StateNotifier<List<Item>> {
+  ItemProvider() : super([]);
   void getItems() async {
-    items = await ItemActions.getAllItems();
-    items.sort(
+    state = await ItemActions().getAllItems();
+    state.sort(
       (a, b) => b.id!.compareTo(a.id!),
     );
-    notifyListeners();
   }
 }
 
-final itemsProvider = ChangeNotifierProvider((ref) => ItemProvider());
+final itemsProvider =
+    StateNotifierProvider<ItemProvider, List<Item>>((ref) => ItemProvider());

@@ -21,19 +21,19 @@ class WorksiteContainer extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<Employee> selectedEmployees = [];
-    final employeeProvider = [...ref.read(employeesProvider).employees];
+    final employeeProvider = [...ref.read(employeesProvider)];
 
     void deleteOffer(Worksite worksite) async {
-      await WorksiteActions.deleteWorksite(worksite.id!);
-      ref.read(worksitesProvider).getWorksites();
+      await WorksiteActions().deleteWorksite(worksite.id!);
+      ref.read(worksitesProvider.notifier).getWorksites();
     }
 
     Future addEmployeesToOffer(List<Employee> selectedEmployees) async {
       for (var employee in selectedEmployees) {
-        await WorksiteActions.employeeManagingForWorksite(
-            "add", worksite.id!, employee.id!);
+        await WorksiteActions()
+            .employeeManagingForWorksite("add", worksite.id!, employee.id!);
       }
-      ref.read(worksitesProvider).getWorksites();
+      ref.read(worksitesProvider.notifier).getWorksites();
       if (context.mounted) Navigator.pop(context);
     }
 
@@ -202,9 +202,9 @@ class WorksiteContainer extends HookConsumerWidget {
           ),
           ListTile(
               onTap: () {
-                ref.read(offersProvider).getOffers();
+                ref.read(offersProvider.notifier).getOffers();
                 debugPrint(worksite.toString());
-                Offer offer = ref.read(offersProvider).offers.firstWhere(
+                Offer offer = ref.read(offersProvider).firstWhere(
                       (element) => element.title == worksite.offerName,
                     );
                 showDialog(

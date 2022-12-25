@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:teklifyap/custom%20widgets/custom_dialog.dart';
+import 'package:teklifyap/custom_widgets/custom_dialog.dart';
 import 'package:teklifyap/providers/item_provider.dart';
-import 'package:teklifyap/custom%20widgets/input_field.dart';
+import 'package:teklifyap/custom_widgets/input_field.dart';
 import 'package:teklifyap/screens/storage_screen/components/item_container.dart';
 import 'package:teklifyap/services/api/item_actions.dart';
 import 'package:teklifyap/constants.dart';
@@ -24,8 +24,8 @@ class StorageScreen extends HookConsumerWidget {
     final itemValueController = useTextEditingController();
     String itemUnitController = Units.KG.name;
     final width = MediaQuery.of(context).size.width;
-    
-    var items = [...ref.read(itemsProvider).items];
+
+    var items = [...ref.read(itemsProvider)];
     if (items.where((element) => element.value == 0).toList().isNotEmpty) {
       Future.delayed(Duration.zero, () {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -40,15 +40,15 @@ class StorageScreen extends HookConsumerWidget {
     }
 
     void addItem(Item item) async {
-      await ItemActions.createItem(item);
-      ref.read(itemsProvider).getItems();
+      await ItemActions().createItem(item);
+      ref.read(itemsProvider.notifier).getItems();
       itemNameController.clear();
       itemValueController.clear();
     }
 
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => CustomDialogs.basicAddOrCreateDialog(
+        onPressed: () => CustomDialogs().basicAddOrCreateDialog(
             content: [
               CustomInputField(
                   controller: itemNameController,
@@ -116,7 +116,8 @@ class StorageScreen extends HookConsumerWidget {
                   style: const TextStyle(fontSize: 32),
                 ),
                 IconButton(
-                    onPressed: () => {ref.read(itemsProvider).getItems()},
+                    onPressed: () =>
+                        {ref.read(itemsProvider.notifier).getItems()},
                     icon: const Icon(
                       Icons.refresh,
                       color: kPrimaryColor,
@@ -126,15 +127,15 @@ class StorageScreen extends HookConsumerWidget {
             )),
         Consumer(builder: (context, ref, child) {
           final itemProvider = ref.watch(itemsProvider);
-          return itemProvider.items.isNotEmpty
+          return itemProvider.isNotEmpty
               ? Expanded(
                   child: GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount:
                             kIsWeb ? (width <= 1000 ? width ~/ 150 : 8) : 3),
-                    itemCount: itemProvider.items.length,
+                    itemCount: itemProvider.length,
                     itemBuilder: (context, index) {
-                      return ItemContainer(item: itemProvider.items[index]);
+                      return ItemContainer(item: itemProvider[index]);
                     },
                   ),
                 )
