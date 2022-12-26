@@ -19,7 +19,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Consumer(builder: (context, ref, child) {
       final languageProvider = ref.watch(localeProvider);
-      
+
       return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -33,7 +33,7 @@ class MyApp extends ConsumerWidget {
           GlobalCupertinoLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate
         ],
-        locale: languageProvider.locale,
+        locale: languageProvider,
         home: const SplashScreen(),
       );
     });

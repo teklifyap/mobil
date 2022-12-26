@@ -19,9 +19,9 @@ class EmployeeContainerForWorksite extends ConsumerWidget {
       title: Text('${employee.name} ${employee.surname}'),
       trailing: IconButton(
         onPressed: () {
-          WorksiteActions.employeeManagingForWorksite(
+          WorksiteActions().employeeManagingForWorksite(
               "delete", worksite.id!, employee.id!);
-          ref.read(worksitesProvider).getWorksites();
+          ref.read(worksitesProvider.notifier).getWorksites();
           Navigator.pop(context);
         },
         icon: const Icon(

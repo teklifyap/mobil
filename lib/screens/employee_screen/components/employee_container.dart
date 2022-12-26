@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:teklifyap/constants.dart';
-import 'package:teklifyap/custom%20widgets/custom_dialog.dart';
+import 'package:teklifyap/custom_widgets/custom_dialog.dart';
 import 'package:teklifyap/providers/employee_provider.dart';
-import 'package:teklifyap/custom%20widgets/input_field.dart';
+import 'package:teklifyap/custom_widgets/input_field.dart';
 import 'package:teklifyap/services/api/employee_actions.dart';
 import 'package:teklifyap/services/models/employee.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -19,21 +19,21 @@ class EmployeeContainer extends HookConsumerWidget {
     final employeeNameController = useTextEditingController();
     final employeeSurnameController = useTextEditingController();
 
-    setEditInputFields() {
+    setControllers() {
       employeeNameController.text = employee.name ?? "";
       employeeSurnameController.text = employee.surname ?? "";
     }
 
     void deleteEmployee(Employee employee) async {
-      await EmployeeActions.deleteEmployee(employee.id!);
-      ref.read(employeesProvider).getEmployees();
+      await EmployeeActions().deleteEmployee(employee.id!);
+      ref.read(employeesProvider.notifier).getEmployees();
     }
 
     void updateEmployee(Employee employee) async {
       employee.name = employeeNameController.text;
       employee.surname = employeeSurnameController.text;
-      await EmployeeActions.updateEmployee(employee);
-      ref.read(employeesProvider).getEmployees();
+      await EmployeeActions().updateEmployee(employee);
+      ref.read(employeesProvider.notifier).getEmployees();
     }
 
     return Padding(
@@ -42,8 +42,8 @@ class EmployeeContainer extends HookConsumerWidget {
         color: kPrimaryColor,
         child: ListTile(
           onTap: () {
-            setEditInputFields();
-            CustomDialogs.basicEditDialog(
+            setControllers();
+            CustomDialogs().basicEditDialog(
                 context: context,
                 title: AppLocalizations.of(context)!.editEmployee,
                 content: [
@@ -57,11 +57,9 @@ class EmployeeContainer extends HookConsumerWidget {
                 ],
                 leftButtonAction: () {
                   deleteEmployee(employee);
-                  Navigator.pop(context);
                 },
                 rightButtonAction: () {
                   updateEmployee(employee);
-                  Navigator.pop(context);
                 },
                 leftButtonIcon: Icons.delete,
                 rightButtonIcon: Icons.save,

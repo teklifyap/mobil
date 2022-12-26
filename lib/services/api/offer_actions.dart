@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:teklifyap/app_data.dart';
@@ -11,7 +10,7 @@ import 'package:teklifyap/services/models/offer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OfferActions {
-  static Future<bool> createOffer(
+  Future<bool> createOffer(
     Offer offer,
   ) async {
     Map<String, dynamic> requestPayload = {
@@ -37,7 +36,7 @@ class OfferActions {
     }
   }
 
-  static Future<Offer> getOffer(int offerID) async {
+  Future<Offer> getOffer(int offerID) async {
     Response res = await get(
       Uri.parse(
         '${ApiEndpoints.offerUrl}/$offerID',
@@ -56,7 +55,7 @@ class OfferActions {
     }
   }
 
-  static Future<bool> updateOffer(Offer offer) async {
+  Future<bool> updateOffer(Offer offer) async {
     Map<String, dynamic> requestPayload = {
       "title": offer.title,
       "receiverName": offer.receiverName,
@@ -81,7 +80,7 @@ class OfferActions {
     }
   }
 
-  static Future<bool> deleteOffer(int offerID) async {
+  Future<bool> deleteOffer(int offerID) async {
     Response res = await delete(
       Uri.parse('${ApiEndpoints.offerUrl}/$offerID'),
       headers: {
@@ -98,7 +97,7 @@ class OfferActions {
     }
   }
 
-  static Future<bool> changeOfferStatus(int offerID) async {
+  Future<bool> changeOfferStatus(int offerID) async {
     Response res = await put(
       Uri.parse('${ApiEndpoints.offerUrl}/status/$offerID'),
       headers: {
@@ -115,7 +114,7 @@ class OfferActions {
     }
   }
 
-  static Future<List<Offer>> getAllOffers() async {
+  Future<List<Offer>> getAllOffers() async {
     List<Offer> allOffers = [];
     Response res = await get(Uri.parse(ApiEndpoints.offerUrl), headers: {
       HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
@@ -125,7 +124,7 @@ class OfferActions {
     if (res.statusCode == 200) {
       List<dynamic> offers = jsonDecode(utf8.decode(res.bodyBytes))["data"];
       for (var offer in offers) {
-        allOffers.add(await OfferActions.getOffer(offer["id"]));
+        allOffers.add(await getOffer(offer["id"]));
       }
       return allOffers;
     } else {
@@ -134,7 +133,7 @@ class OfferActions {
     }
   }
 
-  static Future<bool> addItemToOffer(Offer offer, Item item) async {
+  Future<bool> addItemToOffer(Offer offer, Item item) async {
     Response res = await post(
         Uri.parse('${ApiEndpoints.offerUrl}/item?offer=${offer.id}'),
         body: jsonEncode(item),
@@ -151,7 +150,7 @@ class OfferActions {
     }
   }
 
-  static Future<bool> deleteItemFromOffer(Offer offer, int itemID) async {
+  Future<bool> deleteItemFromOffer(Offer offer, int itemID) async {
     Response res = await delete(
       Uri.parse('${ApiEndpoints.offerUrl}/item/$itemID?offer=${offer.id}'),
       headers: {
@@ -168,7 +167,7 @@ class OfferActions {
     }
   }
 
-  static Future<bool> exportOffer(BuildContext context, Offer offer) async {
+  Future<bool> exportOffer(BuildContext context, Offer offer) async {
     Response res = await get(
         Uri.parse('${ApiEndpoints.offerUrl}/export/${offer.id}'),
         headers: {

@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart';
-
 import 'package:teklifyap/app_data.dart';
 import 'package:teklifyap/services/api/api_endpoints.dart';
 import 'package:teklifyap/services/models/item.dart';
 
 class ItemActions {
-  static Future<bool> createItem(Item item) async {
+  Future<bool> createItem(Item item) async {
     Map<String, dynamic> requestPayload = {
       "name": item.name,
       "value": item.value,
@@ -31,7 +30,7 @@ class ItemActions {
     }
   }
 
-  static Future<bool> deleteItem(int itemID) async {
+  Future<bool> deleteItem(int itemID) async {
     Response res = await delete(
       Uri.parse('${ApiEndpoints.itemUrl}/$itemID'),
       headers: {
@@ -48,7 +47,7 @@ class ItemActions {
     }
   }
 
-  static Future<bool> updateItem(Item item) async {
+  Future<bool> updateItem(Item item) async {
     Map<String, dynamic> requestPayload = {
       "name": item.name,
       "value": item.value,
@@ -71,7 +70,7 @@ class ItemActions {
     }
   }
 
-  static Future<List<Item>> getAllItems() async {
+  Future<List<Item>> getAllItems() async {
     List<Item> allItems = [];
     Response res = await get(Uri.parse(ApiEndpoints.itemUrl), headers: {
       HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
@@ -81,7 +80,7 @@ class ItemActions {
     if (res.statusCode == 200) {
       List<dynamic> items = jsonDecode(utf8.decode(res.bodyBytes))["data"];
       for (var item in items) {
-        allItems.add(await ItemActions.getItem(item["id"]));
+        allItems.add(await ItemActions().getItem(item["id"]));
       }
       return allItems;
     } else {
@@ -90,7 +89,7 @@ class ItemActions {
     }
   }
 
-  static Future<Item> getItem(int itemID) async {
+  Future<Item> getItem(int itemID) async {
     Response res =
         await get(Uri.parse("${ApiEndpoints.itemUrl}/$itemID"), headers: {
       HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',

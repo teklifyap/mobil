@@ -41,8 +41,7 @@ class LanguagePickerWidget extends ConsumerWidget {
             return DropdownMenuItem(
               value: locale,
               onTap: () {
-                final provider = ref.watch(localeProvider);
-                provider.setLocale(locale);
+                ref.read(localeProvider.notifier).setLocale(locale);
               },
               child: Center(
                 child: Text(

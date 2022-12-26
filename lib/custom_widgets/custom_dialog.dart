@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:teklifyap/constants.dart';
 
 class CustomDialogs {
-  static Future basicAddOrCreateDialog({
+  Future basicAddOrCreateDialog({
     required List<Widget> content,
     required String title,
     required String actionText,
@@ -61,7 +61,7 @@ class CustomDialogs {
             ));
   }
 
-  static Future basicEditDialog({
+  Future basicEditDialog({
     required BuildContext context,
     required String title,
     required List<Widget> content,
@@ -100,9 +100,11 @@ class CustomDialogs {
                               if (doesLeftButtonNeedValidation) {
                                 if (formKey.currentState!.validate()) {
                                   leftButtonAction();
+                                  Navigator.pop(context);
                                 }
                               } else {
                                 leftButtonAction();
+                                Navigator.pop(context);
                               }
                             },
                             child: Row(
@@ -125,10 +127,12 @@ class CustomDialogs {
                               if (doesRightButtonNeedValidation) {
                                 if (formKey.currentState!.validate()) {
                                   rightButtonAction();
+                                  Navigator.pop(context);
                                 }
                               } else {
                                 debugPrint("wa");
                                 rightButtonAction();
+                                Navigator.pop(context);
                               }
                             },
                             child: Row(

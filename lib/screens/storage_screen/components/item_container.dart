@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:teklifyap/custom%20widgets/custom_dialog.dart';
+import 'package:teklifyap/custom_widgets/custom_dialog.dart';
 import 'package:teklifyap/providers/item_provider.dart';
-import 'package:teklifyap/custom%20widgets/input_field.dart';
+import 'package:teklifyap/custom_widgets/input_field.dart';
 import 'package:teklifyap/services/api/item_actions.dart';
 import 'package:teklifyap/services/models/item.dart';
 import 'package:teklifyap/constants.dart';
@@ -26,15 +26,15 @@ class ItemContainer extends HookConsumerWidget {
     }
 
     void deleteItem(Item item) async {
-      await ItemActions.deleteItem(item.id as int);
-      ref.read(itemsProvider).getItems();
+      await ItemActions().deleteItem(item.id as int);
+      ref.read(itemsProvider.notifier).getItems();
     }
 
     void updateItem(Item item) async {
       item.name = itemNameController.text;
       item.value = double.parse(itemValueController.text);
-      await ItemActions.updateItem(item);
-      ref.read(itemsProvider).getItems();
+      await ItemActions().updateItem(item);
+      ref.read(itemsProvider.notifier).getItems();
     }
 
     return Padding(
@@ -44,7 +44,7 @@ class ItemContainer extends HookConsumerWidget {
         child: ListTile(
           onTap: () {
             setEditInputFields();
-            CustomDialogs.basicEditDialog(
+            CustomDialogs().basicEditDialog(
                 context: context,
                 title: AppLocalizations.of(context)!.editItem,
                 content: [
@@ -60,11 +60,9 @@ class ItemContainer extends HookConsumerWidget {
                 ],
                 leftButtonAction: () {
                   deleteItem(item);
-                  Navigator.pop(context);
                 },
                 rightButtonAction: () {
                   updateItem(item);
-                  Navigator.pop(context);
                 },
                 leftButtonIcon: Icons.delete,
                 rightButtonIcon: Icons.save,

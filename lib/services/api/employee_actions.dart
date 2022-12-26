@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:http/http.dart';
 import 'package:teklifyap/services/api/api_endpoints.dart';
 import 'package:teklifyap/services/models/employee.dart';
 import 'package:teklifyap/app_data.dart';
 
 class EmployeeActions {
-  static Future<bool> newEmployee(Employee employee) async {
+  Future<bool> newEmployee(Employee employee) async {
     Map<String, dynamic> requestPayload = {
       "name": employee.name,
       "surname": employee.surname,
@@ -31,7 +30,7 @@ class EmployeeActions {
     }
   }
 
-  static Future<List<Employee>> getAllEmployees() async {
+  Future<List<Employee>> getAllEmployees() async {
     List<Employee> allEmployees = [];
     Response res = await get(Uri.parse(ApiEndpoints.employeeUrl), headers: {
       HttpHeaders.authorizationHeader: 'Bearer ${AppData.authToken}',
@@ -41,7 +40,7 @@ class EmployeeActions {
     if (res.statusCode == 200) {
       List<dynamic> employees = jsonDecode(utf8.decode(res.bodyBytes))["data"];
       for (var employee in employees) {
-        allEmployees.add(await EmployeeActions.getEmployee(employee["id"]));
+        allEmployees.add(await getEmployee(employee["id"]));
       }
       return allEmployees;
     } else {
@@ -50,7 +49,7 @@ class EmployeeActions {
     }
   }
 
-  static Future<Employee> getEmployee(int employeeID) async {
+  Future<Employee> getEmployee(int employeeID) async {
     Response res = await get(
         Uri.parse("${ApiEndpoints.employeeUrl}/$employeeID"),
         headers: {
@@ -66,7 +65,7 @@ class EmployeeActions {
     }
   }
 
-  static Future<bool> updateEmployee(Employee employee) async {
+  Future<bool> updateEmployee(Employee employee) async {
     Map<String, dynamic> requestPayload = {
       "name": employee.name,
       "surname": employee.surname
@@ -89,7 +88,7 @@ class EmployeeActions {
     }
   }
 
-  static Future<bool> deleteEmployee(int employeeID) async {
+  Future<bool> deleteEmployee(int employeeID) async {
     Response res = await delete(
       Uri.parse('${ApiEndpoints.employeeUrl}/$employeeID'),
       headers: {

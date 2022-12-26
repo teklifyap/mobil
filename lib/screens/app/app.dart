@@ -27,12 +27,12 @@ class App extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //load data
-    ref.read(itemsProvider).getItems();
-    ref.read(userProvider).getUser();
-    ref.read(offersProvider).getOffers();
-    ref.read(employeesProvider).getEmployees();
-    ref.read(worksitesProvider).getWorksites();
+    // load data
+    ref.read(itemsProvider.notifier).getItems();
+    ref.read(userProvider.notifier).getUser();
+    ref.read(offersProvider.notifier).getOffers();
+    ref.read(employeesProvider.notifier).getEmployees();
+    ref.read(worksitesProvider.notifier).getWorksites();
     PageController pageController =
         usePageController(initialPage: 2, keys: screens);
     final selectedPage = useState(pageController.hasClients

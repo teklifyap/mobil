@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:teklifyap/custom%20widgets/custom_dialog.dart';
+import 'package:teklifyap/custom_widgets/custom_dialog.dart';
 import 'package:teklifyap/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:teklifyap/providers/employee_provider.dart';
 import 'package:teklifyap/screens/employee_screen/components/employee_container.dart';
-import 'package:teklifyap/custom%20widgets/input_field.dart';
+import 'package:teklifyap/custom_widgets/input_field.dart';
 import 'package:teklifyap/services/api/employee_actions.dart';
 import 'package:teklifyap/services/models/employee.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -23,13 +23,13 @@ class EmployeeScreen extends HookConsumerWidget {
     final width = MediaQuery.of(context).size.width;
 
     void newEmployee(Employee employee) async {
-      await EmployeeActions.newEmployee(employee);
-      ref.read(employeesProvider).getEmployees();
+      await EmployeeActions().newEmployee(employee);
+      ref.read(employeesProvider.notifier).getEmployees();
     }
 
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => CustomDialogs.basicAddOrCreateDialog(
+        onPressed: () => CustomDialogs().basicAddOrCreateDialog(
             content: [
               CustomInputField(
                   controller: employeeNameController,
@@ -74,7 +74,7 @@ class EmployeeScreen extends HookConsumerWidget {
                 ),
                 IconButton(
                     onPressed: () =>
-                        {ref.read(employeesProvider).getEmployees()},
+                        {ref.read(employeesProvider.notifier).getEmployees()},
                     icon: const Icon(
                       Icons.refresh,
                       color: kPrimaryColor,
@@ -84,16 +84,16 @@ class EmployeeScreen extends HookConsumerWidget {
             )),
         Consumer(builder: (context, ref, child) {
           final employeeProvider = ref.watch(employeesProvider);
-          return employeeProvider.employees.isNotEmpty
+          return employeeProvider.isNotEmpty
               ? Expanded(
                   child: GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount:
                             kIsWeb ? (width <= 1000 ? width ~/ 150 : 8) : 3),
-                    itemCount: employeeProvider.employees.length,
+                    itemCount: employeeProvider.length,
                     itemBuilder: (context, index) {
                       return EmployeeContainer(
-                          employee: employeeProvider.employees[index]);
+                          employee: employeeProvider[index]);
                     },
                   ),
                 )
