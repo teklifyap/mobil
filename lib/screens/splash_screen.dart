@@ -30,7 +30,12 @@ class SplashScreen extends HookWidget {
       userToken = await UserActions().getUserToken();
       if (userToken != null) {
         AppData.authToken = userToken ?? "";
-        screenToNavigate = App();
+        try {
+          UserActions().getUser();
+          screenToNavigate = App();
+        } catch (error) {
+          throw ('token expired, $error');
+        }
       }
       await Future.delayed(splashScreenDuration);
       // ignore: use_build_context_synchronously
